@@ -8,7 +8,7 @@
         <section class="content">
             <div class="row">
                 <div class="col-sm-2 col-with-right-dorder">
-                    <Sidebar></Sidebar>
+                    <SidebarUsuario></SidebarUsuario>
                 </div>
                 <div class="col-sm-8">
                     <h3>Completar front</h3>
@@ -22,12 +22,12 @@
 
 import VueRouter from 'vue-router'
 import axios from 'axios'
-import Sidebar from './Sidebar.vue'
+import SidebarUsuario from './PanelUsuario/SidebarUsuario.vue'
 
 
 export default{
     components:{
-        'Sidebar': Sidebar  
+        'SidebarUsuario': SidebarUsuario  
     }
     /*data(){
 

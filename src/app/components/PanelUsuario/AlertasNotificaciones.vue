@@ -8,7 +8,7 @@
         <section>
             <div class="row">
                 <div class="col-sm-2 col-with-right-dorder">
-                    <Sidebar></Sidebar> 
+                    <SidebarUsuario></SidebarUsuario> 
                 </div>
                 <div class="col-sm-8">
                     <p>El contenido de las alertas y notificaciones va aqui</p>
@@ -20,11 +20,11 @@
 
 <script>
 import VueRouter from 'vue-router'
-import Sidebar from '../Sidebar.vue'
+import SidebarUsuario from './SidebarUsuario.vue'
 
 export default {
     components:{
-        'Sidebar': Sidebar  
+        'SidebarUsuario': SidebarUsuario  
     }
 }
 </script>

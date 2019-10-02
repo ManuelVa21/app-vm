@@ -17,6 +17,12 @@ import PerfilUsuario from './components/PanelUsuario/PerfilUsuario.vue'
 import AlertasNotificaciones from './components/PanelUsuario/AlertasNotificaciones.vue'
 import Instancias from './components/PanelUsuario/Instancias.vue'
 import Peticiones from './components/PanelUsuario/Peticiones.vue'
+//Componentes Panel Admin
+import InfoUsuarios from './components/PanelAdmin/InfoUsuarios.vue'
+import Solicitudes from './components/PanelAdmin/Solicitudes.vue'
+import Recursos from './components/PanelAdmin/Recursos.vue'
+import Alertas from './components/PanelAdmin/Alertas.vue'
+import Sugerencias from './components/PanelAdmin/Sugerencias.vue'
 
 Vue.config.productionTip = false
 
@@ -60,6 +66,31 @@ const routes = [
     name: 'Peticiones',
     path: '/Peticiones',
     component: Peticiones
+  },
+  {
+    name: 'InfoUsuarios',
+    path: '/InfoUsuarios',
+    component: InfoUsuarios
+  },
+  {
+    name: 'Solicitudes',
+    path: '/Solicitudes',
+    component: Solicitudes
+  },
+  {
+    name: 'Recursos',
+    path: '/Recursos',
+    component: Recursos
+  },
+  {
+    name: 'Alertas',
+    path: '/Alertas',
+    component: Alertas
+  },
+  {
+    name: 'Sugerencias',
+    path: '/Sugerencias',
+    component: Sugerencias
   }
 
 ];
