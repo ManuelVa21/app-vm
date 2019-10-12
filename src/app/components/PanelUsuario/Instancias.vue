@@ -21,7 +21,6 @@
 <script>
 import VueRouter from 'vue-router'
 import SidebarUsuario from './SidebarUsuario.vue'
-
 export default {
     components:{
         'SidebarUsuario': SidebarUsuario  

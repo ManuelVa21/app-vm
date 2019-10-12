@@ -10,14 +10,15 @@ Vue.use(VueAxios, axios);
 import App from './App.vue'
 import Inicio from './components/Inicio.vue'
 import Login from './components/Login.vue'
-import PanelUsuario from './components/PanelUsuario.vue'
 import Registrar from './components/Registrar.vue'
 //Componentes Panel Usuario
+import PanelUsuario from './components/PanelUsuario/PanelUsuario.vue'
 import PerfilUsuario from './components/PanelUsuario/PerfilUsuario.vue'
 import AlertasNotificaciones from './components/PanelUsuario/AlertasNotificaciones.vue'
 import Instancias from './components/PanelUsuario/Instancias.vue'
 import Peticiones from './components/PanelUsuario/Peticiones.vue'
 //Componentes Panel Admin
+import PanelAdmin from './components/PanelAdmin/PanelAdmin.vue'
 import InfoUsuarios from './components/PanelAdmin/InfoUsuarios.vue'
 import Solicitudes from './components/PanelAdmin/Solicitudes.vue'
 import Recursos from './components/PanelAdmin/Recursos.vue'
@@ -91,6 +92,11 @@ const routes = [
     name: 'Sugerencias',
     path: '/Sugerencias',
     component: Sugerencias
+  },
+  {
+    name: 'PanelAdmin',
+    path: '/PanelAdmin',
+    component: PanelAdmin
   }
 
 ];

@@ -12,28 +12,30 @@ process.env.SECRET_KEY = 'secret'
 //Para obtener las listas de usarios registrados en la plataforma
 router.get('/usuarios', async (req,res) =>{
     await usuarios.find(function(err, usuarios){
-        if (err) {throw errr;}
+        if (err) {throw err;}
         else{
             res.json(usuarios);
         }
     })
 });
 
-//Para obtener un usuario
-router.get('/buscar:correo', async(req,res) => {
-    await usuarios.findOne(req.params.correo)
-    .then(res => {
-        if (!res) { return res.status(404).end();}
+router.get('/unusuario', async (req,res) =>{
+    console.log('Ruta de usuarios')
+    console.log(req.query.correo)
+    await usuarios.findOne({ correo: req.query.correo }, function (err, usuarios) {
+        if (err) {throw err;}
         else{
-            return res.status(200).json(res)
+            res.json(usuarios);
         }
-    })
-    console.log('mostrar usuario')
-    console.log(res)
-})
+    });
+});
 
 //Para el registro de usuario en caso de ser nuevo
+
 router.post('/registro', async (req, res) => {
+    console.log('Se entra a registro')
+    console.log('Se muestra req')
+    console.log(req)
     const fecha = new Date()
     const dataUsuario = new usuarios ({
         correo : req.body.correo,
@@ -42,9 +44,44 @@ router.post('/registro', async (req, res) => {
     })
     console.log('mostrar datausuario')
     console.log(dataUsuario)
+    bcrypt.hash(req.body.contrasena, 10, (err, hash) => { 
+        if (hash) {
+            dataUsuario.contrasena = hash
+            usuarios.create(dataUsuario)
+            .then(usuarios => { res.json({ status: usuarios.correo + ' Registrado' }) })
+            .catch(err => { res.send('No se puede crear el usuario') })
+
+        } else {
+            console.log("Error al crear")
+        }
+    })
+
     //const user = await usuarios.findOne(req.body.correo);
 
-    const user = usuarios.findOne({correo: req.body.correo},'correo')
+    //const user = usuarios.findOne({correo: req.body.correo},'correo')
+    //usuarios.findOne({correo: req.body.correo},'correo')
+    /*
+    await usuarios.findOne({correo: req.body.correo}, function (err, usuarios) {
+        if (usuarios) {
+            console.log("Existe el usuario")
+            res.json({ error: 'El usuario ya existe' })
+        } else {
+            console.log("No existe el usuario")
+            bcrypt.hash(req.body.contrasena, 10, (err, hash) => { 
+                if (hash) {
+                    dataUsuario.contrasena = hash
+                    usuarios.save(dataUsuario)
+                    .then(usuarios => { res.json({ status: usuarios.correo + ' Registrado' }) })
+                    .catch(err => { res.send('No se puede crear el usuario') })
+
+                } else {
+                    console.log("Error al crear")
+                }
+            })
+        }
+    });
+*/
+
     /*    if (!user) {
             bcrypt.hash(req.body.contrasena, 10, (err, hash) => {
                 dataUsuario.contrasena = hash
@@ -62,6 +99,7 @@ router.post('/registro', async (req, res) => {
         .catch
 
     })*/
+    /*
     .then(usuarios => {
         console.log(user)
         if (!user) {
@@ -81,6 +119,8 @@ router.post('/registro', async (req, res) => {
         }
     })
     .catch(err => { res.send('error: ' + err); })
+
+    */
 });
 
 //Para realizar el login
@@ -142,8 +182,12 @@ router.put('/:id', async (req, res, next) =>{
     }
 });
 
-router.delete('/:id', async (req,res)=>{
-    await usuarios.findByIdAndRemove(req.params.id, function(err,usuarios){
+router.delete('/delete', async (req,res)=>{
+    //console.log(req.query.correo)
+    //console.log(req.params.correo)
+    console.log('Se muestra el req para buscar el id')
+    console.log(req.query)
+    await usuarios.findByIdAndRemove(req.query._id, function(err,usuarios){
         if (err) { res.json(err);}
         else{
             res.json('Se elimino el usuario satisfactoriamente');
@@ -151,4 +195,4 @@ router.delete('/:id', async (req,res)=>{
     })
 });
 
-module.exports = router;
+module.exports = router

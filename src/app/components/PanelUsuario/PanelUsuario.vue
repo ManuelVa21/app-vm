@@ -22,7 +22,7 @@
 
 import VueRouter from 'vue-router'
 import axios from 'axios'
-import SidebarUsuario from './PanelUsuario/SidebarUsuario.vue'
+import SidebarUsuario from './SidebarUsuario.vue'
 
 
 export default{

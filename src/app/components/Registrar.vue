@@ -5,6 +5,14 @@
         <form v-on:submit.prevent="register">
           <h1 class="h3 mb-3 font-weight-normal">Registro</h1>
           <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input type="nombre" v-model="nombre" class="form-control" name="nombre" placeholder="Ingresar Nombre">
+          </div>
+          <div class="form-group">
+            <label for="nombre">Categoria Usuario</label>
+            <input type="nombre" v-model="categoria_us" class="form-control" name="categoria_us" placeholder="Ingresar Categoria de Usuario">
+          </div>
+          <div class="form-group">
             <label for="email">Correo Electrónico</label>
             <input type="email" v-model="correo" class="form-control" name="email" placeholder="Ingresar Correo Electrónico">
           </div>
@@ -26,6 +34,8 @@ import VueRouter from 'vue-router';
 export default {
   data () {
     return {
+      nombre:'',
+      categoria_us: '',
       correo: '',
       contrasena: ''
     }
@@ -33,16 +43,26 @@ export default {
 
   methods: {
     register () {
-      console.log('Se procede a crear el usuario desde registrar')
-      axios.post('usuarios/registro', {
+      console.log('Se procede a crear el usuario  registrar')
+      axios.post('/usuarios/registro', {
+        nombre: this.nombre,
+        categoria_us: this.categoria_us,
         correo: this.correo,
         contrasena: this.contrasena
-      }).then(res => {
-        this.$router.push({ name: 'Login' })
-      }).catch(err => {
-        console.log(err)
-      });
-    }
+      })
+      .then(function (res) {
+        //this.$router.push({ name: 'PanelUsuario' })
+        console.log('Mostar respuesta')
+        console.log(res); 
+        if (res.data) {
+          console.log('se encontro el correo')
+        }
+        else{
+          console.log('No se encontro el correo')
+        }
+      })
+      .catch(function (error) { console.log(error);});
+    },
   }
 }
 </script>

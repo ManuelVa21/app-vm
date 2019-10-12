@@ -40,21 +40,29 @@ export default{
             usuario:{
                 correo:"",
                 contrasena:""
-            }
+            },
+            respu:[]
         }
     },
     created(){
-        //this.getUsuarios();
+        
     },
     methods:{
-        getUsuario(correo){
-            console.log('Se busca el usuario')
-            console.log(correo)
-            axios.get('/usuarios/buscar',{ params:{correo: correo} })
-                .then(res => { console.log(res.data) })
-                //.then(res => { console.log(res.data) })
-                .catch(err => { console.log(err) });
-            
+        getUsuario(){
+            console.log('Buscar uno')
+            console.log(this.usuario.correo)
+            axios.get('/usuarios/unusuario', { params: { correo: this.usuario.correo } })
+            .then(function (res) { 
+                if (res.data) {
+                    console.log('se encontro el correo')
+                    console.log('se muestra el data')
+                    console.log(res.data)
+                    this.respu = res.data
+                }
+                else{ console.log('No se encontro el correo') } })
+            .catch(function (error) { console.log(error); })  
+            console.log('Despues del axios')    
+            console.log(this.respu)   
         },
         crearUsuario(){
             axios.post('usuarios/registro',{
@@ -72,10 +80,10 @@ export default{
                 //Se verifica si el usuario existe. Segun la respuesta se crea o se ingresa
                 console.log(this.usuario.correo)
                 console.log(this.usuario.contrasena)
-                const user = this.getUsuario(this.usuario.correo)
-                console.log('se muestra user')
-                console.log(user)
-                if (user) {
+                this.getUsuario(this.usuario.correo)
+                console.log('se muestra respu')
+                console.log(this.respu)
+                if (this.respu) {
                     //Si el usuario existe se hace el loggeo
                     console.log('El usuario existe previamente')
                     axios.post('usuarios/login',{
@@ -86,20 +94,19 @@ export default{
                     localStorage.setItem('usertoken', res.data)
                     this.correo = ''
                     this.contrasena = ''
-                    this.$router.replace({ name: 'PanelUsuario' })
+                    this.$router.push({ name: 'PanelUsuario' })
                     })
                     .catch(err => { console.log(err) })
                     this.emitMetodo()
                 }
                 else{
                     //Se crea el registro y se ingresa a la app
-                    this.crearUsuario()
-                    console.log('El usuario fue creado porque no existia')
+                    //this.crearUsuario()
+                    console.log('El correo o contraseña son invalidos')
                 }
             } else {
                 console.log('El correo y contraseña son campos obligatorios')
             }
-
         },
         emitMetodo(){
             EventBus.$emit('logged-in', 'loggedin')

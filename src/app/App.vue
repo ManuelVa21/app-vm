@@ -2,9 +2,6 @@
 <template lang='html'>
     <div id="app">
       <navbar></navbar>
-         
-      
-
       <router-view />
     </div>
 </template>
