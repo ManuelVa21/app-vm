@@ -30,14 +30,26 @@ router.get('/unusuario', async (req,res) =>{
     });
 });
 
-//Para el registro de usuario en caso de ser nuevo
+router.delete('/delete', async (req,res)=>{
+    //console.log(req.query.correo)
+    //console.log(req.params.correo)
+    console.log('Se muestra el req para buscar el id')
+    console.log(req.query)
+    await usuarios.findByIdAndRemove(req.query._id, function(err,usuarios){
+        if (err) { res.json(err);}
+        else{
+            res.json('Se elimino el usuario satisfactoriamente');
+        }
+    })
+});
 
 router.post('/registro', async (req, res) => {
-    console.log('Se entra a registro')
-    console.log('Se muestra req')
+    console.log('Se entra a registro y se muestra req')
     console.log(req)
     const fecha = new Date()
     const dataUsuario = new usuarios ({
+        nombre : req.body.nombre,
+        categoria_us : req.body.categoria_us,
         correo : req.body.correo,
         contrasena : req.body.contrasena,
         registro : fecha
@@ -55,72 +67,6 @@ router.post('/registro', async (req, res) => {
             console.log("Error al crear")
         }
     })
-
-    //const user = await usuarios.findOne(req.body.correo);
-
-    //const user = usuarios.findOne({correo: req.body.correo},'correo')
-    //usuarios.findOne({correo: req.body.correo},'correo')
-    /*
-    await usuarios.findOne({correo: req.body.correo}, function (err, usuarios) {
-        if (usuarios) {
-            console.log("Existe el usuario")
-            res.json({ error: 'El usuario ya existe' })
-        } else {
-            console.log("No existe el usuario")
-            bcrypt.hash(req.body.contrasena, 10, (err, hash) => { 
-                if (hash) {
-                    dataUsuario.contrasena = hash
-                    usuarios.save(dataUsuario)
-                    .then(usuarios => { res.json({ status: usuarios.correo + ' Registrado' }) })
-                    .catch(err => { res.send('No se puede crear el usuario') })
-
-                } else {
-                    console.log("Error al crear")
-                }
-            })
-        }
-    });
-*/
-
-    /*    if (!user) {
-            bcrypt.hash(req.body.contrasena, 10, (err, hash) => {
-                dataUsuario.contrasena = hash
-                await usuarios.create(dataUsuario)
-                    .then(usuarios => {
-                        res.json({ status: usuarios.correo + ' Registrado' })
-                    })
-                    .catch(err => {
-                        res.send('No se puede crear el usuario')
-                    })
-            })
-        } else {
-            res.json({ error: 'El usuario ya existe' })
-        }
-        .catch
-
-    })*/
-    /*
-    .then(usuarios => {
-        console.log(user)
-        if (!user) {
-            bcrypt.hash(req.body.contrasena, 10, (err, hash) => {
-                dataUsuario.contrasena = hash
-                usuarios.create(dataUsuario)
-                    .then(usuarios => {
-                        res.json({ status: usuarios.correo + ' Registrado' })
-                        console.log()
-                    })
-                    .catch(err => {
-                        res.send('No se puede crear el usuario')
-                    })
-            })
-        } else {
-            res.json({ error: 'El usuario ya existe' })
-        }
-    })
-    .catch(err => { res.send('error: ' + err); })
-
-    */
 });
 
 //Para realizar el login
@@ -180,19 +126,6 @@ router.put('/:id', async (req, res, next) =>{
                 });
         }
     }
-});
-
-router.delete('/delete', async (req,res)=>{
-    //console.log(req.query.correo)
-    //console.log(req.params.correo)
-    console.log('Se muestra el req para buscar el id')
-    console.log(req.query)
-    await usuarios.findByIdAndRemove(req.query._id, function(err,usuarios){
-        if (err) { res.json(err);}
-        else{
-            res.json('Se elimino el usuario satisfactoriamente');
-        }
-    })
 });
 
 module.exports = router

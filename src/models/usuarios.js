@@ -20,8 +20,9 @@ const usuarios = new Schema({
     proposito: {type:String},
     //Documento tipo usuario curso
     nombre_curso: {type:String},
-    codigo_curso: {type:String},
-    cantidad_estudiantes: {type:Number},
+    docente_encargado: {type:String},
+    correo_docente_encargado: {type:String},
+    cantidad_maquinas: {type:Number},
     horrio_uso: {type:String}    
 },{
     collection: 'usuarios'

@@ -11,6 +11,7 @@ import App from './App.vue'
 import Inicio from './components/Inicio.vue'
 import Login from './components/Login.vue'
 import Registrar from './components/Registrar.vue'
+import Pruebas from './components/Pruebas.vue'
 //Componentes Panel Usuario
 import PanelUsuario from './components/PanelUsuario/PanelUsuario.vue'
 import PerfilUsuario from './components/PanelUsuario/PerfilUsuario.vue'
@@ -28,6 +29,11 @@ import Sugerencias from './components/PanelAdmin/Sugerencias.vue'
 Vue.config.productionTip = false
 
 const routes = [
+  {
+    name: 'Pruebas',
+    path: '/Pruebas',
+    component: Pruebas
+  },
   {
     name: 'Inicio',
     path: '/',

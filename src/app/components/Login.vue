@@ -36,56 +36,28 @@ export default{
     //name: 'Login',
     data(){
         return{
-//            usuarios:[],
+            respu:[],
             usuario:{
                 correo:"",
                 contrasena:""
-            },
-            respu:[]
+            }
+            
         }
     },
     created(){
         
     },
     methods:{
-        getUsuario(){
-            console.log('Buscar uno')
-            console.log(this.usuario.correo)
-            axios.get('/usuarios/unusuario', { params: { correo: this.usuario.correo } })
-            .then(function (res) { 
-                if (res.data) {
-                    console.log('se encontro el correo')
-                    console.log('se muestra el data')
-                    console.log(res.data)
-                    this.respu = res.data
-                }
-                else{ console.log('No se encontro el correo') } })
-            .catch(function (error) { console.log(error); })  
-            console.log('Despues del axios')    
-            console.log(this.respu)   
-        },
-        crearUsuario(){
-            axios.post('usuarios/registro',{
-                correo: this.usuario.correo,
-                contrasena: this.usuario.contrasena
-            })
-            .then(res => { this.$router.push({ name: 'PanelUsuario' }) })
-            .catch(err => { console.log(err) });
-            this.emitMetodo()
-            console.log('Se crea el usuario')
-        },
         login(){
             //Verificar si el usuario ingresa datos
             if (this.usuario.correo != "" && this.usuario.contrasena != "") {         
-                //Se verifica si el usuario existe. Segun la respuesta se crea o se ingresa
-                console.log(this.usuario.correo)
-                console.log(this.usuario.contrasena)
-                this.getUsuario(this.usuario.correo)
-                console.log('se muestra respu')
-                console.log(this.respu)
-                if (this.respu) {
+                var buscar = this.buscaruno(this.usuario.correo)
+                console.log('Mostrar buscar')
+                console.log(buscar)
+                if (buscar) {
                     //Si el usuario existe se hace el loggeo
                     console.log('El usuario existe previamente')
+                    
                     axios.post('usuarios/login',{
                         correo: this.usuario.correo,
                         contrasena: this.usuario.contrasena
@@ -98,20 +70,38 @@ export default{
                     })
                     .catch(err => { console.log(err) })
                     this.emitMetodo()
+                    
                 }
                 else{
-                    //Se crea el registro y se ingresa a la app
-                    //this.crearUsuario()
+                    alert('El correo o contraseña son invalidos')
                     console.log('El correo o contraseña son invalidos')
                 }
             } else {
-                console.log('El correo y contraseña son campos obligatorios')
+                alert('El correo y contraseña son campos obligatorios')
             }
+        },
+         buscaruno: async function(dato){
+            console.log('Buscar uno')
+            console.log(dato)
+            var self = this
+            //let respu = {};
+            //console.log(respu)
+            //console.log(self.respu)
+            await axios.get('/usuarios/unusuario', { params: { correo: dato } })
+            .then(function (res) { 
+                console.log(res)
+                self.respu = res.data;
+                console.log('mostrar res.data');
+
+                //console.log(self.respu);
+                return self.respu;
+            })
+            .catch(function (error) { console.log(error); })
+            return self.respu
         },
         emitMetodo(){
             EventBus.$emit('logged-in', 'loggedin')
         }
-        
     }
 }
 </script>

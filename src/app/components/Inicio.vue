@@ -2,7 +2,12 @@
 <template>
 
 <div>
-    <h1 class="text-center text-info font-weight-bold">Servicio de máquinas virtuales Plataforma Telco 2.0</h1>
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">Servicio de máquinas virtuales Plataforma Telco 2.0</h1>
+            <p class="lead">Administra tu mismo los recursos que tenemos asignados para ti en la plataforma.</p>
+        </div>
+        </div>
 </div>
 
 </template>

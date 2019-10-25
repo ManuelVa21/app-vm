@@ -1,17 +1,18 @@
 <template>
     <div>
-        <div>
-            <section class="header">
-                <h1 class="page-title">Panel Usuario</h1>
-            </section>
-        </div>
         <section class="content">
             <div class="row">
-                <div class="col-sm-2 col-with-right-dorder">
+                <div class="col-sm-2 col-with-right-border">
                     <SidebarUsuario></SidebarUsuario>
                 </div>
                 <div class="col-sm-8">
-                    <h3>Completar front</h3>
+                    <div>
+                        <InfoGen></InfoGen>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Información general</div>
+                        <div class="panel-body">Aqui va la Información General de la Plataforma Telco 2.0. Esta información es de utilidad para el usuarios</div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -23,11 +24,13 @@
 import VueRouter from 'vue-router'
 import axios from 'axios'
 import SidebarUsuario from './SidebarUsuario.vue'
+import InfoGen from './InfoGen.vue'
 
 
 export default{
     components:{
-        'SidebarUsuario': SidebarUsuario  
+        'SidebarUsuario': SidebarUsuario,
+        'InfoGen':  InfoGen
     }
     /*data(){
 

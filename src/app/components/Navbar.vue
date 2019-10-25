@@ -19,10 +19,20 @@
                 <li v-if="auth==='loggedin'" class="nav-item">
                     <router-link class="nav-link" to="/PanelUsuario">Panel Usuario</router-link>
                 </li>
+
+                <li v-if="auth===''" class="nav-item">
+                    <router-link class="nav-link" to="/Pruebas">Pruebas</router-link>
+                </li>
+
+
                 <li v-if="auth==='loggedin'" class="nav-item">
                     <a class="nav-link" href="" v-on:click="logout">Logout</a>
                 </li>
             </ul>
+            <form v-if="auth==='loggedin'" class="form-inline my-2 my-lg-0 ">
+              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
+            </form>
         </div>
     </nav>
 </template>

@@ -4,13 +4,13 @@ const Schema = mongoose.Schema;
 const solicitudes = new Schema({
     tipo: {type: String},
     fecha: {type: Date, default: Date.now},
+    fecha_fin: {type: Date},
     detalle_recursos: [{
         so: {type: String},
         version_so:{type: String},
         disco_duro: {type: Number},
         ram: {type:Number},
-        cpu: {type:Number},
-        interfaces: {type:Number}
+        cpu: {type:Number}
     }],
     detalle_aumento: [{
         fecha_fin: {type: Date},
