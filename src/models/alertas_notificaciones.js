@@ -4,14 +4,14 @@ const Schema = mongoose.Schema;
 const alertas_notificaciones = new Schema({
     tipo: {type: String},
     fecha: {type: Date, default: Date.now},
+    descripcion: {type:String},
     detalles: [{
         disco_duro: {type:Number},
         ram: {type:Number},
         cpu: {type:Number},
     }],
     estado: {type:Boolean},
-    usuario_destino: {type: String},
-    descripcion: {type:String}
+    usuario_destino: {type: String} 
 
 },{
     collection: 'alertas_notificaciones'
