@@ -8,7 +8,7 @@ const mongoose = require ('mongoose');
 const app=express();
 
 //mongoose.Promise =global.Promise;
-mongoose.connect('mongodb://localhost:27017/appdatabase',{ useNewUrlParser: true })
+mongoose.connect('mongodb://localhost:27017/appdatabase',{ useUnifiedTopology: true, useNewUrlParser: true })
     .then(db => console.log('DB is connected'))
     .catch(err => console.log(err));
 

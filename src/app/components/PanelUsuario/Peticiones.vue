@@ -18,7 +18,7 @@
                                     </button>
                                 </h5>
                                 </div>
-                                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionPU">
+                                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionPU">
                                     <div class="card-body">
                                         <p>Seleccione las características de su pool de recursos</p>
                                         <form >
@@ -157,20 +157,23 @@
                             </div>
                             <!-- Solicitud de backup -->
                             <div class="card">
-                                <div class="card-header" id="headingTwo">
+                                <div class="card-header" id="headingThree">
                                 <h5 class="mb-0">
-                                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                                     Solicitud de backup
                                     </button>
                                 </h5>
-                                </div>
-                                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionPU">
+                                </div>                              
+                                <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionPU">
                                     <div class="card-body">
                                         <p>Aqui va el form de solicitud de backup</p>
-                                        <div class="form-group">
+                                        <form>
+                                            <div class="form-group">
                                                 <p>Por favor escriba el motivo por el cual desea ampliar sus recursos.</p>
                                                 <textarea name="" id="" cols="30" rows="10" placeholder="Motivo de ampliación de recursos"></textarea>
                                             </div>
+                                        <div class="text-center"><button type="submit" class="btn btn-primary">Enviar</button></div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>

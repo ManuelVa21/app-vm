@@ -18,7 +18,7 @@
                                     </button>
                                 </h5>
                                 </div>
-                                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionPU">
+                                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionPU">
                                     <div class="card-body">
                                         <form>
                                             <div class="form-row">

@@ -5,7 +5,7 @@ const pool_recursos = new Schema({
     nombre_proyecto: {type: String},
     descripcion: {type: String},
     propietario: [{nombre_u: String}],
-    numero_vm: {type: Number},
+    //numero_vm: {type: Number},
     disco_duro: {type: Number}, 
     ram: {type: Number},
     cpu: {type: Number},
