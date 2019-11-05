@@ -23,6 +23,9 @@
                 <li v-if="auth===''" class="nav-item">
                     <router-link class="nav-link" to="/Pruebas">Pruebas</router-link>
                 </li>
+                <li v-if="auth===''" class="nav-item">
+                    <router-link class="nav-link" to="/PanelAdmin">Admin</router-link>
+                </li>
 
 
                 <li v-if="auth==='loggedin'" class="nav-item">

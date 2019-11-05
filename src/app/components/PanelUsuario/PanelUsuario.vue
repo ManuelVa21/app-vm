@@ -24,7 +24,7 @@
 import VueRouter from 'vue-router'
 import axios from 'axios'
 import SidebarUsuario from './SidebarUsuario.vue'
-import InfoGen from './InfoGen.vue'
+import InfoGen from '../InfoGen.vue'
 
 
 export default{
