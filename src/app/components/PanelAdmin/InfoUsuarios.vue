@@ -22,7 +22,7 @@
                                     <div class="card-body">
                                         <p>usuarios registrados en la plataforma Telco2.0</p>
                                         <h3>Usuarios</h3>
-                                        <table class="table table-striped">
+                                        <table class="table-responsive-xl table-striped table-hover w-auto">
                                             <thead class="thead-dark">
                                                 <tr>
                                                 <th scope="col">#</th>

@@ -207,7 +207,7 @@
                                     <div class="card-body">
                                         <p>Este es el pool de recursos asignado a su nombre:</p>
                                         <h3>Pool de recursos</h3>
-                                        <table class="table table-striped">
+                                        <table class="table-responsive-xl table-striped table-hover w-auto">
                                             <thead class="thead-dark">
                                                 <tr>
                                                 <th scope="col">#</th>
@@ -252,7 +252,7 @@
                                     <div class="card-body">
                                         <p>Estas son las máquinas virtuales creadas y sus características:</p>
                                         <h3>Máquinas virtuales</h3>
-                                        <table class="table table-striped">
+                                        <table class="table-responsive-xl table-striped table-hover w-auto">
                                             <thead class="thead-dark">
                                                 <tr>
                                                 <th scope="col">#</th>

@@ -169,6 +169,7 @@
                                         <p>Aqui va el form de solicitud de backup</p>
                                         <form>
                                             <div class="form-group">
+                                                
                                                 <p>Por favor escriba el motivo por el cual desea ampliar sus recursos.</p>
                                                 <textarea name="" id="" cols="30" rows="10" placeholder="Motivo de ampliación de recursos"></textarea>
                                             </div>
@@ -179,9 +180,6 @@
                             </div>
                         </div>
                     </div> 
-
-
-
                 </div>
             </div> 
         </section>

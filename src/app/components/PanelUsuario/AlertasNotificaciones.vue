@@ -22,7 +22,7 @@
                                     <div class="card-body">
                                         <p>Esta es la lista de alertas y su respectivo estado:</p>
                                         <h3>Alertas</h3>
-                                        <table class="table table-striped">
+                                        <table class="table-responsive-xl table-striped table-hover w-auto">
                                             <thead class="thead-dark">
                                                 <tr>
                                                 <th scope="col">#</th>

@@ -55,48 +55,48 @@ const routes = [
     component: Registrar
   },
   {
-    name: 'PerfilUsuario',
-    path: '/PerfilUsuario',
+    name: 'PanelUsuario/PerfilUsuario',
+    path: '/PanelUsuario/PerfilUsuario',
     component: PerfilUsuario
   },
   {
-    name: 'AlertasNotificaciones',
-    path: '/AlertasNotificaciones',
+    name: 'PanelUsuario/AlertasNotificaciones',
+    path: '/PanelUsuario/AlertasNotificaciones',
     component: AlertasNotificaciones
   },
   {
-    name: 'Instancias',
-    path: '/Instancias',
+    name: 'PanelUsuario/Instancias',
+    path: '/PanelUsuario/Instancias',
     component: Instancias
   },
   {
-    name: 'Peticiones',
-    path: '/Peticiones',
+    name: 'PanelUsuario/Peticiones',
+    path: '/PanelUsuario/Peticiones',
     component: Peticiones
   },
   {
-    name: 'InfoUsuarios',
-    path: '/InfoUsuarios',
+    name: 'PanelAdmin/InfoUsuarios',
+    path: '/PanelAdmin/InfoUsuarios',
     component: InfoUsuarios
   },
   {
-    name: 'Solicitudes',
-    path: '/Solicitudes',
+    name: 'PanelAdmin/Solicitudes',
+    path: '/PanelAdmin/Solicitudes',
     component: Solicitudes
   },
   {
-    name: 'Recursos',
-    path: '/Recursos',
+    name: 'PanelAdmin/Recursos',
+    path: '/PanelAdmin/Recursos',
     component: Recursos
   },
   {
-    name: 'Alertas',
-    path: '/Alertas',
+    name: 'PanelAdmin/Alertas',
+    path: '/PanelAdmin/Alertas',
     component: Alertas
   },
   {
-    name: 'Sugerencias',
-    path: '/Sugerencias',
+    name: 'PanelAdmin/Sugerencias',
+    path: '/PanelAdmin/Sugerencias',
     component: Sugerencias
   },
   {

@@ -21,44 +21,109 @@
                                 <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionPU">
                                     <div class="card-body">
                                         <p>Infomación correspondiente a los recursos de la plataforma Telco 2.0</p>
-                                        <h3>Recursos totales Telco</h3>
-                                        <table class="table table-striped">
+                                        <h3>Recursos Totales Telco</h3>
+                                        <table class="table-responsive-xl table-striped table-hover w-auto">
                                             <thead class="thead-dark">
-                                                <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col">Blade</th>
+                                                <tr>                                                
                                                 <th scope="col">Almacenamiento</th>
+                                                <th scope="col">Almacenamiento libre</th>
                                                 <th scope="col">RAM</th>
+                                                <th scope="col">RAM libre</th>
                                                 <th scope="col">CPU</th>
+                                                <th scope="col">CPU libre</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                <th scope="row">1</th>
+                                                <th scope="row">-</th> 
+                                                <th scope="row">-</th> 
                                                 <th scope="row">-</th>
                                                 <th scope="row">-</th> 
                                                 <th scope="row">-</th> 
-                                                <th scope="row">-</th>                                                 
+                                                <th scope="row">-</th>                                                   
                                                 </tr>                                                
                                             </tbody>
                                         </table>
 
-                                        <h3>Info Recursos</h3>
-                                        <div class="row">
-                                            <div class="col">
-                                                <h5>Almacenamiento</h5>
+                                        <h3>Info Recursos Blade</h3>
+                                        <div class="col">
+                                            <div class="row-group text-center">
+                                                <h4>Almacenamiento</h4>
+                                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                    <label class="btn btn-secondary active btn-sm">
+                                                        <input type="radio" name="options" id="option1" autocomplete="off" checked> Blade 1
+                                                    </label>
+                                                    <label class="btn btn-secondary btn-sm">
+                                                        <input type="radio" name="options" id="option2" autocomplete="off"> Blade 2
+                                                    </label>
+                                                    <label class="btn btn-secondary btn-sm">
+                                                        <input type="radio" name="options" id="option3" autocomplete="off"> Blade 3
+                                                    </label>
+                                                    <label class="btn btn-secondary btn-sm">
+                                                        <input type="radio" name="options" id="option4" autocomplete="off"> Blade 4
+                                                    </label>
+                                                    <label class="btn btn-secondary btn-sm">
+                                                        <input type="radio" name="options" id="option5" autocomplete="off"> Blade 5
+                                                    </label>
+                                                </div>
+                                                <div class="Chart">
+                                                <h5 style="text-align:center;">Grafico</h5>
+                                                <LineChart/>
+                                                </div>                                                                                               
+                                            </div>
+                                            <br>
+                                            <div class="row-group text-center">
+                                                <h4>RAM</h4>
+                                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                    <label class="btn btn-secondary active btn-sm">
+                                                        <input type="radio" name="options" id="option1" autocomplete="off" checked> Blade 1
+                                                    </label>
+                                                    <label class="btn btn-secondary btn-sm">
+                                                        <input type="radio" name="options" id="option2" autocomplete="off"> Blade 2
+                                                    </label>
+                                                    <label class="btn btn-secondary btn-sm">
+                                                        <input type="radio" name="options" id="option3" autocomplete="off"> Blade 3
+                                                    </label>
+                                                    <label class="btn btn-secondary btn-sm">
+                                                        <input type="radio" name="options" id="option4" autocomplete="off"> Blade 4
+                                                    </label>
+                                                    <label class="btn btn-secondary btn-sm">
+                                                        <input type="radio" name="options" id="option5" autocomplete="off"> Blade 5
+                                                    </label>
+                                                </div>
+                                                <div class="Chart">
+                                                <h5 style="text-align:center;">Grafico</h5>
+                                                <LineChart/>
+                                                </div> 
 
                                             </div>
-                                            <div class="col">
-                                                <h5>RAM</h5>
-
+                                            <br>
+                                            <div class="row-group text-center">
+                                                <h4>CPU</h4>
+                                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                    <label class="btn btn-secondary active btn-sm">
+                                                        <input type="radio" name="options" id="option1" autocomplete="off" checked> Blade 1
+                                                    </label>
+                                                    <label class="btn btn-secondary btn-sm">
+                                                        <input type="radio" name="options" id="option2" autocomplete="off"> Blade 2
+                                                    </label>
+                                                    <label class="btn btn-secondary btn-sm">
+                                                        <input type="radio" name="options" id="option3" autocomplete="off"> Blade 3
+                                                    </label>
+                                                    <label class="btn btn-secondary btn-sm">
+                                                        <input type="radio" name="options" id="option4" autocomplete="off"> Blade 4
+                                                    </label>
+                                                    <label class="btn btn-secondary btn-sm">
+                                                        <input type="radio" name="options" id="option5" autocomplete="off"> Blade 5
+                                                    </label>
+                                                </div>
+                                                <div class="Chart">
+                                                <h5 style="text-align:center;">Grafico</h5>
+                                                <LineChart/>
+                                                </div> 
                                             </div>
-                                            <div class="col">
-                                                <h5>CPU</h5>
-
-                                            </div>
+                                            <br>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -74,7 +139,36 @@
                                 </div>
                                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionPU">
                                     <div class="card-body">
-                                        
+                                        <table class="table-responsive-xl table-striped table-hover w-auto">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Propietario</th>
+                                                <th scope="col">Proyecto</th>
+                                                <th scope="col">Descripción</th>
+                                                <th scope="col">Almacenamiento</th>
+                                                <th scope="col">RAM</th>
+                                                <th scope="col">CPU</th>
+                                                <th scope="col">#máquinas</th>
+                                                <th scope="col">Fecha Inicio</th>
+                                                <th scope="col">Fecha fin</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                <th scope="row">1</th>
+                                                <td>-</td>
+                                                <td>-</td> 
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td> 
+                                                <td>-</td> 
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>                                              
+                                                </tr>                                                
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -89,8 +183,46 @@
                                 </div>
                                 <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionPU">
                                     <div class="card-body">
-                                        
-                                        
+                                        <table class="table-responsive-xl table-striped table-hover w-auto">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Propietario</th>
+                                                <th scope="col">Nombre VM</th>
+                                                <th scope="col">SO</th>
+                                                <th scope="col">Versión</th>
+                                                <th scope="col">Almacenamiento</th>
+                                                <th scope="col">RAM</th>
+                                                <th scope="col">CPU</th>
+                                                <th scope="col">Interfaces</th>
+                                                <th scope="col">IP</th>
+                                                <th scope="col">Blade</th>
+                                                <th scope="col">Estado</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                <th scope="row">1</th>
+                                                <td>-</td>
+                                                <td>-</td> 
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td> 
+                                                <td>-</td> 
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>  
+                                                <td>
+                                                    <div class="btn-group-sm" role="group" aria-label="Basic example">
+                                                    <button type="button" class="btn btn-success">Encender</button>
+                                                    <button type="button" class="btn btn-danger">Apagar</button>
+                                                </div>   
+                                                </td>                                            
+                                                </tr> 
+                                                                                            
+                                            </tbody>
+                                        </table>                                                                                
                                     </div>
                                 </div>
                             </div>
@@ -104,7 +236,7 @@
                                 </div>
                                 <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordionPU">
                                     <div class="card-body">
-                                        
+                                        <p>Definir cuales son las Estadísticas que se van a presentar inicialmente</p>
                                         
                                     </div>
                                 </div>
@@ -122,11 +254,15 @@
 import VueRouter from 'vue-router'
 import axios from 'axios'
 import SidebarAdmin from './SidebarAdmin.vue'
+import LineChart from './Chart/LineChart.vue'
 
 export default{
     components:{
-        'SidebarAdmin': SidebarAdmin
-    }
+        'SidebarAdmin': SidebarAdmin,
+        'LineChart': LineChart
+    },
+    
+    
 }
 </script>
     <!--   -->
