@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const cors = require("cors")
 const jwt = require("jsonwebtoken")
-const bcrypt = require("bcrypt")
+//const bcrypt = require("bcrypt")
 
 const usuarios = require('../models/usuarios');
 router.use(cors())
@@ -56,6 +56,7 @@ router.post('/registro', async (req, res) => {
     })
     console.log('mostrar datausuario')
     console.log(dataUsuario)
+    /*
     bcrypt.hash(req.body.contrasena, 10, (err, hash) => { 
         if (hash) {
             dataUsuario.contrasena = hash
@@ -66,9 +67,9 @@ router.post('/registro', async (req, res) => {
         } else {
             console.log("Error al crear")
         }
-    })
+    })*/
 });
-
+/*
 //Para realizar el login
 router.post('/login', async (req,res) => {
     const user = await usuarios.findOne({ correo: req.body.correo })
@@ -94,6 +95,7 @@ router.post('/login', async (req,res) => {
     })
     .catch(err => { res.send('error: ' + err); })
 })
+*/
 
 //Para actualizar los datos
 router.put('/:id', async (req, res, next) =>{

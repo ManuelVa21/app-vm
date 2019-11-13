@@ -13,7 +13,7 @@ mongoose.connect('mongodb://localhost:27017/appdatabase',{ useUnifiedTopology: t
     .catch(err => console.log(err));
 
 /*Settings*/
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 4000);
 
 /*Middlewares*/
 app.use(morgan('dev'));
