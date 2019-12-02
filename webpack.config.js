@@ -20,7 +20,8 @@ module.exports = {
                 test: /\.vue$/,
                 exclude: /node_modules/,
                 loader: 'vue-loader'
-            }
+            },
+            { test: /\.txt$/, use: 'raw-loader' }
         ]
     },
     plugins:[

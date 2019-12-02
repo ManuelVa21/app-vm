@@ -65,6 +65,7 @@ ${OS_AUTH_URL}/auth/tokens 2>/dev/null | grep 'X-Subject-Token: ' | awk '{print 
 token=`cat ${TMPFILE} | grep 'X-Subject-Token:' | awk '{print $2}'`
 #echo "export OS_AUTH_TOKEN="${token}
 printf $token
+
 #echo
 #curl -g -i -X GET http://10.55.5.155/compute/v2.1/flavors/detail?is_public=None -H "Accept: application/json" -H "User-Agent: python-novaclient" -H "X-Auth-Token: $token" -H "X-OpenStack-Nova-API-Version: 2.1"
 

@@ -24,7 +24,7 @@
                                         <h3>Recursos Totales Telco</h3>
                                         <table class="table-responsive-xl table-striped table-hover w-auto">
                                             <thead class="thead-dark">
-                                                <tr>                                                
+                                                <tr>
                                                 <th scope="col">Almacenamiento</th>
                                                 <th scope="col">Almacenamiento libre</th>
                                                 <th scope="col">RAM</th>
@@ -35,13 +35,13 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                <th scope="row">-</th> 
-                                                <th scope="row">-</th> 
                                                 <th scope="row">-</th>
-                                                <th scope="row">-</th> 
-                                                <th scope="row">-</th> 
-                                                <th scope="row">-</th>                                                   
-                                                </tr>                                                
+                                                <th scope="row">-</th>
+                                                <th scope="row">-</th>
+                                                <th scope="row">-</th>
+                                                <th scope="row">-</th>
+                                                <th scope="row">-</th>
+                                                </tr>
                                             </tbody>
                                         </table>
 
@@ -69,7 +69,7 @@
                                                 <div class="Chart">
                                                 <h5 style="text-align:center;">Grafico</h5>
                                                 <LineChart/>
-                                                </div>                                                                                               
+                                                </div>
                                             </div>
                                             <br>
                                             <div class="row-group text-center">
@@ -94,7 +94,7 @@
                                                 <div class="Chart">
                                                 <h5 style="text-align:center;">Grafico</h5>
                                                 <LineChart/>
-                                                </div> 
+                                                </div>
 
                                             </div>
                                             <br>
@@ -120,7 +120,7 @@
                                                 <div class="Chart">
                                                 <h5 style="text-align:center;">Grafico</h5>
                                                 <LineChart/>
-                                                </div> 
+                                                </div>
                                             </div>
                                             <br>
                                         </div>
@@ -158,15 +158,15 @@
                                                 <tr>
                                                 <th scope="row">1</th>
                                                 <td>-</td>
-                                                <td>-</td> 
                                                 <td>-</td>
                                                 <td>-</td>
-                                                <td>-</td> 
-                                                <td>-</td> 
                                                 <td>-</td>
                                                 <td>-</td>
-                                                <td>-</td>                                              
-                                                </tr>                                                
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -204,25 +204,25 @@
                                                 <tr>
                                                 <th scope="row">1</th>
                                                 <td>-</td>
-                                                <td>-</td> 
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td> 
-                                                <td>-</td> 
                                                 <td>-</td>
                                                 <td>-</td>
                                                 <td>-</td>
-                                                <td>-</td>  
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
                                                 <td>
                                                     <div class="btn-group-sm" role="group" aria-label="Basic example">
                                                     <button type="button" class="btn btn-success">Encender</button>
                                                     <button type="button" class="btn btn-danger">Apagar</button>
-                                                </div>   
-                                                </td>                                            
-                                                </tr> 
-                                                                                            
+                                                </div>
+                                                </td>
+                                                </tr>
+
                                             </tbody>
-                                        </table>                                                                                
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -237,7 +237,7 @@
                                 <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordionPU">
                                     <div class="card-body">
                                         <p>Definir cuales son las Estadísticas que se van a presentar inicialmente</p>
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -254,16 +254,87 @@
 import VueRouter from 'vue-router'
 import axios from 'axios'
 import SidebarAdmin from './SidebarAdmin.vue'
+import Token from '!!raw-loader!../PanelAdmin/Token.txt'
+
 import LineChart from './Chart/LineChart.vue'
 
+
 export default{
+
+    data(){
+        return{
+            resdata:{}
+        }
+    },
     components:{
         'SidebarAdmin': SidebarAdmin,
         'LineChart': LineChart
     },
-    
-    
+    created(){
+        this.getFlavor();
+    },
+    methods:{
+        getFlavor(){
+            console.log('Se ingresa a getFlavor')
+            /*let config={
+                headers:{
+                    'X-Auth-Token':'gAAAAABd4So9EPUuUXryn8HGgWr51vRpGIrIRAePZBsHs3RJzS7FhYUAxmoAY950nl13BrnrKBQqm0sO7ob46oLlNfAxDVBjRxs0Zwrrda-hPoY_OuKjC5X62sfh8W_DgjzC7ZaOWQ04vk2Losay5hO8nBiurhScPss-ZbkS5HWOj-cDwrVQTwA',
+                    'Access-Control-Allow-Origin': '10.55.6.39',
+                    //'Origin': 'http://localhost:4000',
+                    'Access-Control-Allow-Credentials':'true',
+                    'Access-Control-Expose-Headers': 'Authorization',
+                    'Access-Control-Max-Age':'86400',
+                    'Content-Type': 'application/json'
+                    }
+            }*/
+            axios.get('http://10.55.2.24/compute/v2.1/flavors/detail', {headers:{
+                    'X-Auth-Token':Token,
+                    'Access-Control-Allow-Origin': '10.55.6.39',
+                    //'Origin': 'http://localhost:4000',
+                    'Access-Control-Allow-Credentials':'true',
+                    'Access-Control-Expose-Headers': 'Authorization',
+                    'Access-Control-Max-Age':'86400',
+                    'Content-Type': 'application/json'
+                }})
+            .then(function (res) {
+                console.log('Se muestra la respuesta del axios')
+                console.log(res.data)
+            })
+            .catch(function (error) {
+                // handle error
+                console.log('Error')
+                console.log(error);
+            })
+
+            console.log('resdata Despues axios')
+            console.log(this.resdata)
+        },
+        getNetworks(){
+            console.log('Se ingresa a getNetworks')
+            const config = {
+                headers:{
+                    'X-Auth-Token':Token,
+                    'X-Container-Meta-Access-Control-Allow-Origin': 'http://localhost:4000',
+                    'Content-Type': 'application/json'
+                }
+            }
+            console.log('Se muestra el header')
+            console.log(config)
+            axios.get('http://10.55.2.24/compute/v2.1/flavors/detail', this.config)
+            .then(function (res) {
+                console.log('Se muestra la respuesta del axios')
+                console.log(res)
+            })
+            .catch(function (error) {
+                // handle error
+                console.log('Error')
+                console.log(error);
+            })
+        }
+
+    }
+
+
 }
 </script>
     <!--   -->
-

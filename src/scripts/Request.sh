@@ -4,8 +4,8 @@
 OS_IP_OPENSTACK=10.55.2.24
 
 # Obtener el token
-#token=$(./scripts/createToken.sh)
-token=$(./createToken.sh)
+#token=$(./scripts/CreateToken.sh)
+token=$(./CreateToken.sh)
 
 case $1 in
      consult)
