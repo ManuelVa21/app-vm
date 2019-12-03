@@ -6,7 +6,8 @@
                     <SidebarUsuario></SidebarUsuario> 
                 </div>
                 <div class="col-sm-8">
-                    <p>Descripción de las funciones que se pueden realizar en esta sección</p>
+                    <p>Descripción de las funciones que se pueden realizar en esta sección TIGRE</p>
+                    <p>  Modificando un archivo antes de subi </p>
                     <div class="container">
                         <div class="accordion" id="accordionPU">
                             <!-- -->
@@ -77,13 +78,15 @@
                                         <!-- Informacion complementaria categoria usuario Docente -->
                                         <!-- v-if="categoria_us==='Docente'"" -->
                                         <form>
+                                            
                                             <div class="form-group">
                                                 <label for="NombrePro">Nombre Proyecto</label>
                                                 <input type="text" class="form-control" id="NombrePro" placeholder="Ingresar nombre del proyecto">
                                             </div>
                                             <div class="form-group">
                                                 <label for="Proposito">Proposito Proyecto</label>
-                                                <textarea name="Proposito" id="Proposito" class="form control" placeholder="Inserte una breve descripción"></textarea>
+                                                 
+                                               <p> <textarea name="Proposito" rows='10' cols='60' id="Proposito" class="form control" placeholder="Inserte una breve descripción"></textarea></p>
                                             </div>
                                             <button type="submit" class="btn btn-primary">Guardar</button>
                                         </form>

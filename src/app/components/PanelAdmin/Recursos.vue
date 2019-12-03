@@ -272,6 +272,7 @@ export default{
     },
     created(){
         this.getFlavor();
+        this.getUsers();
     },
     methods:{
         getFlavor(){
@@ -305,31 +306,22 @@ export default{
                 console.log('Error')
                 console.log(error);
             })
-
-            console.log('resdata Despues axios')
-            console.log(this.resdata)
         },
-        getNetworks(){
-            console.log('Se ingresa a getNetworks')
-            const config = {
-                headers:{
-                    'X-Auth-Token':Token,
-                    'X-Container-Meta-Access-Control-Allow-Origin': 'http://localhost:4000',
+        getUsers(){
+            console.log('Se ingresa a getUsers')
+            axios.get('http://10.55.6.31:3000/api/users', {headers:{
                     'Content-Type': 'application/json'
-                }
-            }
-            console.log('Se muestra el header')
-            console.log(config)
-            axios.get('http://10.55.2.24/compute/v2.1/flavors/detail', this.config)
+                }})
             .then(function (res) {
                 console.log('Se muestra la respuesta del axios')
-                console.log(res)
+                console.log(res.data)
             })
             .catch(function (error) {
                 // handle error
                 console.log('Error')
                 console.log(error);
             })
+
         }
 
     }
