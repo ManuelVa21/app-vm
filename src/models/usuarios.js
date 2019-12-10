@@ -23,7 +23,7 @@ const usuarios = new Schema({
     docente_encargado: {type:String},
     correo_docente_encargado: {type:String},
     cantidad_maquinas: {type:Number},
-    horrio_uso: {type:String}    
+    horario_uso: {type:String}    
 },{
     collection: 'usuarios'
 });

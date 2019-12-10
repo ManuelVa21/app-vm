@@ -11,25 +11,33 @@
                     <router-link class="nav-link" to="/">Inicio</router-link>
                 </li>
                 <li v-if="auth===''" class="nav-item">
-                    <router-link class="nav-link" to="/Login">Login</router-link>
+                    <router-link class="nav-link" to="/PanelUsuario">Usuario</router-link>
                 </li>
+               
+               <!-- 
+               
                 <li v-if="auth===''" class="nav-item">
                     <router-link class="nav-link" to="/Registrar">Registro</router-link>
                 </li>
+
                 <li v-if="auth==='loggedin'" class="nav-item">
                     <router-link class="nav-link" to="/PanelUsuario">Panel Usuario</router-link>
-                </li>
+                </li>  
 
                 <li v-if="auth===''" class="nav-item">
                     <router-link class="nav-link" to="/Pruebas">Pruebas</router-link>
                 </li>
-                <li v-if="auth===''" class="nav-item">
-                    <router-link class="nav-link" to="/PanelAdmin">Admin</router-link>
-                </li>
+              
 
 
                 <li v-if="auth==='loggedin'" class="nav-item">
                     <a class="nav-link" href="" v-on:click="logout">Logout</a>
+                </li>  
+
+                -->
+
+                  <li v-if="auth===''" class="nav-item">
+                    <router-link class="nav-link" to="/PanelAdmin">Admin</router-link>
                 </li>
             </ul>
             <form v-if="auth==='loggedin'" class="form-inline my-2 my-lg-0 ">
