@@ -196,14 +196,15 @@
                                                 <th scope="col">CPU</th>
                                                 <th scope="col">Interfaces</th>
                                                 <th scope="col">IP</th>
-                                                <th scope="col">Blade</th>
                                                 <th scope="col">Estado</th>
+                                                <th scope="col">-</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody v-for="server of servers" v-bind:key="server.id" >
                                                 <tr>
                                                 <th scope="row">1</th>
                                                 <td>-</td>
+                                                <td>{{server.name}}</td>
                                                 <td>-</td>
                                                 <td>-</td>
                                                 <td>-</td>
@@ -211,8 +212,7 @@
                                                 <td>-</td>
                                                 <td>-</td>
                                                 <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
+                                                <td>{{server.status}}</td>
                                                 <td>
                                                     <div class="btn-group-sm" role="group" aria-label="Basic example">
                                                     <button type="button" class="btn btn-success">Encender</button>
@@ -250,53 +250,44 @@
 </template>
 
 <script>
-
 import VueRouter from 'vue-router'
 import axios from 'axios'
 import SidebarAdmin from './SidebarAdmin.vue'
 import Token from '!!raw-loader!../PanelAdmin/Token.txt'
-
 import LineChart from './Chart/LineChart.vue'
-
-
+/*
+class VM{
+    constructor(propietario,nombre_vm,SO,almacenamiento,RAM,CPU,interfaces,ip,description){
+        this.title = title;
+        this.description= description;
+    }
+}
+*/
 export default{
-
     data(){
         return{
-            resdata:{}
+            servers:[]
         }
+    },
+    created(){
+        this.getFlavor();
+        this.getServers();
     },
     components:{
         'SidebarAdmin': SidebarAdmin,
         'LineChart': LineChart
     },
-    created(){
-        this.getFlavor();
-        this.getUsers();
-    },
     methods:{
         getFlavor(){
             console.log('Se ingresa a getFlavor')
-            /*let config={
-                headers:{
-                    'X-Auth-Token':'gAAAAABd4So9EPUuUXryn8HGgWr51vRpGIrIRAePZBsHs3RJzS7FhYUAxmoAY950nl13BrnrKBQqm0sO7ob46oLlNfAxDVBjRxs0Zwrrda-hPoY_OuKjC5X62sfh8W_DgjzC7ZaOWQ04vk2Losay5hO8nBiurhScPss-ZbkS5HWOj-cDwrVQTwA',
-                    'Access-Control-Allow-Origin': '10.55.6.39',
-                    //'Origin': 'http://localhost:4000',
-                    'Access-Control-Allow-Credentials':'true',
-                    'Access-Control-Expose-Headers': 'Authorization',
-                    'Access-Control-Max-Age':'86400',
-                    'Content-Type': 'application/json'
-                    }
-            }*/
-            axios.get('http://10.55.2.24/compute/v2.1/flavors/detail', {headers:{
+            axios.get('http://10.55.2.24/compute/v2.1/flavors/detail', {params:{id:'d3'}, headers:{
                     'X-Auth-Token':Token,
                     'Access-Control-Allow-Origin': '10.55.6.39',
-                    //'Origin': 'http://localhost:4000',
                     'Access-Control-Allow-Credentials':'true',
                     'Access-Control-Expose-Headers': 'Authorization',
                     'Access-Control-Max-Age':'86400',
                     'Content-Type': 'application/json'
-                }})
+                }} )
             .then(function (res) {
                 console.log('Se muestra la respuesta del axios')
                 console.log(res.data)
@@ -307,26 +298,26 @@ export default{
                 console.log(error);
             })
         },
-        getUsers(){
-            console.log('Se ingresa a getUsers')
-            axios.get('http://10.55.6.31:3000/api/users', {headers:{
+        getServers(){
+            this.axios.get('http://10.55.2.24/compute/v2.1/servers/detail', {headers:{
+                    'X-Auth-Token':Token,
+                    'Access-Control-Allow-Origin': '10.55.6.39',
+                    'Access-Control-Allow-Credentials':'true',
+                    'Access-Control-Expose-Headers': 'Authorization',
+                    'Access-Control-Max-Age':'86400',
                     'Content-Type': 'application/json'
                 }})
-            .then(function (res) {
-                console.log('Se muestra la respuesta del axios')
-                console.log(res.data)
-            })
-            .catch(function (error) {
-                // handle error
-                console.log('Error')
-                console.log(error);
-            })
-
+                .then(res => {
+                    //console.log('res.data');
+                    //console.log(res.data.servers);
+                    //console.log(res.data.servers[0].name);
+                    this.servers = res.data.servers;
+                })
+                .catch(error => {
+                    console.log(error)
+                });
         }
-
     }
-
-
 }
 </script>
     <!--   -->
