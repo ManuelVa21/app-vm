@@ -6,6 +6,7 @@
                     <SidebarAdmin></SidebarAdmin>
                 </div>
                 <div class="col-sm-8">
+                 <div class="panel panel-info">
                     <p>Descripción de la sección</p>
                     <div class="container">
                         <div class="accordion" id="accordionIU">
@@ -13,12 +14,12 @@
                             <div class="card">
                                 <div class="card-header" id="headingOne">
                                 <h5 class="mb-0">
-                                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#headingOne" aria-expanded="false" aria-controls="headingOne">
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                     Listar usuarios
                                     </button>
                                 </h5>
                                 </div>
-                                <div id="headingOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionIU">
+                                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionIU">
                                     <div class="card-body">
                                         <p>usuarios registrados en la plataforma Telco2.0</p>
                                         <h3>Usuarios</h3>
@@ -53,6 +54,7 @@
                         </div>
 
                     </div>
+                </div>
                 </div>
             </div>
         </section>
