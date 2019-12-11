@@ -266,55 +266,68 @@ class VM{
 export default{
     data(){
         return{
-            servers:[]
+            servers:[],
+            config:{
+                headers:{
+                'X-Auth-Token':Token,
+                'Access-Control-Allow-Origin': '10.55.6.39',
+                'Access-Control-Allow-Credentials':'true',
+                'Access-Control-Expose-Headers': 'Authorization',
+                'Access-Control-Max-Age':'86400',
+                'Content-Type': 'application/json'
+                }
+            },
+            id:'d3'
         }
     },
     created(){
-        this.getFlavor();
-        this.getServers();
+        //this.getFlavor();
+        //this.getServers();
+        this.getOneFlavor();
     },
     components:{
         'SidebarAdmin': SidebarAdmin,
         'LineChart': LineChart
     },
     methods:{
+        //Se obtienen todos los flavors
         getFlavor(){
             console.log('Se ingresa a getFlavor')
-            axios.get('http://10.55.2.24/compute/v2.1/flavors/detail', {params:{id:'d3'}, headers:{
-                    'X-Auth-Token':Token,
-                    'Access-Control-Allow-Origin': '10.55.6.39',
-                    'Access-Control-Allow-Credentials':'true',
-                    'Access-Control-Expose-Headers': 'Authorization',
-                    'Access-Control-Max-Age':'86400',
-                    'Content-Type': 'application/json'
-                }} )
+            axios.get('http://10.55.2.24/compute/v2.1/flavors/detail', this.config)
             .then(function (res) {
                 console.log('Se muestra la respuesta del axios')
                 console.log(res.data)
             })
             .catch(function (error) {
                 // handle error
-                console.log('Error')
-                console.log(error);
+                console.log('Error ', error);
             })
         },
+        //Se obtiene un solo flavor
+        getOneFlavor(dato){
+            console.log('Se ingresa  getOneFlavor')
+            let data={id:'d3'}
+            axios.get('http://10.55.2.24/compute/v2.1/flavors/d3' ,this.config)
+            .then(function (res) {
+                console.log('Se muestra la respuesta del axios')
+                console.log(res.data)
+            })
+            .catch(function (error) {
+                // handle error
+                console.log('Error ',error);
+            })
+        },
+        //Se obtiene un arreglo con todos los servidores
         getServers(){
-            this.axios.get('http://10.55.2.24/compute/v2.1/servers/detail', {headers:{
-                    'X-Auth-Token':Token,
-                    'Access-Control-Allow-Origin': '10.55.6.39',
-                    'Access-Control-Allow-Credentials':'true',
-                    'Access-Control-Expose-Headers': 'Authorization',
-                    'Access-Control-Max-Age':'86400',
-                    'Content-Type': 'application/json'
-                }})
+            this.axios.get('http://10.55.2.24/compute/v2.1/servers/detail', this.config)
                 .then(res => {
-                    //console.log('res.data');
+                    console.log(res.data);
                     //console.log(res.data.servers);
                     //console.log(res.data.servers[0].name);
                     this.servers = res.data.servers;
                 })
                 .catch(error => {
-                    console.log(error)
+                    console.log('Error ',error);
                 });
         }
     }
