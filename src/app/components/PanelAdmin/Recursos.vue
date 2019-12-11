@@ -183,41 +183,54 @@
                                 </div>
                                 <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionPU">
                                     <div class="card-body">
-                                        <table class="table-responsive-xl table-striped table-hover w-auto">
+                                        <table class="table-responsive-xl table-striped table-hover w-auto text-center">
                                             <thead class="thead-dark">
                                                 <tr>
                                                 <th scope="col">#</th>
+                                                <th scope="col">Proyecto</th>
                                                 <th scope="col">Propietario</th>
                                                 <th scope="col">Nombre VM</th>
+                                                <th scope="col">Creado</th>
                                                 <th scope="col">SO</th>
-                                                <th scope="col">Versión</th>
                                                 <th scope="col">Almacenamiento</th>
                                                 <th scope="col">RAM</th>
                                                 <th scope="col">CPU</th>
                                                 <th scope="col">Interfaces</th>
                                                 <th scope="col">IP</th>
                                                 <th scope="col">Estado</th>
-                                                <th scope="col">-</th>
+                                                <th scope="col">Acciones</th>
                                                 </tr>
                                             </thead>
-                                            <tbody v-for="server of servers" v-bind:key="server.id" >
+                                            <tbody v-for="(server, index) in servers" v-bind:key="server.id" >
                                                 <tr>
-                                                <th scope="row">1</th>
+                                                <th>{{index+1}}</th>
+                                                <td>-</td>
                                                 <td>-</td>
                                                 <td>{{server.name}}</td>
+                                                <td>{{server.created}}</td>
+                                                <td>-</td>
+                                                <td><button type="button" class="btn btn-link" data-toggle="tooltip" data-placement="top" title="Recursos">Recursos</button></td>
                                                 <td>-</td>
                                                 <td>-</td>
                                                 <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
+                                                <td>{{server.addresses}}</td>
                                                 <td>{{server.status}}</td>
                                                 <td>
                                                     <div class="btn-group-sm" role="group" aria-label="Basic example">
-                                                    <button type="button" class="btn btn-success">Encender</button>
-                                                    <button type="button" class="btn btn-danger">Apagar</button>
-                                                </div>
+                                                        <div>
+                                                            <!-- Material switch -->
+                                                            <div class="checkbox">
+                                                            <label>
+                                                                <button type="button" class="btn btn-sm btn-secondary btn-toggle" data-toggle="button" aria-pressed="false" autocomplete="off">
+                                                                <div class="handle"></div>
+                                                            </button>
+                                                            </label>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-primary">Editar</button>
+                                                        <button type="button" class="btn btn-danger">Eliminar</button>
+                                                        <button type="button" class="btn btn-success">Consola</button>
+                                                    </div>
                                                 </td>
                                                 </tr>
 
@@ -266,7 +279,6 @@ class VM{
 export default{
     data(){
         return{
-            servers:[],
             config:{
                 headers:{
                 'X-Auth-Token':Token,
@@ -277,13 +289,15 @@ export default{
                 'Content-Type': 'application/json'
                 }
             },
-            id:'d3'
+            servers:[],
+            addresses:[]
         }
     },
     created(){
         //this.getFlavor();
-        //this.getServers();
+        this.getServers();
         this.getOneFlavor();
+        this.getProject();
     },
     components:{
         'SidebarAdmin': SidebarAdmin,
@@ -304,27 +318,41 @@ export default{
             })
         },
         //Se obtiene un solo flavor
-        getOneFlavor(dato){
+        getOneFlavor(){
             console.log('Se ingresa  getOneFlavor')
-            let data={id:'d3'}
-            axios.get('http://10.55.2.24/compute/v2.1/flavors/d3' ,this.config)
-            .then(function (res) {
-                console.log('Se muestra la respuesta del axios')
-                console.log(res.data)
-            })
-            .catch(function (error) {
-                // handle error
-                console.log('Error ',error);
-            })
+            axios.get('http://10.55.2.24/compute/v2.1/flavors/d3', this.config)
+                .then(res => {
+                    console.log(res.data);
+                    //console.log(res.data.servers);
+                })
+                .catch(error => {
+                    console.log('Error ',error);
+                });
         },
         //Se obtiene un arreglo con todos los servidores
         getServers(){
-            this.axios.get('http://10.55.2.24/compute/v2.1/servers/detail', this.config)
+            console.log('Se ingresa  getServers')
+            axios.get('http://10.55.2.24/compute/v2.1/servers/detail?all_tenants=True', this.config)
                 .then(res => {
                     console.log(res.data);
                     //console.log(res.data.servers);
                     //console.log(res.data.servers[0].name);
                     this.servers = res.data.servers;
+                    this.addresses = res.data.servers[0].addresses;
+                })
+                .catch(error => {
+                    console.log('Error ',error);
+                });
+        },
+        //Se obtiene el proyecto para nombre de proyecto
+        //Usar tenant_id
+        getProject(){
+            console.log('Se ingresa  getProject')
+            axios.get('http://10.55.2.24/identity/v3/projects/5bf6c3433ee0474eaff89028179bbf2d', this.config)
+                .then(res => {
+                    console.log(res.data);
+                    //console.log(res.data.servers);
+                    //console.log(res.data.servers[0].name);
                 })
                 .catch(error => {
                     console.log('Error ',error);
