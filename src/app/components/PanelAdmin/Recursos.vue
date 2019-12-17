@@ -133,7 +133,7 @@
                                 <div class="card-header" id="headingTwo">
                                 <h5 class="mb-0">
                                     <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    Recursos de Usuarios
+                                    Proyectos Openstack
                                     </button>
                                 </h5>
                                 </div>
@@ -143,8 +143,8 @@
                                             <thead class="thead-dark">
                                                 <tr>
                                                 <th scope="col">#</th>
+                                                <th scope="col">Nombre</th>
                                                 <th scope="col">Propietario</th>
-                                                <th scope="col">Proyecto</th>
                                                 <th scope="col">Descripción</th>
                                                 <th scope="col">Almacenamiento</th>
                                                 <th scope="col">RAM</th>
@@ -154,12 +154,11 @@
                                                 <th scope="col">Fecha fin</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody v-for="(project, index) in projects" v-bind:key="project.id">
                                                 <tr>
-                                                <th scope="row">1</th>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
+                                                <th scope="row">{{index+1}}</th>
+                                                <td>{{project.name}}</td>
+                                                <td>{{project.description}}</td>
                                                 <td>-</td>
                                                 <td>-</td>
                                                 <td>-</td>
@@ -192,10 +191,9 @@
                                                 <th scope="col">Nombre VM</th>
                                                 <th scope="col">Creado</th>
                                                 <th scope="col">SO</th>
-                                                <th scope="col">Almacenamiento</th>
+                                                <th scope="col">Disco</th>
                                                 <th scope="col">RAM</th>
                                                 <th scope="col">CPU</th>
-                                                <th scope="col">Interfaces</th>
                                                 <th scope="col">IP</th>
                                                 <th scope="col">Estado</th>
                                                 <th scope="col">Acciones</th>
@@ -204,16 +202,28 @@
                                             <tbody v-for="(server, index) in servers" v-bind:key="server.id" >
                                                 <tr>
                                                 <th>{{index+1}}</th>
-                                                <td>-</td>
+                                                <!--<td>{{getOneProject(server.tenant_id)}}</td> -->
+                                                <td>{{server.tenant_id}}</td>
                                                 <td>-</td>
                                                 <td>{{server.name}}</td>
                                                 <td>{{server.created}}</td>
-                                                <td>-</td>
-                                                <td><button type="button" class="btn btn-link" data-toggle="tooltip" data-placement="top" title="Recursos">Recursos</button></td>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>{{server.addresses}}</td>
+                                                <!--<td><template v-if="server.image.id">
+                                                    {{server.image.id}}
+                                                    </template>
+                                                    <template v-else> - </template>
+                                                </td>-->
+                                                <td>{{server.image.id}}</td>
+                                                <td>{{flavor[0]}}</td>
+                                                <td>{{flavor[1]}}</td>
+                                                <td>{{flavor[2]}}</td>
+                                                <td>
+                                                    <template v-if="server.addresses.shared">{{server.addresses.shared[0].addr}}</template>
+                                                    <template v-else-if="server.addresses.aiotest">{{server.addresses.aiotest[0].addr}}</template>
+                                                    <template v-else-if="server.addresses.aio2">{{server.addresses.aio2[0].addr}}</template>
+                                                    <template v-else-if="server.addresses.aio1">{{server.addresses.aio1[0].addr}}</template>
+                                                    <template v-else-if="server.addresses.NetOpenstackDist">{{server.addresses.NetOpenstackDist[0].addr}}</template>
+                                                    <template v-else> - </template>
+                                                </td>
                                                 <td>{{server.status}}</td>
                                                 <td>
                                                     <div class="btn-group-sm" role="group" aria-label="Basic example">
@@ -268,14 +278,7 @@ import axios from 'axios'
 import SidebarAdmin from './SidebarAdmin.vue'
 import Token from '!!raw-loader!../PanelAdmin/Token.txt'
 import LineChart from './Chart/LineChart.vue'
-/*
-class VM{
-    constructor(propietario,nombre_vm,SO,almacenamiento,RAM,CPU,interfaces,ip,description){
-        this.title = title;
-        this.description= description;
-    }
-}
-*/
+
 export default{
     data(){
         return{
@@ -290,73 +293,98 @@ export default{
                 }
             },
             servers:[],
-            addresses:[]
+            projects:[],
+            flavor:[]
         }
     },
     created(){
-        //this.getFlavor();
         this.getServers();
-        this.getOneFlavor();
-        this.getProject();
+        this.getProjects();
     },
     components:{
         'SidebarAdmin': SidebarAdmin,
         'LineChart': LineChart
     },
-    methods:{
-        //Se obtienen todos los flavors
-        getFlavor(){
-            console.log('Se ingresa a getFlavor')
-            axios.get('http://10.55.2.24/compute/v2.1/flavors/detail', this.config)
-            .then(function (res) {
-                console.log('Se muestra la respuesta del axios')
-                console.log(res.data)
-            })
-            .catch(function (error) {
-                // handle error
-                console.log('Error ', error);
-            })
-        },
-        //Se obtiene un solo flavor
-        getOneFlavor(){
-            console.log('Se ingresa  getOneFlavor')
-            axios.get('http://10.55.2.24/compute/v2.1/flavors/d3', this.config)
-                .then(res => {
-                    console.log(res.data);
-                    //console.log(res.data.servers);
-                })
-                .catch(error => {
-                    console.log('Error ',error);
-                });
-        },
+    methods:{        
         //Se obtiene un arreglo con todos los servidores
-        getServers(){
+         getServers: async function(){
             console.log('Se ingresa  getServers')
-            axios.get('http://10.55.2.24/compute/v2.1/servers/detail?all_tenants=True', this.config)
+            let server
+            await axios.get('http://10.55.2.24/compute/v2.1/servers/detail?all_tenants=True', this.config)
                 .then(res => {
-                    console.log(res.data);
+                    //console.log(res.data);
                     //console.log(res.data.servers);
                     //console.log(res.data.servers[0].name);
                     this.servers = res.data.servers;
-                    this.addresses = res.data.servers[0].addresses;
                 })
-                .catch(error => {
-                    console.log('Error ',error);
-                });
+                .catch(error => { console.log('Error ',error); });
+                for await ( server of this.servers){
+                    server.tenant_id = await this.getOneProject(server.tenant_id);
+                    if (server.image.id) {
+                        server.image.id = await this.getOneImage(server.image.id);                        
+                    }
+                    else{
+                        server.image.id =server.image.id; 
+                    }
+                    await this.getOneFlavor(server.flavor.id);                    
+                    //console.log(this.flavor)
+                }
         },
-        //Se obtiene el proyecto para nombre de proyecto
-        //Usar tenant_id
-        getProject(){
-            console.log('Se ingresa  getProject')
-            axios.get('http://10.55.2.24/identity/v3/projects/5bf6c3433ee0474eaff89028179bbf2d', this.config)
+        //Se obtiene el proyecto para nombre de proyecto. --Usar tenant_id--
+        getOneProject: async function(id){
+            let answer
+            //console.log('Se ingresa  getOneProject')
+            await axios.get('http://10.55.2.24/identity/v3/projects/'+id,this.config)
                 .then(res => {
-                    console.log(res.data);
-                    //console.log(res.data.servers);
-                    //console.log(res.data.servers[0].name);
+                    //console.log(res.data.project.name)
+                    answer= res.data.project.name;
                 })
-                .catch(error => {
+                .catch(error => { 
                     console.log('Error ',error);
-                });
+                    answer="error";
+                    });
+            return answer;
+        },
+        getOneImage: async function(id){
+            let answer
+            //console.log('Se ingresa  getOneImage')
+            await axios.get('http://10.55.2.24/image/v2/images/'+id,this.config)
+                .then(res => {
+                    //console.log(res)
+                    //console.log(res.data.name)
+                    answer= res.data.name;
+                })
+                .catch(error => { 
+                    console.log('Error ',error);
+                    answer="error";
+                    });
+            return answer;
+        },
+        //Se obtiene un solo flavor
+        getOneFlavor: async function(id){
+            //let answer 
+            this.flavor=[];
+            //console.log('Se ingresa  getOneFlavor')
+            return axios.get('http://10.55.2.24/compute/v2.1/flavors/'+id, this.config)
+                .then(res => {
+                    //console.log(res.data);
+                    this.flavor[0] = res.data.flavor.disk;
+                    this.flavor[1] = res.data.flavor.ram;
+                    this.flavor[2] = res.data.flavor.vcpus;
+                })
+                .catch(error => { console.log('Error ',error); });
+                //return flavor;
+        },
+        //
+        //
+        getProjects: async function(){
+            console.log('Se ingresa  getProjects')
+            await axios.get('http://10.55.2.24/identity/v3/projects/', this.config)
+                .then(res => {
+                    //console.log(res.data.projects);
+                    this.projects = res.data.projects;
+                })
+                .catch(error => { console.log('Error ',error); });                
         }
     }
 }
