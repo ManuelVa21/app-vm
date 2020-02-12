@@ -1,11 +1,11 @@
 #!/bin/sh
 
-export OS_USERNAME=gestion_tesis
+export OS_USERNAME=gestion
 export OS_PROJECT_NAME=Gestion_Tesis
 export OS_PROJECT_DOMAIN_NAME=default
 export OS_USER_DOMAIN_NAME=Default
 export OS_PASSWORD=gestionroot
-export OS_AUTH_URL=http://10.55.2.24/identity/v3
+export OS_AUTH_URL=http://10.55.2.24/identity
 
 
 TMPFILE=`mktemp`

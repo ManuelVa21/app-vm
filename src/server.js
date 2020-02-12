@@ -23,12 +23,12 @@ app.use(bodyParser.json());
 
 /*Routes*/
 //app.use('/api/tasks',require('./routes/tasks'));
-app.use('/alertas_notificaciones', require('./routes/alertas_notificaciones'));
-app.use('/pool_recursos', require('./routes/pool_recursos'));
-app.use('/recursos_telco', require('./routes/recursos_telco'));
-app.use('/solicitudes', require('./routes/solicitudes'));
-app.use('/sugerencias', require('./routes/sugerencias'));
-app.use('/usuarios', require('./routes/usuarios'));
+app.use('/api/alertas_notificaciones', require('./routes/alertas_notificaciones'));
+app.use('/api/pool_recursos', require('./routes/pool_recursos'));
+app.use('/api/recursos_telco', require('./routes/recursos_telco'));
+app.use('/api/solicitudes', require('./routes/solicitudes'));
+app.use('/api/sugerencias', require('./routes/sugerencias'));
+app.use('/api/usuarios', require('./routes/usuarios'));
 
 //Static files
 app.use(express.static(path.join(__dirname, 'public')));

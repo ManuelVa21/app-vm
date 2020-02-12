@@ -235,6 +235,7 @@
                                 </div>
                                 <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionPU">
                                     <div class="card-body">
+                                        <button v-on:click="addServer()" type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Agregar máquina"><i class="fas fa-plus"></i></button>
                                         <table class="table-responsive-xl table-striped table-hover w-auto text-center">
                                             <thead class="thead-dark">
                                                 <tr>
@@ -319,7 +320,8 @@ import VueRouter from 'vue-router'
 import axios from 'axios'
 import SidebarAdmin from './SidebarAdmin.vue'
 import Token from '!!raw-loader!../PanelAdmin/Token.txt'
-import LineChart from './Chart/LineChart.vue'
+import LineChart from './Chart/LineChart.vue';
+const configG = require('../../../config')
 
 class Project{
     constructor(nombre,descripcion){
@@ -333,12 +335,15 @@ export default{
         return{
             config:{
                 headers:{
+                'User-Agent': 'python-keystoneclient',
                 'X-Auth-Token':Token,
                 'Access-Control-Allow-Origin': '10.55.6.39',
                 'Access-Control-Allow-Credentials':'true',
                 'Access-Control-Expose-Headers': 'Authorization',
                 'Access-Control-Max-Age':'86400',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-OpenStack-Nova-API-Version': '2.1' 
                 }
             },
             project: new Project(),
@@ -362,9 +367,9 @@ export default{
          getServers: async function(){
             let server
             //console.log('Se ingresa a getServers')
-            await axios.get('http://10.55.2.24/compute/v2.1/servers/detail?all_tenants=True', this.config)
+            await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/servers/detail?all_tenants=True', this.config)
                 .then(res => {
-                    //console.log(res.data.servers);
+                    console.log(res.data.servers);
                     this.servers = res.data.servers;
                     //console.log(res.data.servers[4].addresses);
                 })
@@ -384,7 +389,7 @@ export default{
         getOneProject: async function(id){
             let answer
             //console.log('Se ingresa  getOneProject')
-            await axios.get('http://10.55.2.24/identity/v3/projects/'+id,this.config)
+            await axios.get('http://'+configG.ipOpenstack+'/identity/v3/projects/'+id,this.config)
                 .then(res => {
                     //console.log(res.data.project.name)
                     answer= res.data.project.name;
@@ -398,7 +403,7 @@ export default{
         getOneImage: async function(id){
             let answer
             //console.log('Se ingresa  getOneImage')
-            await axios.get('http://10.55.2.24/image/v2/images/'+id,this.config)
+            await axios.get('http://'+configG.ipOpenstack+'/image/v2/images/'+id,this.config)
                 .then(res => {
                     //console.log(res)
                     //console.log(res.data.name)
@@ -414,7 +419,7 @@ export default{
         getOneFlavor: async function(id){
             let answer=[] 
             //console.log('Se ingresa  getOneFlavor')
-            await axios.get('http://10.55.2.24/compute/v2.1/flavors/'+id, this.config)
+            await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/flavors/'+id, this.config)
                 .then(res => {
                     //console.log(res.data);
                     answer[0] = res.data.flavor.disk;
@@ -427,7 +432,7 @@ export default{
         //
         //
         getProjects: async function(){
-            await axios.get('http://10.55.2.24/identity/v3/projects/', this.config)
+            await axios.get('http://'+configG.ipOpenstack+'/identity/v3/projects/', this.config)
                 .then(res => {
                     //console.log(res.data.projects);
                     this.projects = res.data.projects;
@@ -439,7 +444,7 @@ export default{
         //Recursos Telco
         getrecursosTelco: async function(){
             //console.log('Se ingresa a recursosTelco')
-            await axios.get('http://10.55.2.24/compute/v2.1/os-hypervisors/detail', this.config)
+            await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/os-hypervisors/detail', this.config)
                 .then(res => {
                     //console.log(res.data.hypervisors[0]);
                     this.recursosTs = res.data.hypervisors;
@@ -455,7 +460,7 @@ export default{
                     "type": "novnc"
                 }
             };
-            await axios.post('http://10.55.2.24/compute/v2.1/servers/'+idServer+'/action',data,this.config)
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
                 .then(res => {
                     //console.log(res.data)
                     window.open(res.data.console.url)
@@ -464,7 +469,7 @@ export default{
         },
         deleteServer: async function(idServer){
             //console.log('Se ingresa a deleteServer')
-            await axios.delete('http://10.55.2.24/compute/v2.1/servers/'+idServer,this.config)
+            await axios.delete('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer,this.config)
                 .then(res => {
                     console.log(res.data)
                 })
@@ -472,7 +477,7 @@ export default{
                 this.getServers();
         },
         deleteProject: async function(idProject){
-            await axios.delete('http://10.55.2.24/identity/v3/projects/'+idProject,this.config)
+            await axios.delete('http://'+configG.ipOpenstack+'/identity/v3/projects/'+idProject,this.config)
                 .then(res => {
                     console.log(res.data)
                 })
@@ -480,9 +485,43 @@ export default{
                 this.getProjects();
         },
         addProject: async function(){
-            console.log('Se ingresa a addProject')
-            console.log(this.project.nombre)
-            console.log(this.project.descripcion)
+            //console.log('Se ingresa a addProject')
+            let data={
+                "project": {
+                    "tags": [], 
+                    "enabled": true, 
+                    "description": this.project.descripcion, 
+                    "name": this.project.nombre
+                }
+            };
+            await axios.post('http://'+configG.ipOpenstack+'/identity/v3/projects',data,this.config)
+                .then(res => {
+                    //console.log(res.data)
+                })
+                .catch(error => { console.log('Error ',error); });
+                this.getProjects();
+                this.project = new Project();
+        },
+        addServer: async function(){
+            console.log('Se ingresa a addServer')
+            let data={
+                "server": {
+                    "name": "pruebaconhost",
+                    "OS-DCF:diskConfig": "AUTO", 
+                    "imageRef": "4ea30d31-e460-428e-9a32-4de90cabca2d", 
+                    "flavorRef": "d1", 
+                    "max_count": 1, 
+                    "min_count": 1,
+                    "host": "bl3-ProLiant-BL460c-Gen10",  
+                    "networks": [{"uuid": "f8ac43ad-01cb-44e4-806c-112cd26b0fdb"}]
+                }
+            };
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers ',data,this.config)
+                .then(res => {
+                    console.log(res.data)
+                })
+                .catch(error => { console.log('Error ',error); });
+                this.getServers();
         },
         backup: async function(idServer){
             console.log('Se ingresa a backup')

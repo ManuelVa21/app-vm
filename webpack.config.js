@@ -10,10 +10,13 @@ module.exports = {
     module:{
         rules:[
             {
-                test: /\.js$/,
+                test: /\.m?js$/,
                 exclude: /node_modules/,
                 use:{
-                    loader:'babel-loader'
+                    loader:'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env']
+                      }
                 }
             },
             {
@@ -21,7 +24,11 @@ module.exports = {
                 exclude: /node_modules/,
                 loader: 'vue-loader'
             },
-            { test: /\.txt$/, use: 'raw-loader' }
+            { 
+                test: /\.txt$/,
+                exclude: /node_modules/, 
+                use: 'raw-loader' 
+            }
         ]
     },
     plugins:[

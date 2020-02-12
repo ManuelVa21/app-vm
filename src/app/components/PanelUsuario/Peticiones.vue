@@ -20,71 +20,58 @@
                                 </div>
                                 <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionPU">
                                     <div class="card-body">
-                                        <p>Seleccione las características de su pool de recursos</p>
-                                        <form >
-                                            <div class="form-row">
-                                                <div class="form-group col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="SO">Sistema Operativo</label>
-                                                        <select type="SO" class="form-control" id="SO">
-                                                            <option selected>Seleccione el SO</option>
-                                                            <option>1</option>
-                                                            <option>2</option>
-                                                            <option>3</option>
-                                                        </select>
-                                                    </div>                                                    
-                                                    <div class="form-group">
-                                                        <label for="Disco">Almacenamiento</label>
-                                                        <select type="Disco" class="form-control" id="Disco">
-                                                            <option selected>Seleccione disco duro</option>
-                                                            <option>1</option>
-                                                            <option>2</option>
-                                                            <option>3</option>
-                                                        </select>
-                                                    </div>                                                    
-                                                    <div class="form-group">
-                                                        <label for="CPU">Número de Procesadores</label>
-                                                        <select type="CPU" class="form-control" id="CPU">
-                                                            <option selected>Seleccione procesadores</option>
-                                                            <option>1</option>
-                                                            <option>2</option>
-                                                            <option>3</option>
-                                                        </select>
-                                                    </div>                                                    
+                                        <form @submit.prevent="sendSolicitudPool">                                        
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading font-weight-bold">Información básica del proyecto</div>
+                                                    <div class="panel-body">
+                                                        <div class="form-row">
+                                                            <div class="form-group col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="nombre">Nombre del proyecto</label>
+                                                                <input v-model="solicitudpool.nombrep" type="text" class="form-control" id="nombre" placeholder="Ingrese nombre del proyecto">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="nombretu">Nombre del tutor</label>
+                                                                <input v-model="solicitudpool.tutorp" type="text" class="form-control" id="nombretu" placeholder="Ingrese nombre del tutor">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="des">Descripción</label>
+                                                                <textarea v-model="solicitudpool.descripcionp" name="" id="des" cols="30" rows="10" placeholder="Ingrese descripción del proyecto"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="pass">Contraseña</label>
+                                                                <input v-model="solicitudpool.contrasenap" type="password" class="form-control" id="pass" placeholder="Ingrese contraseña">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="emailtu">Correo tutor</label>
+                                                                <input v-model="solicitudpool.correotp" type="email" class="form-control" id="emailtu" placeholder="Ingrese Correo del tutor">
+                                                            </div>
+                                                        </div>
+                                                        </div>                                                        
+                                                    </div>
                                                 </div>
-                                                <div class="form-group col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="Version">Versión o distribución</label>
-                                                        <select type="SO" class="form-control" id="SO">
-                                                            <option selected>Seleccione la versión</option>
-                                                            <option>1</option>
-                                                            <option>2</option>
-                                                            <option>3</option>
-                                                        </select>
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading font-weight-bold">Información Adicional</div>
+                                                    <div class="panel-body">
+                                                        <div class="form-row">
+                                                            <div class="form-group col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="numvm">Número de mááquinas virtuales</label>
+                                                                <input v-model="solicitudpool.numvm" type="number" class="form-control" id="numvm" placeholder="Ingrese el número de máquinas virtuales necesarias">
+                                                            </div>                                                            
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="fechafin">Fecha finalización del servicio</label>
+                                                                <input v-model="solicitudpool.fechafin" type="date" id="fechafin" value="2020-01-01" min="2020-01-01" max="2025-12-31">
+                                                            </div>
+                                                        </div>
+                                                        </div>                                                        
                                                     </div>
-                                                    <div class="form-group">
-                                                        <label for="RAM">Memoria RAM</label>
-                                                        <select type="RAM" class="form-control" id="RAM">
-                                                            <option selected>Seleccione RAM</option>
-                                                            <option>1</option>
-                                                            <option>2</option>
-                                                            <option>3</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="CPU">Fecha Finalización</label>
-                                                        <select type="CPU" class="form-control" id="CPU">
-                                                            <option selected>Seleccione fecha fin</option>
-                                                            <option>1</option>
-                                                            <option>2</option>
-                                                            <option>3</option>
-                                                        </select>
-                                                    </div> 
-
-                                                </div>                                               
-
-                                            </div>
-                                            <div class="text-center"><button type="submit" class="btn btn-primary">Enviar</button></div>
+                                                </div>
+                                            <div class="text-center"><button type="submit" class="btn btn-primary">Enviar</button></div>                                        
                                         </form>
                                     </div>
                                 </div>
@@ -188,11 +175,61 @@
 
 <script>
 import VueRouter from 'vue-router'
+import axios from 'axios'
 import SidebarUsuario from './SidebarUsuario.vue'
 
+class SolocitudPool{
+    constructor(nombrep,contrasenap,descripcionp,tutorp,correotp,numvm,fechafin){
+        this.nombrep = nombrep;
+        this.contrasenap = contrasenap;
+        this.descripcionp = descripcionp;
+        this.tutorp = tutorp;
+        this.correotp = correotp;
+        this.numvm = numvm;
+        this.fechafin= fechafin;
+    }
+}
+
 export default {
+    data(){
+        return{
+            config:{
+                headers:{
+                //'Content-Type': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'application/json',
+                "Access-Control-Allow-Origin":"*"
+                }
+            },
+            solicitudpool: new SolocitudPool()
+        }
+    },
+    created(){
+
+    },
     components:{
         'SidebarUsuario': SidebarUsuario  
+    },
+    methods:{
+        sendSolicitudPool: async function(){
+            console.log('Se ingresa a send Solicitud pool recursos')
+            console.log(this.solicitudpool)
+            let data={                
+                "tipo": "Pool de recursos",
+                "nombre_proyecto": this.solicitudpool.nombrep,
+                "contrasenap": this.solicitudpool.contrasenap,
+                "descripcion": this.solicitudpool.descripcionp,
+                "tutor": this.solicitudpool.tutorp,
+                "correo_tutor": this.solicitudpool.correotp,
+                "numero_maquinas": this.solicitudpool.numvm,
+                "fecha_fin": this.solicitudpool.fechafin
+            };
+            await axios.post('/api/solicitudes',data,this.config)
+                .then(res => {
+                    console.log(res)                    
+                })
+                .catch(error => { console.log('Error ',error); });
+        }
     }
 }
 </script>

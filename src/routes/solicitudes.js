@@ -1,28 +1,45 @@
-const express = require('express');
-const router = express.Router();
+var express = require('express');
+var router = express.Router();
 
-const solicitudes = require('../models/solicitudes');
-
+var Solicitudes = require('../models/solicitudes');
+//import Solicitudes from '../models/solicitudes';
 //Para obtener la lista de solicitudes
 router.get('/', async (req,res) =>{
-    await solicitudes.find(function(err, solicitudes){
+    await Solicitudes.find(function(err, solicitudes){
         if (err) {throw errr;}
         else{
-            res.json(solicitudes);
+            //res.json(solicitudes);
+            console.log('Se muestra la respuesta del get')
+            console.log(res)
+            console.log('Se muestra la respuesta del get solicitudes')
+            console.log(solicitudes)
         }
     })
+    .catch(err =>{
+        res.status(400).send({solicitudes: 'Error al procesar'});
+    });
 });
 
 //Para enviar del cliente a la bd
-router.post('/', async (req, res) => {
+router.post('/PanelUsuario/Peticiones', async (req, res) => {
     //Guardar el dato que envia el navegador
-    const solicitudes = new solicitudes(req.body);
-    await solicitudes.save()
-    .then(solicitudes => {
-        res.status(200).json({solicitudes: 'Solicitud enviada correctamente'});
+    console.log('Se mira el request')
+    console.log(req)
+    console.log('Se mira el request.body')
+    console.log(req.body)
+    console.log('Se mira el request.query')
+    console.log(req.query)
+    var Solicitudes = new Solicitudes(req.body);
+    await Solicitudes.save()
+    .then(res => {
+        console.log('Se muestra el res despues del await')
+        console.log(res)
+        //res.status(200).json({solicitudes: 'Solicitud enviada correctamente'});
     })
     .catch(err =>{
-        res.status(400).send({solicitudes: 'Error al enviar solicitud'});
+        console.log('se muestra el error del await')
+        console.log('Error ',err)
+        //res.status(400).send({solicitudes: 'Error al enviar solicitud'});
     });
 });
 
@@ -56,6 +73,9 @@ router.delete('/:id', async (req,res)=>{
             res.json('Se elimino satisfactoriamente la solicitud');
         }
     })
+    .catch(err =>{
+        res.status(400).send({solicitudes: 'Error al procesar'});
+    });
 });
 
 module.exports = router;
