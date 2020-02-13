@@ -8,7 +8,7 @@ const mongoose = require ('mongoose');
 const app=express();
 
 //mongoose.Promise =global.Promise;
-mongoose.connect('mongodb://localhost:27017/appdatabase',{ useUnifiedTopology: true, useNewUrlParser: true })
+mongoose.connect('mongodb://localhost/gestiontelco',{ useUnifiedTopology: true, useNewUrlParser: true })
     .then(db => console.log('DB is connected'))
     .catch(err => console.log(err));
 
@@ -29,9 +29,10 @@ app.use('/api/recursos_telco', require('./routes/recursos_telco'));
 app.use('/api/solicitudes', require('./routes/solicitudes'));
 app.use('/api/sugerencias', require('./routes/sugerencias'));
 app.use('/api/usuarios', require('./routes/usuarios'));
-
+app.use('/api/test', require('./routes/test'));
 //Static files
 app.use(express.static(path.join(__dirname, 'public')));
+//app.use(express.static(__dirname + '/public'));
 
 /*Server y listening */
 app.listen(app.get('port'), () => {

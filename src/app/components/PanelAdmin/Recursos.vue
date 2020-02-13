@@ -265,7 +265,8 @@
                                                 <td>{{server.flavor.id[1]+' Gb'}}</td>
                                                 <td>{{server.flavor.id[2]+' vcpu'}}</td>
                                                 <td>
-                                                    <!-- -->
+                                                    {{server.addresses[Object.keys(server.addresses)[0]][1].addr}}
+                                                    <!-- 
                                                     <template v-if="server.addresses.shared">{{server.addresses.shared[0].addr}}</template>
                                                     <template v-else-if="server.addresses.privada">{{server.addresses.privada[0].addr}}</template>
                                                     <template v-else-if="server.addresses.aiotest">{{server.addresses.aiotest[0].addr}}</template>
@@ -273,6 +274,7 @@
                                                     <template v-else-if="server.addresses.aio1">{{server.addresses.aio1[0].addr}}</template>
                                                     <template v-else-if="server.addresses.NetOpenstackDist">{{server.addresses.NetOpenstackDist[0].addr}}</template>
                                                     <template v-else> - </template>
+                                                    -->
                                                 </td>
                                                 <td>{{server.status}}</td>
                                                 <td>

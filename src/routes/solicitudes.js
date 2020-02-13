@@ -1,7 +1,7 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var Solicitudes = require('../models/solicitudes');
+const Solicitudes = require('../models/solicitudes');
 //import Solicitudes from '../models/solicitudes';
 //Para obtener la lista de solicitudes
 router.get('/', async (req,res) =>{
@@ -13,6 +13,7 @@ router.get('/', async (req,res) =>{
             console.log(res)
             console.log('Se muestra la respuesta del get solicitudes')
             console.log(solicitudes)
+            res.send()
         }
     })
     .catch(err =>{
@@ -20,8 +21,13 @@ router.get('/', async (req,res) =>{
     });
 });
 
+router.post('/l', async (req,res) =>{
+        console.log(req)
+        res.send(Object.keys(req))
+});
+
 //Para enviar del cliente a la bd
-router.post('/PanelUsuario/Peticiones', async (req, res) => {
+router.post('/', async (req, res) => {
     //Guardar el dato que envia el navegador
     console.log('Se mira el request')
     console.log(req)
@@ -29,7 +35,7 @@ router.post('/PanelUsuario/Peticiones', async (req, res) => {
     console.log(req.body)
     console.log('Se mira el request.query')
     console.log(req.query)
-    var Solicitudes = new Solicitudes(req.body);
+    const Solicitudes = new Solicitudes(req.body);
     await Solicitudes.save()
     .then(res => {
         console.log('Se muestra el res despues del await')
