@@ -1,4 +1,4 @@
-    <!-- -->
+ <!-- -->
 <template>
 <div>
     <div class="container">
@@ -27,11 +27,9 @@
 </template>
 
 <script>
-
 import VueRouter from 'vue-router'
 import axios from 'axios'
 import EventBus from './EventBus.vue'
-
 export default{
     //name: 'Login',
     data(){
@@ -92,7 +90,6 @@ export default{
                 console.log(res)
                 self.respu = res.data;
                 console.log('mostrar res.data');
-
                 //console.log(self.respu);
                 return self.respu;
             })
@@ -106,4 +103,3 @@ export default{
 }
 </script>
     <!--   -->
-

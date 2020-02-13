@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const Solicitudes = require('../models/solicitudes');
-//import Solicitudes from '../models/solicitudes';
+
 //Para obtener la lista de solicitudes
 router.get('/', async (req,res) =>{
     await Solicitudes.find(function(err, solicitudes){
