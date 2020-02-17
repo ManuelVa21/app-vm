@@ -11,7 +11,7 @@ router.get('/',async(req,res) =>{
 
 router.post('/',async (req,res) =>{
     console.log(req.body)
-    const test = new Test()
+    const test = new Test(req.body)
     await test.save();
     res.json(
         {
@@ -20,5 +20,13 @@ router.post('/',async (req,res) =>{
         }
     );
  });
+ router.delete('/', async (req,res) => {
+    console.log('Se va a eliminar')
+    console.log(req.query._id)
+    await Test.findByIdAndRemove(req.query._id);
+    res.json({
+        status: 'Tarea eliminada'
+    });
+ })
 
 module.exports = router;

@@ -5,51 +5,35 @@ const Solicitudes = require('../models/solicitudes');
 
 //Para obtener la lista de solicitudes
 router.get('/', async (req,res) =>{
-    await Solicitudes.find(function(err, solicitudes){
-        if (err) {throw errr;}
-        else{
-            //res.json(solicitudes);
-            console.log('Se muestra la respuesta del get')
-            console.log(res)
-            console.log('Se muestra la respuesta del get solicitudes')
-            console.log(solicitudes)
-            res.send()
+    try {
+        console.log('Se muestra la respuesta del get')
+        const solicitudes = await Solicitudes.find();
+        if (!solicitudes) {
+            res.json({ status:404, content:solicitudes })            
+        } else {
+            res.json({ status:200, content:solicitudes })            
         }
-    })
-    .catch(err =>{
-        res.status(400).send({solicitudes: 'Error al procesar'});
-    });
-});
-
-router.post('/l', async (req,res) =>{
-        console.log(req)
-        res.send(Object.keys(req))
+    } catch (error) {
+        res.json({ status:400, content:error })
+    }
 });
 
 //Para enviar del cliente a la bd
 router.post('/', async (req, res) => {
-    //Guardar el dato que envia el navegador
-    console.log('Se mira el request')
-    console.log(req)
-    console.log('Se mira el request.body')
-    console.log(req.body)
-    console.log('Se mira el request.query')
-    console.log(req.query)
-    const Solicitudes = new Solicitudes(req.body);
-    await Solicitudes.save()
-    .then(res => {
-        console.log('Se muestra el res despues del await')
-        console.log(res)
-        //res.status(200).json({solicitudes: 'Solicitud enviada correctamente'});
-    })
-    .catch(err =>{
-        console.log('se muestra el error del await')
-        console.log('Error ',err)
-        //res.status(400).send({solicitudes: 'Error al enviar solicitud'});
-    });
+    try {
+        console.log('Se mira el request')
+        console.log(req.body)
+        const solicitudes = new Solicitudes(req.body)
+        await solicitudes.save();
+        res.json({ status:'200', answer:"Solicitud Creada" });
+        
+    } catch (error) {
+        res.json({ status:400, content:error })
+    }
 });
 
 //Para actualizar los datos
+/*
 router.put('/:id', async (req, res, next) =>{
     await solicitudes.findById(req.params.id), function(err,solicitudes){
         if (!solicitudes) {
@@ -70,18 +54,14 @@ router.put('/:id', async (req, res, next) =>{
         }
     }
 });
+*/
 
 //Para eliminar datos
-router.delete('/:id', async (req,res)=>{
-    await solicitudes.findByIdAndRemove(req.params.id, function(err,solicitudes){
-        if (err) { res.json(err);}
-        else{
-            res.json('Se elimino satisfactoriamente la solicitud');
-        }
-    })
-    .catch(err =>{
-        res.status(400).send({solicitudes: 'Error al procesar'});
-    });
+router.delete('/', async (req,res)=>{
+    console.log('Se va a eliminar')
+    console.log(req)
+    await Solicitudes.findByIdAndRemove(req.params.id);
+    res.json({ status:'200', answer:"Server Delete" });
 });
 
 module.exports = router;

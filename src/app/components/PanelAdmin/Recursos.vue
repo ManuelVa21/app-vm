@@ -371,7 +371,7 @@ export default{
             //console.log('Se ingresa a getServers')
             await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/servers/detail?all_tenants=True', this.config)
                 .then(res => {
-                    console.log(res.data.servers);
+                    //console.log(res.data.servers);
                     this.servers = res.data.servers;
                     //console.log(res.data.servers[4].addresses);
                 })

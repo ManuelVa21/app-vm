@@ -1,5 +1,5 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 var solicitudesSchema = new Schema({
     tipo: {type: String},
@@ -20,8 +20,6 @@ var solicitudesSchema = new Schema({
     }],
     motivo: {type: String},
     estado: {type: Boolean, default:false}
-},{
-    collection: 'Solicitudes'
 });
 
 /*Se crea el modelo (que debe interactuar con la app) para exportar y poder conectar 
