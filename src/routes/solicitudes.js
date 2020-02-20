@@ -33,17 +33,23 @@ router.post('/', async (req, res) => {
 });
 
 //Para actualizar los datos
-/*
-router.put('/:id', async (req, res, next) =>{
+router.put('/:_id', async (req, res, next) =>{
+    try {
+        //console.log('Se entra a editar estado')
+        //console.log(req)
+        const cambiarestado = await Solicitudes.findByIdAndUpdate(req.params,req.body)
+        res.json({ status:'200', answer:"Estado modificado", content: cambiarestado });
+
+    } catch (error) {
+        res.json({ status:400, content:error })
+    }
+    /*
     await solicitudes.findById(req.params.id), function(err,solicitudes){
         if (!solicitudes) {
             return next(new Error('No se puede cargar documento'));
         }
         else{
-            solicitudes.detalle_recursos= req.body.solicitudes.detalle_recursos;
-            solicitudes.detalle_aumento= req.body.solicitudes.detalle_aumento;
             solicitudes.motivo= req.body.solicitudes.motivo;
-
             solicitudes.save()
                 .then(solicitudes =>{
                     res.json('Actualización completa')
@@ -53,13 +59,13 @@ router.put('/:id', async (req, res, next) =>{
                 });
         }
     }
+    */
 });
-*/
 
 //Para eliminar datos
 router.delete('/', async (req,res)=>{
-    console.log('Se va a eliminar')
-    console.log(req.query)
+    //console.log('Se va a eliminar')
+    //console.log(req.query)
     await Solicitudes.findByIdAndRemove(req.query._id);
     res.json({ status:'200', answer:"Solicitud eliminada" });
 });

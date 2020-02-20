@@ -140,7 +140,7 @@
                                                     <div class="text-center"><button type="submit" class="btn btn-primary">Enviar</button></div>
                                                 </template> 
                                                 <!-- Formulario para cursos -->
-                                                <template v-else>
+                                                <template v-else-if="solicitudpool.catUsuario === 'Curso'">
                                                     <div class="panel panel-default">
                                                     <div class="panel-heading font-weight-bold">Información básica del proyecto</div>
                                                         <div class="panel-body">
@@ -184,6 +184,8 @@
                                                         </div>
                                                     </div>
                                                     <div class="text-center"><button type="submit" class="btn btn-primary">Enviar</button></div>
+                                                </template>
+                                                <template v-else>
                                                 </template> 
                                         </form>
                                     </div>

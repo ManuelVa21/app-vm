@@ -49,7 +49,7 @@ router.delete('/', async (req,res)=>{
 router.post('/', async (req, res) => {
     try {
         //console.log('Se mira el request')
-        //console.log(req.body)
+        //console.log(req)
         const usuario = new Usuarios(req.body)
         await usuario.save();
         res.json({ status:'200', answer:"Usuario Creado" });

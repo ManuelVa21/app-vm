@@ -1,31 +1,38 @@
 const express = require('express');
 const router = express.Router();
 
-const pool_recursos = require('../models/pool_recursos');
+const Pool_recursos = require('../models/pool_recursos');
 
 //Para obtener los datos acerca de los pool de recursos
 router.get('/', async (req,res) =>{
-    await pool_recursos.find(function(err, pool_recursos){
-        if (err) {throw errr;}
-        else{
-            res.json(pool_recursos);
+    try {
+        const pool_recursos = await Pool_recursos.find();
+        if (!pool_recursos) {
+            res.json({ status:404, content:pool_recursos })            
+        } else {
+            res.json({ status:200, content:pool_recursos })            
         }
-    })
+    } catch (error) {
+        res.json({ status:400, content:error })
+    }
 });
 
 //Para enviar del cliente a la bd
 router.post('/', async (req, res) => {
-    const pool_recursos = new pool_recursos(req.body);
-     await pool_recursos.save()
-    .then(pool_recursos => {
-        res.status(200).json({pool_recursos: 'Pool de recursos asignado correctamente'});
-    })
-    .catch(err =>{
-        res.status(400).send({pool_recursos: 'Error al asignar el pool de recursos'});
-    });
+    try {
+        //console.log('Se mira el request')
+        //console.log(req.body)
+        const pool_recursos = new Pool_recursos(req.body)
+        await pool_recursos.save();
+        res.json({ status:'200', answer:"Pool de recursos creado" });
+        
+    } catch (error) {
+        res.json({ status:400, content:error })
+    }
 });
 
 //Para actualizar los datos
+/*
 router.put('/:id', async (req, res, next) =>{
     await pool_recursos.findById(req.params.id), function(err,pool_recursos){
         if (!pool_recursos) {
@@ -54,16 +61,14 @@ router.put('/:id', async (req, res, next) =>{
         }
     }
 });
+*/
 
-router.delete('/:id', async (req,res,next) => {
-    await pool_recursos.findByIdAndRemove(req.params.id, function(err,pool_recursos){
-        if (err) { res.json(err); }
-        else {
-            res.json('Se elimino el pool de recursos satisfactoriamente');
-        }
-    })
+router.delete('/', async (req,res) => {
+    console.log('Se va a eliminar')
+    console.log(req.query)
+    await Pool_recursos.findByIdAndRemove(req.query._id);
+    res.json({ status:'200', answer:"Pool de recursos eliminado" });
 });
-
 
 module.exports = router;
 

@@ -38,7 +38,8 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody v-for="(solicitud, index) in solicitudes" v-bind:key="solicitud.id">
-                                                    <tr>
+                                                    <template v-if="solicitud.estado === false">
+                                                        <tr style="background-color:#FF0000;">
                                                     <th>{{index+1}}</th>
                                                     <td>{{solicitud.fecha}}</td>
                                                     <td>{{solicitud.usuario}}</td> 
@@ -47,27 +48,44 @@
                                                     <td>{{solicitud.tutor}}</td> 
                                                     <td>{{solicitud.correo_tutor}}</td> 
                                                     <td>{{solicitud.fecha_fin}}</td>
-                                                    <td>
-                                                        <template v-if="solicitud.estado === false">
-                                                            <td><font color="red">Pendiente</font></td>                                                
-                                                        </template>
-                                                        <template v-else>
-                                                            <td><font color="green">Resuelto</font></td>
-                                                        </template> 
-                                                    </td>
+                                                    <td>Pendiente</td>
                                                     <td> 
                                                         <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
                                                         <template v-if="solicitud.estado === false">
                                                             <button v-on:click="aceptarPool(solicitud)" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Aceptar"><i class="fas fa-check"></i></button>
-                                                            <button v-on:click="negarPool()" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-times"></i></button>                                                
-                                                            <button v-on:click="eliminarSolicitud(solicitud._id)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                                            <button v-on:click="negarPool(solicitud._id,solicitud.tipo)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-times"></i></button>
                                                         </template>
                                                         <template v-else>
-                                                            <button v-on:click="eliminarSolicitud()" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                                            <button v-on:click="eliminarSolicitud(solicitud._id,solicitud.tipo)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i></button>
                                                         </template>                                                        
                                                         </div>
                                                     </td>                                              
-                                                    </tr>                                                
+                                                    </tr> 
+                                                    </template>
+                                                    <template v-else>
+                                                        <tr style="background-color:#00FF00;">
+                                                    <th>{{index+1}}</th>
+                                                    <td>{{solicitud.fecha}}</td>
+                                                    <td>{{solicitud.usuario}}</td> 
+                                                    <td>{{solicitud.nombre_proyecto}}</td>
+                                                    <td>{{solicitud.descripcion}}</td>
+                                                    <td>{{solicitud.tutor}}</td> 
+                                                    <td>{{solicitud.correo_tutor}}</td> 
+                                                    <td>{{solicitud.fecha_fin}}</td>
+                                                    <td>Resuelto</td>
+                                                    <td> 
+                                                        <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
+                                                        <template v-if="solicitud.estado === false">
+                                                            <button v-on:click="aceptarPool(solicitud)" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Aceptar"><i class="fas fa-check"></i></button>
+                                                            <button v-on:click="negarPool()" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-times"></i></button>
+                                                        </template>
+                                                        <template v-else>
+                                                            <button v-on:click="eliminarSolicitud(solicitud._id)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                                        </template>                                                        
+                                                        </div>
+                                                    </td>                                              
+                                                    </tr>
+                                                    </template>                                       
                                                 </tbody>
                                             </table>
                                         </div>
@@ -210,6 +228,8 @@
 import VueRouter from 'vue-router'
 import axios from 'axios'
 import SidebarAdmin from './SidebarAdmin.vue'
+import Token from '!!raw-loader!../PanelAdmin/Token.txt'
+const configG = require('../../../config')
 
 export default{
     data(){
@@ -219,6 +239,19 @@ export default{
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 "Access-Control-Allow-Origin":"*"
+                }
+            },
+            configOS:{
+                headers:{
+                'User-Agent': 'python-keystoneclient',
+                'X-Auth-Token':Token,
+                'Access-Control-Allow-Origin': '10.55.6.39',
+                'Access-Control-Allow-Credentials':'true',
+                'Access-Control-Expose-Headers': 'Authorization',
+                'Access-Control-Max-Age':'86400',
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-OpenStack-Nova-API-Version': '2.1' 
                 }
             },
             solicitudes:[]
@@ -261,20 +294,26 @@ export default{
             console.log('Se ingresa a aceptarPool')
             console.log('Se muestra la info')
             console.log(info)
-            this.createUsuario(info)
-            this.createProyecto(info)
-            //Crear pool de recursos en BD local
+            //this.createUsuario(info)
+            //this.createProyecto(info)
+            //this.createPool(info)
+            this.cambiarEstado(info._id)
+            this.getSolicitudes(info.tipo)
+            //Se cambia el estado de la solicitud
 
         },
-        negarPool: async function(){
+        negarPool: async function(id,tipo){
             console.log('Se ingresa a negarPool')
+            this.cambiarEstado(id)
+            this.getSolicitudes(tipo)
 
         },
-        eliminarSolicitud: async function(id){
+        eliminarSolicitud: async function(id,tipo){
             //console.log('Se ingresa a eliminarSolicitud')
             await axios.delete('/api/solicitudes?_id='+id, this.config)
             .then(res => { console.log(res)})
             .catch(error => { console.log('Error ',error); });
+            this.getSolicitudes(tipo)
         },
         createUsuario: async function(info){
             //Se crea el registro del usuario
@@ -323,18 +362,31 @@ export default{
                     "name": info.nombre_proyecto
                 }
             };
-            await axios.post('http://'+configG.ipOpenstack+'/identity/v3/projects',data,this.config)
+            await axios.post('http://'+configG.ipOpenstack+'/identity/v3/projects',data,this.configOS)
                 .then(res => { console.log(res) })
                 .catch(error => { console.log('Error ',error); });
-            
         },
         createPool: async function(info){
             console.log('Se ingresa a crear pool en la bd')
-            await axios.post('/api/usuarios',{
-                nombre: info.usuario,
+            await axios.post('/api/pool_recursos',{
+                nombre_proyecto: info.usuario.nombre_proyecto,
+                contrasena: info.usuario.contrasenap,
+                descripcion: info.usuario.descripcion,
+                propietario: info.usuario.usuario,
+                numero_vm: info.usuario.numvm,
+                disco_duro: "-",
+                ram: "-",
+                cpu: "-",
+                fecha_fin: info.usuario.fecha_fin
             },this.config)
-            .then(res => { console.log(res)})
-            .catch(error => { console.log('Error ',error); });
+                .then(res => { console.log(res)})
+                .catch(error => { console.log('Error ',error); });
+        },
+        cambiarEstado: async function(id){
+            console.log('Se va a cambiar el estado de la solicitud')
+            await axios.put('/api/solicitudes/'+id,{estado: true }, this.config)
+                .then(res => { console.log(res)})
+                .catch(error => { console.log('Error ',error); });
         }
     }
 }
