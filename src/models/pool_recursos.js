@@ -1,11 +1,14 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
-const pool_recursos = new Schema({
+const pool_recursosSchema = new Schema({
     nombre_proyecto: {type: String},
+    contrasena: {type: String},
     descripcion: {type: String},
     propietario: [{nombre_u: String}],
-    //numero_vm: {type: Number},
+    tutor: {type: String},
+    correo_tutor: {type: String},
+    numero_vm: {type: Number},
     disco_duro: {type: Number}, 
     ram: {type: Number},
     cpu: {type: Number},
@@ -14,7 +17,6 @@ const pool_recursos = new Schema({
     vms: [{
         nombre_vm: {type:String},
         so_vm: {type:String},
-        versión_so_vm: {type:String},
         disco_duro_vm: {type: Number},
         ram_vm: {type:Number},
         cpu_vm: {type:Number},
@@ -23,12 +25,10 @@ const pool_recursos = new Schema({
         blade: {type:String},
         estado: {type:Boolean}
     }]
-},{
-    collection: 'pool_recursos'
 });
 
 /*Se crea el modelo (que debe interactuar con la app) para exportar y poder conectar 
 con la bd, los parametros que se deben pasar son el nombre que se le quiere dar 
 y el esquema el cual esta definido en una variable*/
 
-module.exports = mongoose.model('pool_recursos', pool_recursos);
+module.exports = mongoose.model('Pool_recursos', pool_recursosSchema);

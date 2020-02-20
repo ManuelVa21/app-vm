@@ -20,11 +20,31 @@
                                 </div>
                                 <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionPU">
                                     <div class="card-body">
-                                        <form @submit.prevent="sendSolicitudPool">                                        
+                                        <form @submit.prevent="sendSolicitud('Pool de Recursos')">                                        
                                                 <div class="panel panel-default">
-                                                    <div class="panel-heading font-weight-bold">Información básica del proyecto</div>
+                                                    <div class="panel-heading font-weight-bold">Información de usuario</div>
                                                     <div class="panel-body">
                                                         <div class="form-row">
+                                                            <div class="form-group col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="categoria">Categoría de usuario</label>
+                                                                <select v-model="solicitudpool.catUsuario" class="form-control" id="categoria">
+                                                                    <option selected>Seleccione nuevo valor de procesadores</option>
+                                                                    <option>Estudiante</option>
+                                                                    <option>Docente</option>
+                                                                    <option>Curso</option>
+                                                                </select>
+                                                            </div>                                                            
+                                                        </div>
+                                                        </div>                                                        
+                                                    </div>
+                                                </div>
+                                                <!-- Formulario para estudiantes -->
+                                                <template v-if="solicitudpool.catUsuario === 'Estudiante'">
+                                                    <div class="panel panel-default">
+                                                    <div class="panel-heading font-weight-bold">Información básica del proyecto</div>
+                                                        <div class="panel-body">
+                                                            <div class="form-row">
                                                             <div class="form-group col-md-6">
                                                             <div class="form-group">
                                                                 <label for="nombre">Nombre del proyecto</label>
@@ -38,40 +58,133 @@
                                                                 <label for="des">Descripción</label>
                                                                 <textarea v-model="solicitudpool.descripcionp" name="" id="des" cols="30" rows="10" placeholder="Ingrese descripción del proyecto"></textarea>
                                                             </div>
-                                                        </div>
-                                                        <div class="form-group col-md-6">
-                                                            <div class="form-group">
-                                                                <label for="pass">Contraseña</label>
-                                                                <input v-model="solicitudpool.contrasenap" type="password" class="form-control" id="pass" placeholder="Ingrese contraseña">
                                                             </div>
-                                                            <div class="form-group">
-                                                                <label for="emailtu">Correo tutor</label>
-                                                                <input v-model="solicitudpool.correotp" type="email" class="form-control" id="emailtu" placeholder="Ingrese Correo del tutor">
-                                                            </div>
-                                                        </div>
-                                                        </div>                                                        
-                                                    </div>
-                                                </div>
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading font-weight-bold">Información Adicional</div>
-                                                    <div class="panel-body">
-                                                        <div class="form-row">
                                                             <div class="form-group col-md-6">
-                                                            <div class="form-group">
-                                                                <label for="numvm">Número de mááquinas virtuales</label>
-                                                                <input v-model="solicitudpool.numvm" type="number" class="form-control" id="numvm" placeholder="Ingrese el número de máquinas virtuales necesarias">
-                                                            </div>                                                            
-                                                        </div>
-                                                        <div class="form-group col-md-6">
-                                                            <div class="form-group">
-                                                                <label for="fechafin">Fecha finalización del servicio</label>
-                                                                <input v-model="solicitudpool.fechafin" type="date" id="fechafin" value="2020-01-01" min="2020-01-01" max="2025-12-31">
+                                                                <div class="form-group">
+                                                                    <label for="pass">Contraseña</label>
+                                                                    <input v-model="solicitudpool.contrasenap" type="password" class="form-control" id="pass" placeholder="Ingrese contraseña">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="emailtu">Correo tutor</label>
+                                                                    <input v-model="solicitudpool.correotp" type="email" class="form-control" id="emailtu" placeholder="Ingrese Correo del tutor">
+                                                                </div>
                                                             </div>
+                                                            </div>                                                        
                                                         </div>
-                                                        </div>                                                        
                                                     </div>
-                                                </div>
-                                            <div class="text-center"><button type="submit" class="btn btn-primary">Enviar</button></div>                                        
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading font-weight-bold">Información Adicional</div>
+                                                        <div class="panel-body">
+                                                            <div class="form-row">
+                                                                <div class="form-group col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="numvm">Número de máquinas virtuales</label>
+                                                                    <input v-model="solicitudpool.numvm" type="number" class="form-control" id="numvm" placeholder="Ingrese el número de máquinas virtuales necesarias">
+                                                                </div>                                                            
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="fechafin">Fecha finalización del servicio</label>
+                                                                    <input v-model="solicitudpool.fechafin" type="date" id="fechafin" value="2020-01-01" min="2020-01-01" max="2025-12-31">
+                                                                </div>
+                                                            </div>
+                                                            </div>                                                        
+                                                        </div>
+                                                    </div>
+                                                    <div class="text-center"><button type="submit" class="btn btn-primary">Enviar</button></div>
+                                                </template>
+                                                <!-- Formulario para docentes -->
+                                                <template v-else-if="solicitudpool.catUsuario === 'Docente'">
+                                                    <div class="panel panel-default">
+                                                    <div class="panel-heading font-weight-bold">Información básica del proyecto</div>
+                                                        <div class="panel-body">
+                                                            <div class="form-row">
+                                                            <div class="form-group col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="nombre">Nombre del proyecto</label>
+                                                                    <input v-model="solicitudpool.nombrep" type="text" class="form-control" id="nombre" placeholder="Ingrese nombre del proyecto">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="des">Descripción</label>
+                                                                    <textarea v-model="solicitudpool.descripcionp" name="" id="des" cols="30" rows="10" placeholder="Ingrese descripción del proyecto"></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="pass">Contraseña</label>
+                                                                    <input v-model="solicitudpool.contrasenap" type="password" class="form-control" id="pass" placeholder="Ingrese contraseña">
+                                                                </div>
+                                                            </div>
+                                                            </div>                                                        
+                                                        </div>
+                                                    </div>
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading font-weight-bold">Información Adicional</div>
+                                                        <div class="panel-body">
+                                                            <div class="form-row">
+                                                                <div class="form-group col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="numvm">Número de máquinas virtuales</label>
+                                                                    <input v-model="solicitudpool.numvm" type="number" class="form-control" id="numvm" placeholder="Ingrese el número de máquinas virtuales necesarias">
+                                                                </div>                                                            
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="fechafin">Fecha finalización del servicio</label>
+                                                                    <input v-model="solicitudpool.fechafin" type="date" id="fechafin" value="2020-01-01" min="2020-01-01" max="2025-12-31">
+                                                                </div>
+                                                            </div>
+                                                            </div>                                                        
+                                                        </div>
+                                                    </div>
+                                                    <div class="text-center"><button type="submit" class="btn btn-primary">Enviar</button></div>
+                                                </template> 
+                                                <!-- Formulario para cursos -->
+                                                <template v-else>
+                                                    <div class="panel panel-default">
+                                                    <div class="panel-heading font-weight-bold">Información básica del proyecto</div>
+                                                        <div class="panel-body">
+                                                            <div class="form-row">
+                                                            <div class="form-group col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="nombre">Nombre del curso</label>
+                                                                    <input v-model="solicitudpool.nombrep" type="text" class="form-control" id="nombre" placeholder="Ingrese nombre del curso">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="des">Descripción</label>
+                                                                    <textarea v-model="solicitudpool.descripcionp" name="" id="des" cols="30" rows="10" placeholder="Ingrese descripción del proyecto"></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="pass">Contraseña para el proyecto</label>
+                                                                    <input v-model="solicitudpool.contrasenap" type="password" class="form-control" id="pass" placeholder="Ingrese contraseña">
+                                                                </div>
+                                                            </div>
+                                                            </div>                                                        
+                                                        </div>
+                                                    </div>
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading font-weight-bold">Información Adicional</div>
+                                                        <div class="panel-body">
+                                                            <div class="form-row">
+                                                                <div class="form-group col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="numvm">Número de máquinas virtuales</label>
+                                                                    <input v-model="solicitudpool.numvm" type="number" class="form-control" id="numvm" placeholder="Ingrese el número de máquinas virtuales necesarias">
+                                                                </div>                                                            
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="fechafin">Fecha finalización del servicio</label>
+                                                                    <input v-model="solicitudpool.fechafin" type="date" id="fechafin" value="2020-01-01" min="2020-01-01" max="2025-12-31">
+                                                                </div>
+                                                            </div>
+                                                            </div>                                                        
+                                                        </div>
+                                                    </div>
+                                                    <div class="text-center"><button type="submit" class="btn btn-primary">Enviar</button></div>
+                                                </template> 
                                         </form>
                                     </div>
                                 </div>
@@ -88,7 +201,7 @@
                                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionPU">
                                     <div class="card-body">
                                         <p>Seleccione las características de su pool de recursos</p>
-                                        <form >
+                                        <form @submit.prevent="sendSolicitud('Aumento Pool de Recursos')">
                                             <div class="form-group">
                                                 <p>Por favor escriba el motivo por el cual desea ampliar sus recursos.</p>
                                                 <textarea name="" id="" cols="30" rows="10" placeholder="Motivo de ampliación de recursos"></textarea>
@@ -154,11 +267,24 @@
                                 <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionPU">
                                     <div class="card-body">
                                         <p>Aqui va el form de solicitud de backup</p>
-                                        <form>
+                                        <form @submit.prevent="sendSolicitud('Backup')">
                                             <div class="form-group">
-                                                
+                                                <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="Proyecto">Proyecto</label>
+                                                        <input v-model="solicitudpool.nombrep" type="text" class="form-control" id="Proyecto" placeholder="Ingrese el nombre del proyecto">
+                                                    </div>                                                            
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="maquina">Máquina virtual</label>
+                                                        <input v-model="solicitudpool.maquina" type="text" class="form-control" id="maquina" placeholder="Ingrese el nombre de la máquina">
+                                                    </div>
+                                                </div>
+                                                </div>  
                                                 <p>Por favor escriba el motivo por el cual desea ampliar sus recursos.</p>
-                                                <textarea name="" id="" cols="30" rows="10" placeholder="Motivo de ampliación de recursos"></textarea>
+                                                <textarea v-model="solicitudpool.motivo" name="" id="" cols="30" rows="10" placeholder="Motivo de ampliación de recursos"></textarea>
                                             </div>
                                         <div class="text-center"><button type="submit" class="btn btn-primary">Enviar</button></div>
                                         </form>
@@ -179,7 +305,9 @@ import axios from 'axios'
 import SidebarUsuario from './SidebarUsuario.vue'
 
 class SolocitudPool{
-    constructor(nombrep,contrasenap,descripcionp,tutorp,correotp,numvm,fechafin){
+    constructor(catUsuario,correo,nombrep,contrasenap,descripcionp,tutorp,correotp,numvm,fechafin,aumento_fecha_fin,aumento_disco_duro,aumento_ram,aumento_cpu,motivo,maquina){
+        this.catUsuario = catUsuario;
+        this.correo = correo;
         this.nombrep = nombrep;
         this.contrasenap = contrasenap;
         this.descripcionp = descripcionp;
@@ -187,6 +315,12 @@ class SolocitudPool{
         this.correotp = correotp;
         this.numvm = numvm;
         this.fechafin= fechafin;
+        this.aumento_fecha_fin = aumento_fecha_fin;
+        this.aumento_disco_duro= aumento_disco_duro;
+        this.aumento_ram= aumento_ram;
+        this.aumento_cpu= aumento_cpu;
+        this.motivo= motivo;
+        this.maquina=maquina;
     }
 }
 
@@ -195,8 +329,7 @@ export default {
         return{
             config:{
                 headers:{
-                //'Content-Type': 'application/json',
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 "Access-Control-Allow-Origin":"*"
                 }
@@ -211,24 +344,29 @@ export default {
         'SidebarUsuario': SidebarUsuario  
     },
     methods:{
-        sendSolicitudPool: async function(){
-            console.log('Se ingresa a send Solicitud pool recursos')
-            console.log(this.solicitudpool)
-            let data={                
-                "tipo": "Pool de recursos",
-                "nombre_proyecto": this.solicitudpool.nombrep,
-                "contrasenap": this.solicitudpool.contrasenap,
-                "descripcion": this.solicitudpool.descripcionp,
-                "tutor": this.solicitudpool.tutorp,
-                "correo_tutor": this.solicitudpool.correotp,
-                "numero_maquinas": this.solicitudpool.numvm,
-                "fecha_fin": this.solicitudpool.fechafin
-            };
-            await axios.post('/api/solicitudes',data,this.config)
-                .then(res => {
-                    console.log(res)                    
-                })
+        sendSolicitud: async function(tipoSol){
+            await axios.post('/api/solicitudes',{
+                tipo: tipoSol,
+                catUsuario: this.solicitudpool.catUsuario,
+                usuario : "-",
+                correo: "-",
+                nombre_proyecto: this.solicitudpool.nombrep,
+                contrasenap: this.solicitudpool.contrasenap,
+                descripcion: this.solicitudpool.descripcionp,
+                tutor: this.solicitudpool.tutorp,
+                correo_tutor: this.solicitudpool.correotp,
+                fecha_fin: this.solicitudpool.fechafin,
+                numvm: this.solicitudpool.numvm,
+                aumento_fecha_fin: this.solicitudpool.aumento_fecha_fin,
+                aumento_disco_duro: this.solicitudpool.aumento_disco_duro,
+                aumento_ram: this.solicitudpool.aumento_ram,
+                aumento_cpu: this.solicitudpool.aumento_cpu,
+                motivo: this.solicitudpool.motivo,
+                maquina: this.solicitudpool.maquina
+                }, this.config)
+                .then(res => { console.log(res)})
                 .catch(error => { console.log('Error ',error); });
+                solicitudpool = new SolocitudPool();
         }
     }
 }

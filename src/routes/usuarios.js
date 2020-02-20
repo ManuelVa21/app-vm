@@ -1,61 +1,62 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
 const cors = require("cors")
-const jwt = require("jsonwebtoken")
-//const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt")
 
-const usuarios = require('../models/usuarios');
+const Usuarios = require('../models/usuarios');
 router.use(cors())
 
 process.env.SECRET_KEY = 'secret'
 
 //Para obtener las listas de usarios registrados en la plataforma
-router.get('/usuarios', async (req,res) =>{
-    await usuarios.find(function(err, usuarios){
-        if (err) {throw err;}
-        else{
-            res.json(usuarios);
+router.get('/', async (req,res) =>{
+    try {
+        const usuarios = await Usuarios.find();
+        if (!usuarios) {
+            res.json({ status:404, content:usuarios })            
+        } else {
+            res.json({ status:200, content:usuarios })            
         }
-    })
+    } catch (error) {
+        res.json({ status:400, content:error })
+    }
 });
 
 router.get('/unusuario', async (req,res) =>{
     console.log('Ruta de usuarios')
-    console.log(req.query.correo)
-    await usuarios.findOne({ correo: req.query.correo }, function (err, usuarios) {
-        if (err) {throw err;}
-        else{
-            res.json(usuarios);
+    console.log(req.query)
+    try {
+        const usuarios = await Usuarios.findById(req.query);
+        if (!usuarios) {
+            res.json({ status:404, content:usuarios })            
+        } else {
+            res.json({ status:200, content:usuarios })            
         }
-    });
+    } catch (error) {
+        res.json({ status:400, content:error })
+    }
 });
 
-router.delete('/delete', async (req,res)=>{
+router.delete('/', async (req,res)=>{
     //console.log(req.query.correo)
     //console.log(req.params.correo)
     console.log('Se muestra el req para buscar el id')
     console.log(req.query)
-    await usuarios.findByIdAndRemove(req.query._id, function(err,usuarios){
-        if (err) { res.json(err);}
-        else{
-            res.json('Se elimino el usuario satisfactoriamente');
-        }
-    })
+    await Usuarios.findByIdAndRemove(req.query._id);
+    res.json({ status:'200', answer:"Usuario eliminado" });
 });
 
-router.post('/registro', async (req, res) => {
-    console.log('Se entra a registro y se muestra req')
-    console.log(req)
-    const fecha = new Date()
-    const dataUsuario = new usuarios ({
-        nombre : req.body.nombre,
-        categoria_us : req.body.categoria_us,
-        correo : req.body.correo,
-        contrasena : req.body.contrasena,
-        registro : fecha
-    })
-    console.log('mostrar datausuario')
-    console.log(dataUsuario)
+router.post('/', async (req, res) => {
+    try {
+        //console.log('Se mira el request')
+        //console.log(req.body)
+        const usuario = new Usuarios(req.body)
+        await usuario.save();
+        res.json({ status:'200', answer:"Usuario Creado" });
+        
+    } catch (error) {
+        res.json({ status:400, content:error })
+    }
     /*
     bcrypt.hash(req.body.contrasena, 10, (err, hash) => { 
         if (hash) {
@@ -69,35 +70,9 @@ router.post('/registro', async (req, res) => {
         }
     })*/
 });
-/*
-//Para realizar el login
-router.post('/login', async (req,res) => {
-    const user = await usuarios.findOne({ correo: req.body.correo })
-    .then(usuarios => {
-        if (user) {
-            //Se compara la contraseña introducida con la almacenada, si el resultado es true se accede
-            if (bcrypt.compareSync(req.body.contrasena, usuarios.contrasena)) {
-                const payload = {
-                    _id: usuarios._id,
-                    correo: usuarios.correo
-                }
-                let token = jwt.sign(payload, process.env.SECRET_KEY, {
-                    expiresIn: 1440
-                })
-                res.send(token)
-            } else {
-                res.json({ error: 'El usuario no existe' })
-            }                
-        } else {
-            res.json({ error: 'El usuario no existe' })
-            console.log({error: 'El usuario no existe'})
-        }
-    })
-    .catch(err => { res.send('error: ' + err); })
-})
-*/
 
 //Para actualizar los datos
+/*
 router.put('/:id', async (req, res, next) =>{
     await usuarios.findById(req.params.id), function(err,usuarios){
         if (!usuarios) {
@@ -129,5 +104,5 @@ router.put('/:id', async (req, res, next) =>{
         }
     }
 });
-
+*/
 module.exports = router

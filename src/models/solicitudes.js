@@ -3,22 +3,24 @@ const { Schema } = mongoose;
 
 var solicitudesSchema = new Schema({
     tipo: {type: String},
+    catUsuario : {type: String},
+    usuario: {type: String},
+    correo: {type: String},
     nombre_proyecto: {type: String},
     contrasenap: {type: String},
     descripcion: {type: String},
     tutor: {type: String},
     correo_tutor: {type: String},
     fecha: {type: Date, default: Date.now},
-    numero_maquinas: {type: Number},
     fecha_fin: {type: Date},
-    detalle_aumento: [{
-        fecha_fin: {type: Date},
-        disco_duro: {type: Number},
-        ram: {type:Number},
-        cpu: {type:Number},
-        interfaces: {type:Number}
-    }],
+    numvm: {type: Number},
+    //detalle_aumento
+        aumento_fecha_fin: {type: Date},
+        aumento_disco_duro: {type: Number},
+        aumento_ram: {type:Number},
+        aumento_cpu: {type:Number},
     motivo: {type: String},
+    maquina: {type: String},
     estado: {type: Boolean, default:false}
 });
 

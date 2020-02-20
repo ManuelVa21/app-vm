@@ -5,9 +5,9 @@ const Solicitudes = require('../models/solicitudes');
 
 //Para obtener la lista de solicitudes
 router.get('/', async (req,res) =>{
-    try {
-        console.log('Se muestra la respuesta del get')
-        const solicitudes = await Solicitudes.find();
+    try {        
+        //const solicitudes = await Solicitudes.find();
+        const solicitudes = await Solicitudes.find(req.query);
         if (!solicitudes) {
             res.json({ status:404, content:solicitudes })            
         } else {
@@ -21,8 +21,8 @@ router.get('/', async (req,res) =>{
 //Para enviar del cliente a la bd
 router.post('/', async (req, res) => {
     try {
-        console.log('Se mira el request')
-        console.log(req.body)
+        //console.log('Se mira el request')
+        //console.log(req.body)
         const solicitudes = new Solicitudes(req.body)
         await solicitudes.save();
         res.json({ status:'200', answer:"Solicitud Creada" });
@@ -59,9 +59,9 @@ router.put('/:id', async (req, res, next) =>{
 //Para eliminar datos
 router.delete('/', async (req,res)=>{
     console.log('Se va a eliminar')
-    console.log(req)
-    await Solicitudes.findByIdAndRemove(req.params.id);
-    res.json({ status:'200', answer:"Server Delete" });
+    console.log(req.query)
+    await Solicitudes.findByIdAndRemove(req.query._id);
+    res.json({ status:'200', answer:"Solicitud eliminada" });
 });
 
 module.exports = router;
