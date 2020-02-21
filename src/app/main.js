@@ -16,7 +16,7 @@ import Pruebas from './components/Pruebas.vue'
 import PanelUsuario from './components/PanelUsuario/PanelUsuario.vue'
 import PerfilUsuario from './components/PanelUsuario/PerfilUsuario.vue'
 import AlertasNotificaciones from './components/PanelUsuario/AlertasNotificaciones.vue'
-import Instancias from './components/PanelUsuario/Instancias.vue'
+import MiProyecto from './components/PanelUsuario/MiProyecto.vue'
 import Peticiones from './components/PanelUsuario/Peticiones.vue'
 //Componentes Panel Admin
 import PanelAdmin from './components/PanelAdmin/PanelAdmin.vue'
@@ -65,9 +65,9 @@ const routes = [
     component: AlertasNotificaciones
   },
   {
-    name: 'PanelUsuario/Instancias',
-    path: '/PanelUsuario/Instancias',
-    component: Instancias
+    name: 'PanelUsuario/MiProyecto',
+    path: '/PanelUsuario/MiProyecto',
+    component: MiProyecto
   },
   {
     name: 'PanelUsuario/Peticiones',
