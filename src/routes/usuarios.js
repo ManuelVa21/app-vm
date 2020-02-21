@@ -23,8 +23,8 @@ router.get('/', async (req,res) =>{
 });
 
 router.get('/unusuario', async (req,res) =>{
-    console.log('Ruta de usuarios')
-    console.log(req.query)
+    //onsole.log('Ruta de usuarios')
+    //console.log(req.query)
     try {
         const usuarios = await Usuarios.findById(req.query);
         if (!usuarios) {
@@ -40,8 +40,8 @@ router.get('/unusuario', async (req,res) =>{
 router.delete('/', async (req,res)=>{
     //console.log(req.query.correo)
     //console.log(req.params.correo)
-    console.log('Se muestra el req para buscar el id')
-    console.log(req.query)
+    //console.log('Se muestra el req para buscar el id')
+    //console.log(req.query)
     await Usuarios.findByIdAndRemove(req.query._id);
     res.json({ status:'200', answer:"Usuario eliminado" });
 });
@@ -72,37 +72,25 @@ router.post('/', async (req, res) => {
 });
 
 //Para actualizar los datos
-/*
-router.put('/:id', async (req, res, next) =>{
-    await usuarios.findById(req.params.id), function(err,usuarios){
-        if (!usuarios) {
-            return next(new Error('No se puede cargar documento'));
-        }
-        else{
-            usuarios.nombre= req.body.usuarios.nombre;
-            usuarios.correo = req.body.usuarios.correo;
-            usuarios.contrasena = req.body.usuarios.contrasena;
-            usuarios.categoria_us = req.body.usuarios.categoria_us;
-            usuarios.registro = req.body.usuarios.registro;
-            usuarios.codigo_us = req.body.usuarios.codigo_us;
-            usuarios.nombre_pro = req.body.usuarios.nombre_pro;
-            usuarios.tutor_pro = req.body.usuarios.tutor_pro;
-            usuarios.correo_tutor = req.body.usuarios.correo_tutor;
-            usuarios.proposito = req.body.usuarios.proposito;
-            usuarios.nombre_curso = req.body.usuarios.nombre_curso;
-            usuarios.codigo_curso = req.body.usuarios.codigo_curso;
-            usuarios.cantidad_estudiantes = req.body.usuarios.cantidad_estudiantes;
-            usuarios.horario_uso = req.body.usuarios.horario_uso;
 
-            usuarios.save()
-                .then(usuarios =>{
-                    res.json('Actualización completa')
-                })
-                .catch(err =>{
-                    res.status(400).send({usuarios:'Error al actualizar'});
-                });
-        }
+router.put('/:_id', async (req, res, next) =>{
+    //console.log(req)
+   // console.log(req.params)
+    //console.log(req.body)
+    try {
+        //console.log('Se entra a editar estado')
+        //console.log(req)
+        await Usuarios.findByIdAndUpdate(req.params,req.body)
+        res.json({ status:'200', answer:"Usuario Editado" });
+        
+    } catch (error) {
+        res.json({ status:400, content:error })
     }
+    
+   // await usuarios.findById(req.params.id), function(err,usuarios){
+        
+     
+    
 });
-*/
+
 module.exports = router

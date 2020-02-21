@@ -238,7 +238,7 @@
                                         <button v-on:click="addServer()" type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Agregar máquina"><i class="fas fa-plus"></i></button>
                                         <table class="table-responsive-xl table-striped table-hover w-auto text-center">
                                             <thead class="thead-dark">
-                                                <tr>
+                                                <tr class="table-active">
                                                 <th scope="col">#</th>
                                                 <th scope="col">Proyecto</th>
                                                 <th scope="col">Propietario</th>
@@ -254,32 +254,60 @@
                                                 </tr>
                                             </thead>
                                             <tbody v-for="(server, index) in servers" v-bind:key="server.id" >
-                                                <tr>
-                                                <th>{{index+1}}</th>
-                                                <td>{{server.tenant_id}}</td>
-                                                <td>-</td>
-                                                <td>{{server.name}}</td>
-                                                <td>{{server.created}}</td>
-                                                <td>{{server.image.id}}</td>
-                                                <td>{{server.flavor.id[0]+' Gb'}}</td>
-                                                <td>{{server.flavor.id[1]+' Gb'}}</td>
-                                                <td>{{server.flavor.id[2]+' vcpu'}}</td>
-                                                <td>
-                                                    <!-- {{server.addresses[Object.keys(server.addresses)[0]][1].addr}}-->
-                                                </td>
-                                                <td>{{server.status}}</td>
-                                                <td>
-                                                    <div class="btn-group-sm" role="group" aria-label="Basic example">
-                                                        <div>
-                                                            <!-- Material switch -->
-                                                        </div>                                                        
-                                                        <button v-on:click="consola(server.id)" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i></button>
-                                                        <button v-on:click="backup(server.id)" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i></button>
-                                                        <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i></button>                                                        
-                                                    </div>
-                                                </td>
-                                                </tr>
-
+                                                <template v-if="server.status === 'ACTIVE'">
+                                                    <tr class="table-success">
+                                                        <th>{{index+1}}</th>
+                                                        <td>{{server.tenant_id}}</td>
+                                                        <td>-</td>
+                                                        <td>{{server.name}}</td>
+                                                        <td>{{server.created}}</td>
+                                                        <td>{{server.image.id}}</td>
+                                                        <td>{{server.flavor.id[0]+' Gb'}}</td>
+                                                        <td>{{server.flavor.id[1]+' Gb'}}</td>
+                                                        <td>{{server.flavor.id[2]+' vcpu'}}</td>
+                                                        <td>
+                                                            <!-- {{server.addresses[Object.keys(server.addresses)[0]][1].addr}}-->
+                                                        </td>
+                                                        <td>{{server.status}}</td>
+                                                        <td>
+                                                            <div class="btn-group-sm" role="group" aria-label="Basic example">
+                                                                <div>
+                                                                    <!-- Material switch -->
+                                                                </div>                                                        
+                                                                <button v-on:click="consola(server.id)" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i></button>
+                                                                <button v-on:click="backup(server.id)" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i></button>
+                                                                <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i></button>                                                        
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </template>
+                                                <template v-else>
+                                                    <tr style="background-color:#FF0000;">
+                                                        <th>{{index+1}}</th>
+                                                        <td>{{server.tenant_id}}</td>
+                                                        <td>-</td>
+                                                        <td>{{server.name}}</td>
+                                                        <td>{{server.created}}</td>
+                                                        <td>{{server.image.id}}</td>
+                                                        <td>{{server.flavor.id[0]+' Gb'}}</td>
+                                                        <td>{{server.flavor.id[1]+' Gb'}}</td>
+                                                        <td>{{server.flavor.id[2]+' vcpu'}}</td>
+                                                        <td>
+                                                            <!-- {{server.addresses[Object.keys(server.addresses)[0]][1].addr}}-->
+                                                        </td>
+                                                        <td>{{server.status}}</td>
+                                                        <td>
+                                                            <div class="btn-group-sm" role="group" aria-label="Basic example">
+                                                                <div>
+                                                                    <!-- Material switch -->
+                                                                </div>                                                        
+                                                                <button v-on:click="consola(server.id)" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i></button>
+                                                                <button v-on:click="backup(server.id)" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i></button>
+                                                                <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i></button>                                                        
+                                                            </div>
+                                                        </td>
+                                                    </tr>                                                        
+                                                </template>
                                             </tbody>
                                         </table>
                                     </div>

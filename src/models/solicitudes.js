@@ -14,6 +14,9 @@ var solicitudesSchema = new Schema({
     fecha: {type: Date, default: Date.now},
     fecha_fin: {type: Date},
     numvm: {type: Number},
+    disco_duro: {type: Number},
+    ram: {type:Number},
+    cpu: {type:Number},
     //detalle_aumento
         aumento_fecha_fin: {type: Date},
         aumento_disco_duro: {type: Number},

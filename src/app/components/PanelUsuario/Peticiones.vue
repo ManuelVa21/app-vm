@@ -25,15 +25,21 @@
                                                     <div class="panel-heading font-weight-bold">Información de usuario</div>
                                                     <div class="panel-body">
                                                         <div class="form-row">
-                                                            <div class="form-group col-md-6">
+                                                        <div class="form-group col-md-6">
                                                             <div class="form-group">
                                                                 <label for="categoria">Categoría de usuario</label>
                                                                 <select v-model="solicitudpool.catUsuario" class="form-control" id="categoria">
-                                                                    <option selected>Seleccione nuevo valor de procesadores</option>
+                                                                    <option selected>Seleccione categoría de usuario</option>
                                                                     <option>Estudiante</option>
                                                                     <option>Docente</option>
                                                                     <option>Curso</option>
                                                                 </select>
+                                                            </div>                                                            
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="usuario">Nombre Usuario</label>
+                                                                <input v-model="solicitudpool.usuario" type="text" class="form-control" id="usuario" placeholder="Ingrese su nombre">
                                                             </div>                                                            
                                                         </div>
                                                         </div>                                                        
@@ -73,22 +79,36 @@
                                                         </div>
                                                     </div>
                                                     <div class="panel panel-default">
-                                                        <div class="panel-heading font-weight-bold">Información Adicional</div>
+                                                        <div class="panel-heading font-weight-bold">Información de Recursos</div>
                                                         <div class="panel-body">
                                                             <div class="form-row">
                                                                 <div class="form-group col-md-6">
                                                                 <div class="form-group">
-                                                                    <label for="numvm">Número de máquinas virtuales</label>
-                                                                    <input v-model="solicitudpool.numvm" type="number" class="form-control" id="numvm" placeholder="Ingrese el número de máquinas virtuales necesarias">
+                                                                    <label for="disco">Disco duro</label>
+                                                                    <input v-model="solicitudpool.disco_duro" type="number" class="form-control" id="disco" placeholder="Seleccione el disco duro" min="1" max="30">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="cpu">CPU</label>
+                                                                    <input v-model="solicitudpool.cpu" type="number" class="form-control" id="cpu" placeholder="Seleccione CPU" min="1" max="8">
+                                                                </div>                                                                
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="ram">Ram</label>
+                                                                    <input v-model="solicitudpool.ram" type="number" class="form-control" id="ram" placeholder="Seleccione RAM" min="1" max="8">
+                                                                </div> 
+                                                                <div class="form-group">
+                                                                    <label for="fechafin">Fecha finalización del servicio</label>
+                                                                    <input v-model="solicitudpool.fechafin" class="form-control" type="date" id="fechafin" value="2020-01-01" min="2020-01-01" max="2025-12-31">
                                                                 </div>                                                            
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <div class="form-group">
-                                                                    <label for="fechafin">Fecha finalización del servicio</label>
-                                                                    <input v-model="solicitudpool.fechafin" type="date" id="fechafin" value="2020-01-01" min="2020-01-01" max="2025-12-31">
+                                                                    <label for="numvm">Número de máquinas virtuales</label>
+                                                                    <input v-model="solicitudpool.numvm" type="number" class="form-control" id="numvm" placeholder="Ingrese el número de máquinas virtuales" min="1" max="2">
+                                                                </div>                                                            
                                                                 </div>
-                                                            </div>
-                                                            </div>                                                        
+                                                            </div>                                                      
                                                         </div>
                                                     </div>
                                                     <div class="text-center"><button type="submit" class="btn btn-primary">Enviar</button></div>
@@ -119,22 +139,36 @@
                                                         </div>
                                                     </div>
                                                     <div class="panel panel-default">
-                                                        <div class="panel-heading font-weight-bold">Información Adicional</div>
+                                                        <div class="panel-heading font-weight-bold">Información de Recursos</div>
                                                         <div class="panel-body">
                                                             <div class="form-row">
                                                                 <div class="form-group col-md-6">
                                                                 <div class="form-group">
-                                                                    <label for="numvm">Número de máquinas virtuales</label>
-                                                                    <input v-model="solicitudpool.numvm" type="number" class="form-control" id="numvm" placeholder="Ingrese el número de máquinas virtuales necesarias">
+                                                                    <label for="disco">Disco duro</label>
+                                                                    <input v-model="solicitudpool.disco_duro" type="number" class="form-control" id="disco" placeholder="Seleccione el disco duro" min="1" max="60">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="cpu">CPU</label>
+                                                                    <input v-model="solicitudpool.cpu" type="number" class="form-control" id="cpu" placeholder="Seleccione CPU" min="1" max="16">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="ram">Ram</label>
+                                                                    <input v-model="solicitudpool.ram" type="number" class="form-control" id="ram" placeholder="Seleccione RAM" min="1" max="16">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="fechafin">Fecha finalización del servicio</label>
+                                                                    <input v-model="solicitudpool.fechafin" type="date" class="form-control" id="fechafin" value="2020-01-01" min="2020-01-01" max="2025-12-31">
                                                                 </div>                                                            
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <div class="form-group">
-                                                                    <label for="fechafin">Fecha finalización del servicio</label>
-                                                                    <input v-model="solicitudpool.fechafin" type="date" id="fechafin" value="2020-01-01" min="2020-01-01" max="2025-12-31">
+                                                                    <label for="numvm">Número de máquinas virtuales</label>
+                                                                    <input v-model="solicitudpool.numvm" type="number" class="form-control" id="numvm" placeholder="Ingrese el número de máquinas virtuales" min="1" max="4">
+                                                                </div>                                                            
                                                                 </div>
-                                                            </div>
-                                                            </div>                                                        
+                                                            </div>                                                       
                                                         </div>
                                                     </div>
                                                     <div class="text-center"><button type="submit" class="btn btn-primary">Enviar</button></div>
@@ -165,22 +199,36 @@
                                                         </div>
                                                     </div>
                                                     <div class="panel panel-default">
-                                                        <div class="panel-heading font-weight-bold">Información Adicional</div>
+                                                        <div class="panel-heading font-weight-bold">Información de Recursos</div>
                                                         <div class="panel-body">
                                                             <div class="form-row">
                                                                 <div class="form-group col-md-6">
                                                                 <div class="form-group">
-                                                                    <label for="numvm">Número de máquinas virtuales</label>
-                                                                    <input v-model="solicitudpool.numvm" type="number" class="form-control" id="numvm" placeholder="Ingrese el número de máquinas virtuales necesarias">
+                                                                    <label for="disco">Disco duro</label>
+                                                                    <input v-model="solicitudpool.disco_duro" type="number" class="form-control" id="disco" placeholder="Seleccione el disco duro" min="1" max="200">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="cpu">CPU</label>
+                                                                    <input v-model="solicitudpool.cpu" type="number" class="form-control" id="cpu" placeholder="Seleccione CPU" min="1" max="80">
+                                                                </div>                                                                                                                          
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="ram">Ram</label>
+                                                                    <input v-model="solicitudpool.ram" type="number" class="form-control" id="ram" placeholder="Seleccione RAM" min="1" max="40">
+                                                                </div>  
+                                                                <div class="form-group">
+                                                                    <label for="fechafin">Fecha finalización del servicio</label>
+                                                                    <input v-model="solicitudpool.fechafin" type="date" class="form-control" id="fechafin" value="2020-01-01" min="2020-01-01" max="2025-12-31">
                                                                 </div>                                                            
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <div class="form-group">
-                                                                    <label for="fechafin">Fecha finalización del servicio</label>
-                                                                    <input v-model="solicitudpool.fechafin" type="date" id="fechafin" value="2020-01-01" min="2020-01-01" max="2025-12-31">
+                                                                    <label for="numvm">Número de máquinas virtuales</label>
+                                                                    <input v-model="solicitudpool.numvm" type="number" class="form-control" id="numvm" placeholder="Ingrese el número de máquinas virtuales" min="1" max="20">
+                                                                </div>                                                            
                                                                 </div>
-                                                            </div>
-                                                            </div>                                                        
+                                                            </div>                                                       
                                                         </div>
                                                     </div>
                                                     <div class="text-center"><button type="submit" class="btn btn-primary">Enviar</button></div>
@@ -307,7 +355,8 @@ import axios from 'axios'
 import SidebarUsuario from './SidebarUsuario.vue'
 
 class SolocitudPool{
-    constructor(catUsuario,correo,nombrep,contrasenap,descripcionp,tutorp,correotp,numvm,fechafin,aumento_fecha_fin,aumento_disco_duro,aumento_ram,aumento_cpu,motivo,maquina){
+    constructor(usuario,catUsuario,correo,nombrep,contrasenap,descripcionp,tutorp,correotp,numvm,disco_duro,ram,cpu,fechafin,aumento_fecha_fin,aumento_disco_duro,aumento_ram,aumento_cpu,motivo,maquina){
+        this.usuario = usuario;
         this.catUsuario = catUsuario;
         this.correo = correo;
         this.nombrep = nombrep;
@@ -316,6 +365,9 @@ class SolocitudPool{
         this.tutorp = tutorp;
         this.correotp = correotp;
         this.numvm = numvm;
+        this.disco_duro = disco_duro;
+        this.ram = ram;
+        this.cpu = cpu;
         this.fechafin= fechafin;
         this.aumento_fecha_fin = aumento_fecha_fin;
         this.aumento_disco_duro= aumento_disco_duro;
@@ -346,11 +398,12 @@ export default {
         'SidebarUsuario': SidebarUsuario  
     },
     methods:{
+        limpiar: async function(){this.solicitudpool = new SolocitudPool()},
         sendSolicitud: async function(tipoSol){
             await axios.post('/api/solicitudes',{
                 tipo: tipoSol,
                 catUsuario: this.solicitudpool.catUsuario,
-                usuario : "-",
+                usuario : this.solicitudpool.usuario,
                 correo: "-",
                 nombre_proyecto: this.solicitudpool.nombrep,
                 contrasenap: this.solicitudpool.contrasenap,
@@ -359,6 +412,9 @@ export default {
                 correo_tutor: this.solicitudpool.correotp,
                 fecha_fin: this.solicitudpool.fechafin,
                 numvm: this.solicitudpool.numvm,
+                disco_duro: this.solicitudpool.disco_duro,
+                ram: this.solicitudpool.ram,
+                cpu: this.solicitudpool.cpu,
                 aumento_fecha_fin: this.solicitudpool.aumento_fecha_fin,
                 aumento_disco_duro: this.solicitudpool.aumento_disco_duro,
                 aumento_ram: this.solicitudpool.aumento_ram,
