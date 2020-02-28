@@ -263,6 +263,25 @@ export default{
                 'X-OpenStack-Nova-API-Version': '2.1' 
                 }
             },
+            configOSS:{
+                headers:{
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-Auth-Token':Token,
+                    'User-Agent': 'openstacksdk/0.36.0 keystoneauth1/3.18.0 python-requests/2.22.0 CPython/2.7.17',
+                    'Access-Control-Allow-Origin': '10.55.6.39',
+                    'Access-Control-Allow-Credentials':'true',
+                    'Access-Control-Expose-Headers': 'Authorization',
+                    'Access-Control-Max-Age':'86400'
+                }
+            },
+            configUseraddrole:{
+                headers:{
+                    'Accept': 'application/json',
+                    'X-Auth-Token':Token,
+                    'User-Agent': 'python-keystoneclient',
+                }
+            },
             solicitudes:[]
         }
     },
@@ -300,12 +319,8 @@ export default{
         },
         //Acciones
         aceptarPool: async function(info){
-            console.log('Se ingresa a aceptarPool')
-            console.log('Se muestra la info')
-            console.log(info)
-            this.createUsuario(info)
             this.createProyecto(info)
-            this.createPool(info)
+            this.createUsuario(info)
             this.cambiarEstado(info._id)
             this.getSolicitudes(info.tipo)
         },
@@ -365,8 +380,8 @@ export default{
             }
         },
         createProyecto: async function(info){
-            //Se crea el proyecto en openstack
-            console.log('Se muestra el info desde crear proyecto')
+            console.log('Se crea el proyecto en openstack')
+            //console.log('Se muestra el info desde crear proyecto')
             //console.log(info)            
             let data={
                 "project": {
@@ -377,12 +392,161 @@ export default{
                 }
             };
             await axios.post('http://'+configG.ipOpenstack+'/identity/v3/projects',data,this.configOS)
-                .then(res => { console.log(res) })
+                .then(res => {
+                    console.log('Se muestra la respuesta despues de crear el proyecto') 
+                    console.log(res)
+                    if (res.status == '201') {
+                        this.setQuota(res.data.project.id,info);
+                        this.createUser(res.data.project.id,info)
+                        this.createNetwork(res.data.project.id,info)
+                        this.createPool(res.data.project.id,info)
+                    } else { console.log('Error al crear ')}
+                    })
                 .catch(error => { console.log('Error ',error); });
         },
-        createPool: async function(info){
+        setQuota: async function(id_project,info){
+            //Se recibe el id y la información de la quota
+            console.log('se muestra el info que se recibe dentro de set quota')
+            console.log(info)
+            let data={
+                "quota_set":{
+                    "instances": info.numvm, 
+                    "ram": info.ram, 
+                    "cores": info.cpu
+                }
+            };
+            await axios.put('http://'+configG.ipOpenstack+'/compute/v2.1/os-quota-sets/'+id_project,data,this.configOS)
+            .then(res => {
+                console.log('Se muestra la respuesta del set quota')
+                console.log(res)
+            })
+            .catch(error => { console.log('Error ',error); });
+        },
+        createUser: async function(id_project,info){
+            console.log('se ingresa a createUser')
+            console.log('se muestra el info en create user')
+            console.log(info)
+            let data={
+                "user":{
+                    "default_project_id" : id_project,
+                    "description" : info.descripcion,
+                    "email" : info.correo,
+                    "enable" : true,
+                    "name" : info.usuario,
+                    "password" : info.contrasenap,
+                    "domain_id" : "default"
+                }
+            };
+            await axios.post('http://'+configG.ipOpenstack+'/identity/v3/users',data,this.configOS)
+            .then(res => {
+                console.log('Se muestra la respuesta del create user')
+                console.log(res)
+                if (res.status == '201') {
+                    this.roleAdd(id_project,res.data.user.id)
+                } else { console.log('Error al crear ')}
+            })
+            .catch(error => { console.log('Error ',error); });
+        },
+        roleAdd: async function(id_project,id_user){
+            console.log('se ingresa a roleAdd')
+            //http://10.55.2.24/identity/v3/projects/{id proyecto}/users/{id usuario creado}/roles/{id role member}
+            await axios.put('http://'+configG.ipOpenstack+'/identity/v3/projects/'+id_project+'/users/'+id_user+'/roles/2e8eddef9f064c2db9b929420329f3dc',this.configUseraddrole)
+            .then(res => {
+                console.log('Se muestra la respuesta del role add')
+                console.log(res)
+            })
+            .catch(error => { console.log('Error ',error); });
+        },
+        createNetwork: async function(id_project,info){
+            console.log('se ingresa a createNetwork')
+            let data={
+                "network": {
+                    "admin_state_up": true, 
+                    "availability_zone_hints": ["nova"], 
+                    "project_id": info.id_project, 
+                    "description": "network para proyecto "+info.nombre_proyecto, 
+                    "name": info.nombre_proyecto+"-net"
+                    }
+            };
+            await axios.post('http://'+configG.ipOpenstack+':9696/v2.0/networks',data,this.configOSS)
+            .then(res => {
+                console.log('Se muestra la respuesta del create network')
+                console.log(res)
+                if (res.status == '201') {
+                    this.createSubNet(res.data.network.id,info)
+                    this.createRouter(info.id_project,info.nombre_proyecto)
+                } else { console.log('Error al crear ') }
+            })
+            .catch(error => { console.log('Error ',error); });
+        },
+        createSubNet: async function(id_net,info){
+            console.log('se ingresa a createSubNet')
+            let data={
+                "subnet": {
+                    "ip_version": 4, 
+                    "network_id": id_net, 
+                    "cidr": "192.168.2001.0/24", 
+                    "name": info.nombre_proyecto+"-subnet", 
+                    "tenant_id": info.id_project
+                    }
+            };
+            await axios.post('http://'+configG.ipOpenstack+':9696/v2.0/subnets',data,this.configOSS)
+            .then(res => {
+                console.log('Se muestra la respuesta del create sub network')
+                console.log(res)
+            })
+            .catch(error => { console.log('Error ',error); });
+        },
+        createRouter: async function(id_project,nombre_pro){
+            console.log('se ingresa a createRouter')
+            let data={
+                "router": {
+                    "tenant_id": id_project, 
+                    "availability_zone_hints": ["nova"], 
+                    "description": "Router para project "+nombre_pro, 
+                    "name": nombre_pro+"-router", 
+                    "admin_state_up": true
+                    }
+            };
+            await axios.post('http://'+configG.ipOpenstack+':9696/v2.0/routers',data,this.configOSS)
+            .then(res => {
+                console.log('Se muestra la respuesta del create router')
+                console.log(res)
+                this.routerAddSubnet(res.data.router.id)
+            })
+            .catch(error => { console.log('Error ',error); });
+        },
+        routerAddSubnet: async function(id_router){
+            console.log('Se ingresa a routerAdd Subnet')
+            await axios.put('http://'+configG.ipOpenstack+':9696/v2.0/routers/'+id_router+'/add_router_interface',this.configOSS)
+            .then(res => {
+                console.log('Se muestra la respuesta del add router')
+                console.log(res)
+                this.routerSet(id_router)
+            })
+            .catch(error => { console.log('Error ',error); });
+        },
+        routerSet: async function(id_router){
+            console.log('Se ingresa a router set')
+            let data={
+                "router": {
+                    "external_gateway_info": {
+                        //"network_id": {id red publica para salir a internet}
+                        "network_id": "897405e4-ec27-43ae-befe-3ef65d0ebee6"
+                    }
+                }
+            };
+            await axios.put('http://'+configG.ipOpenstack+':9696/v2.0/routers/'+id_router,data,this.configOSS)
+            .then(res => {
+                console.log('Se muestra la respuesta del set router')
+                console.log(res)
+            })
+            .catch(error => { console.log('Error ',error); });
+        },
+        createPool: async function(id_pro,info){
             console.log('Se ingresa a crear pool en la bd')
             await axios.post('/api/pool_recursos',{
+                id_openstack: id_pro,
                 nombre_proyecto: info.nombre_proyecto,
                 contrasena: info.contrasenap,
                 descripcion: info.descripcion,

@@ -282,7 +282,7 @@
                                                     </tr>
                                                 </template>
                                                 <template v-else>
-                                                    <tr style="background-color:#FF0000;">
+                                                    <tr class="table-danger">
                                                         <th>{{index+1}}</th>
                                                         <td>{{server.tenant_id}}</td>
                                                         <td>-</td>
@@ -455,7 +455,7 @@ export default{
         getProjects: async function(){
             await axios.get('http://'+configG.ipOpenstack+'/identity/v3/projects/', this.config)
                 .then(res => {
-                    //console.log(res.data.projects);
+                    console.log(res.data.projects);
                     this.projects = res.data.projects;
                 })
                 .catch(error => { console.log('Error ',error); });                
@@ -517,7 +517,7 @@ export default{
             };
             await axios.post('http://'+configG.ipOpenstack+'/identity/v3/projects',data,this.config)
                 .then(res => {
-                    //console.log(res.data)
+                    console.log(res.data)
                 })
                 .catch(error => { console.log('Error ',error); });
                 this.getProjects();
