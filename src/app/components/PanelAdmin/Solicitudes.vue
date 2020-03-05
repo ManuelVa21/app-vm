@@ -22,7 +22,8 @@
                                     <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionPU">
                                         <div class="card-body">
                                             <p>Lista de solicitudes de Pool de recursos</p>
-                                            <table class="table-responsive-xl table-striped table-hover w-auto text-center">
+                                            <div class="table-responsive">
+                                            <table class="table table-striped table-hover w-auto table-condensed text-center">
                                                 <thead class="thead-dark text-center">
                                                     <tr class="table-active">
                                                     <th scope="col">#</th>
@@ -86,6 +87,8 @@
                                                     </template>                                       
                                                 </tbody>
                                             </table>
+                                            
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -101,7 +104,8 @@
                                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionPU">
                                         <div class="card-body">
                                             <p>Lista de solicitudes de Aumento de Pool de recursos</p>
-                                            <table class="table-responsive-xl table-striped table-hover w-auto">
+                                            <div class="table-responsive">
+                                            <table class="table table-striped table-hover w-auto">
                                                 <thead class="thead-dark text-center">
                                                     <tr class="table-active">
                                                         <th scope="col">#</th>
@@ -159,6 +163,7 @@
                                                     </template>                                           
                                                 </tbody>
                                             </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -174,7 +179,8 @@
                                     <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionPU">
                                         <div class="card-body">
                                             <p>Lista de solicitudes de Backup</p>
-                                            <table class="table-responsive-xl table-striped table-hover w-auto">
+                                            <div class="table-responsive">
+                                            <table class="table table-striped table-hover w-auto">
                                                 <thead class="thead-dark text-center">
                                                     <tr class="table-active">
                                                     <th scope="col">#</th>
@@ -220,6 +226,7 @@
                                                     </template>  
                                                 </tbody>
                                             </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -278,8 +285,13 @@ export default{
             configUseraddrole:{
                 headers:{
                     'Accept': 'application/json',
+                    'Content-Type': 'application/json',
                     'X-Auth-Token':Token,
                     'User-Agent': 'python-keystoneclient',
+                    'Access-Control-Allow-Origin': '10.55.6.39',
+                    'Access-Control-Allow-Credentials':'true',
+                    'Access-Control-Expose-Headers': 'Authorization',
+                    'Access-Control-Max-Age':'86400'
                 }
             },
             solicitudes:[]
@@ -315,7 +327,7 @@ export default{
                 console.log(res.data.content);
                 this.solicitudes = res.data.content;                    
             })
-            .catch(error => { console.log('Error ',error); });
+            .catch(error => { console.log('Error en get solicitudes',error); });
         },
         //Acciones
         aceptarPool: async function(info){
@@ -342,7 +354,7 @@ export default{
                 //console.log(res)
                 this.getSolicitudes(tipo)
                 })
-            .catch(error => { console.log('Error ',error); });
+            .catch(error => { console.log('Error en eliminar solicitud',error); });
         },
         createUsuario: async function(info){
             //Se crea el registro del usuario
@@ -358,7 +370,7 @@ export default{
                     pool_asociado: info.nombre_proyecto
                 },this.config)
                 .then(res => { console.log(res)})
-                .catch(error => { console.log('Error ',error); });
+                .catch(error => { console.log('Error en create usuario',error); });
             } else if (info.categoria_us === 'Docente'){
                 await axios.post('/api/usuarios',{
                     nombre: info.usuario,
@@ -402,7 +414,7 @@ export default{
                         this.createPool(res.data.project.id,info)
                     } else { console.log('Error al crear ')}
                     })
-                .catch(error => { console.log('Error ',error); });
+                .catch(error => { console.log('Error  en create project',error); });
         },
         setQuota: async function(id_project,info){
             //Se recibe el id y la información de la quota
@@ -420,7 +432,7 @@ export default{
                 console.log('Se muestra la respuesta del set quota')
                 console.log(res)
             })
-            .catch(error => { console.log('Error ',error); });
+            .catch(error => { console.log('Error en set quota',error); });
         },
         createUser: async function(id_project,info){
             console.log('se ingresa a createUser')
@@ -445,17 +457,19 @@ export default{
                     this.roleAdd(id_project,res.data.user.id)
                 } else { console.log('Error al crear ')}
             })
-            .catch(error => { console.log('Error ',error); });
+            .catch(error => { console.log('Error en create user',error); });
         },
         roleAdd: async function(id_project,id_user){
             console.log('se ingresa a roleAdd')
+            console.log(id_project)
+            console.log(id_user)
             //http://10.55.2.24/identity/v3/projects/{id proyecto}/users/{id usuario creado}/roles/{id role member}
             await axios.put('http://'+configG.ipOpenstack+'/identity/v3/projects/'+id_project+'/users/'+id_user+'/roles/2e8eddef9f064c2db9b929420329f3dc',this.configUseraddrole)
             .then(res => {
                 console.log('Se muestra la respuesta del role add')
                 console.log(res)
             })
-            .catch(error => { console.log('Error ',error); });
+            .catch(error => { console.log('Error en roleAdd',error); });
         },
         createNetwork: async function(id_project,info){
             console.log('se ingresa a createNetwork')
@@ -463,7 +477,7 @@ export default{
                 "network": {
                     "admin_state_up": true, 
                     "availability_zone_hints": ["nova"], 
-                    "project_id": info.id_project, 
+                    "project_id": id_project, 
                     "description": "network para proyecto "+info.nombre_proyecto, 
                     "name": info.nombre_proyecto+"-net"
                     }
@@ -473,21 +487,24 @@ export default{
                 console.log('Se muestra la respuesta del create network')
                 console.log(res)
                 if (res.status == '201') {
-                    this.createSubNet(res.data.network.id,info)
-                    this.createRouter(info.id_project,info.nombre_proyecto)
+                    this.createSubNet(res.data.network.id,info,id_project)
+                    this.createRouter(id_project,info.nombre_proyecto)
                 } else { console.log('Error al crear ') }
             })
-            .catch(error => { console.log('Error ',error); });
+            .catch(error => { console.log('Error en create network',error); });
         },
-        createSubNet: async function(id_net,info){
+        createSubNet: async function(id_net,info,id_project){
             console.log('se ingresa a createSubNet')
+            console.log('se muestra el info en create subnet')
+            console.log(info)
+            console.log(id_project)
             let data={
                 "subnet": {
                     "ip_version": 4, 
                     "network_id": id_net, 
-                    "cidr": "192.168.2001.0/24", 
+                    "cidr": "192.168.205.0/24", 
                     "name": info.nombre_proyecto+"-subnet", 
-                    "tenant_id": info.id_project
+                    "tenant_id": id_project
                     }
             };
             await axios.post('http://'+configG.ipOpenstack+':9696/v2.0/subnets',data,this.configOSS)
@@ -495,7 +512,7 @@ export default{
                 console.log('Se muestra la respuesta del create sub network')
                 console.log(res)
             })
-            .catch(error => { console.log('Error ',error); });
+            .catch(error => { console.log('Error en create subnet',error); });
         },
         createRouter: async function(id_project,nombre_pro){
             console.log('se ingresa a createRouter')
@@ -514,7 +531,7 @@ export default{
                 console.log(res)
                 this.routerAddSubnet(res.data.router.id)
             })
-            .catch(error => { console.log('Error ',error); });
+            .catch(error => { console.log('Error en create router',error); });
         },
         routerAddSubnet: async function(id_router){
             console.log('Se ingresa a routerAdd Subnet')
@@ -524,7 +541,7 @@ export default{
                 console.log(res)
                 this.routerSet(id_router)
             })
-            .catch(error => { console.log('Error ',error); });
+            .catch(error => { console.log('Error en router add ',error); });
         },
         routerSet: async function(id_router){
             console.log('Se ingresa a router set')
@@ -532,7 +549,7 @@ export default{
                 "router": {
                     "external_gateway_info": {
                         //"network_id": {id red publica para salir a internet}
-                        "network_id": "897405e4-ec27-43ae-befe-3ef65d0ebee6"
+                        "network_id": configG.idNetPublic
                     }
                 }
             };
@@ -541,7 +558,7 @@ export default{
                 console.log('Se muestra la respuesta del set router')
                 console.log(res)
             })
-            .catch(error => { console.log('Error ',error); });
+            .catch(error => { console.log('Error en router set',error); });
         },
         createPool: async function(id_pro,info){
             console.log('Se ingresa a crear pool en la bd')
@@ -555,16 +572,16 @@ export default{
                 disco_duro: info.disco_duro,
                 ram: info.ram,
                 cpu: info.cpu,
-                fecha_fin: info.usuario.fecha_fin
+                fecha_fin: info.fecha_fin
             },this.config)
                 .then(res => { console.log(res)})
-                .catch(error => { console.log('Error ',error); });
+                .catch(error => { console.log('Error en create pool',error); });
         },
         cambiarEstado: async function(id){
             console.log('Se va a cambiar el estado de la solicitud')
             await axios.put('/api/solicitudes/'+id,{estado: true }, this.config)
                 .then(res => { console.log(res)})
-                .catch(error => { console.log('Error ',error); });
+                .catch(error => { console.log('Error en cambiar estado',error); });
         }
     }
 }

@@ -22,7 +22,8 @@
                                     <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionPU">
                                         <div class="card-body">
                                             <p>Lista de Sugerencias</p>
-                                            <table class="table-responsive-xl table-striped table-hover w-auto">
+                                            <div class="table-responsive">
+                                            <table class="table table-striped table-hover w-auto">
                                                 <thead class="thead-dark text-center">
                                                     <tr>
                                                     <th scope="col">#</th>
@@ -40,6 +41,7 @@
                                                     </tr>                                                
                                                 </tbody>
                                             </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>                                

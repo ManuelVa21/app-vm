@@ -77,10 +77,8 @@
 
 
                                         <h3>Usuarios</h3>
-                                        
-
-
-                                        <table class="table-responsive-xl table-striped table-hover w-auto text-center">
+                                        <div class="table-responsive">
+                                        <table class="table table-striped table-hover w-auto text-center">
                                             <thead class="thead-dark">
                                                 <tr>
                                                 <th scope="col">#</th>
@@ -162,7 +160,8 @@
                                                 </td>  
                                                 </tr>                                                
                                             </tbody>
-                                        </table>                                       
+                                        </table> 
+                                        </div>    
                                     </div>
                                 </div>
                             </div>

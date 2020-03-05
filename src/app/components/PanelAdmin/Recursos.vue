@@ -22,7 +22,8 @@
                                     <div class="card-body">
                                         <p>Infomación correspondiente a los recursos de la plataforma Telco 2.0</p>                                        
                                         <h3>Recursos Totales Telco: OpenStack</h3>
-                                        <table class="text-center table-responsive-xl table-striped table-hover w-auto">
+                                        <div class="table-responsive">
+                                        <table class="table text-center table-responsive-xl table-striped table-hover w-auto">
                                             <thead class="thead-dark">
                                                 <tr>
                                                 <th scope="col">Nombre Host</th>
@@ -50,9 +51,11 @@
                                                 </tr>
                                             </tbody>
                                         </table>
+                                        </div>
                                         <br>
                                         <h3>Recursos Totales Telco: VMWare</h3>
-                                        <table class="text-center table-responsive-xl table-striped table-hover w-auto">
+                                        <div class="table-responsive">
+                                        <table class=" table text-center table-responsive-xl table-striped table-hover w-auto">
                                             <thead class="thead-dark">
                                                 <tr>
                                                 <th scope="col">#</th>
@@ -82,6 +85,7 @@
                                                 </tr>
                                             </tbody>
                                         </table>
+                                        </div>
                                         <h3>Info Recursos Plataforma T</h3>
                                         <div class="col">
                                             <div class="row-group text-center">
@@ -184,7 +188,8 @@
                                             </div>
                                         </div>
                                         <div>
-                                        <table class="table-responsive-xl table-striped table-hover w-auto text-center">
+                                        <div class="table-responsive">
+                                        <table class="table table-striped table-hover w-auto text-center">
                                             <thead class="thead-dark">
                                                 <tr>
                                                 <th scope="col">#</th>
@@ -221,6 +226,7 @@
                                             </tbody>
                                         </table>
                                         </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -236,7 +242,8 @@
                                 <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionPU">
                                     <div class="card-body">
                                         <button v-on:click="addServer()" type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Agregar máquina"><i class="fas fa-plus"></i></button>
-                                        <table class="table-responsive-xl table-striped table-hover w-auto text-center">
+                                        <div class="table-responsive">
+                                        <table class="table table-striped table-hover w-auto text-center">
                                             <thead class="thead-dark">
                                                 <tr class="table-active">
                                                 <th scope="col">#</th>
@@ -310,6 +317,7 @@
                                                 </template>
                                             </tbody>
                                         </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -371,6 +379,7 @@ export default{
             recursosTs:[],
             servers:[],
             projects:[],
+            projects_dbs:[],
             flavor:[]
         }
     },
@@ -470,7 +479,7 @@ export default{
                     //console.log(res.data.hypervisors[0]);
                     this.recursosTs = res.data.hypervisors;
                 })
-                .catch(error => { console.log('Error ',error); });
+                .catch(error => { console.log('Error recursos telco',error); });
         },
         //
         //

@@ -17,6 +17,22 @@ router.get('/', async (req,res) =>{
     }
 });
 
+//Para obtener los datos de un solo pool
+router.get('/unpool', async (req,res) =>{
+    //console.log('Ruta de un proyecto')
+    console.log(req.query)
+    try {
+        const pool_recursos = await Pool_recursos.findById(req.query);
+        if (!pool_recursos) {
+            res.json({ status:404, content:pool_recursos })            
+        } else {
+            res.json({ status:200, content:pool_recursos })            
+        }
+    } catch (error) {
+        res.json({ status:400, content:error })
+    }
+});
+
 //Para enviar del cliente a la bd
 router.post('/', async (req, res) => {
     try {
