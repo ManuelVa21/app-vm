@@ -25,7 +25,9 @@ app.use(bodyParser.json());
 
 app.get('/:token', (req, res) => {
     console.log('aqui estamos')
-    console.log(req.params.token)
+    console.log(req.params)
+    res.redirect('/?'+req.params.token);
+    /*
     axios.get('http://10.55.6.31:3000/auth/verify', {headers : {'x-access-token': req.params.token,'Content-Type':'application/json'}})
     .then(res => { 
         console.log('Se muestra la respuesta del axios en el servidor ')
@@ -40,10 +42,9 @@ app.get('/:token', (req, res) => {
             res.redirect('/');
         } else {
             console.log('Se ingresa a panel admin')
-            
         }
     }
-    //res.send(req.params.token)
+    */
   });
 
 

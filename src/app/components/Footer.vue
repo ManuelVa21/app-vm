@@ -2,8 +2,8 @@
     <div class="container">
         <div class="row">
             <div class="col m-lg-4">
-                <div class="row"><h5>Empresary</h5></div>
-                <div class="row"><p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae soluta earum vero, nisi voluptatum laboriosam, ratione mollitia placeat ipsam temporibus similique dolorem! Praesentium dicta recusandae tenetur est illum nihil officiis. </p></div>
+                <div class="row"><h5>Plataforma Telco 2.0</h5></div>
+                <div class="row"><p>Este es el servicio de máquinas virtuales de la Plataforma Telco 2.0. Solicita y administra tus recursos.</p></div>
             </div>
             <div class="col m-lg-4">
                 <div class="col m-2">
@@ -21,7 +21,7 @@
                 <hr>
                 <div class="row d-flex align-items-center">
                     <div class="col-4"><i class="fa fa-envelope fa-2x"></i></div>
-                    <div class="col-8"><span>business@hotmail.com</span><br><span>business@hotmail.com</span></div>
+                    <div class="col-8"><span>telco@unicauca.edu.co</span></div>
                        
                 </div>
                 <div class="row d-flex align-items-center">

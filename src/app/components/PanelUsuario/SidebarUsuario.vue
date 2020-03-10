@@ -8,7 +8,7 @@
             <!-- <img src="..." alt="..." class="rounded-circle"> -->
             <div class="sidebar-heading text-center text-primary">Telco 2.0 </div>
               <ul class="list-group list-group-flush">
-                <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelUsuario/PerfilUsuario">Perfil Usuario</router-link></li>
+                <!--<li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelUsuario/PerfilUsuario">Perfil Usuario</router-link></li>-->
                 <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelUsuario/MiProyecto">Mi Proyecto</router-link></li>
                 <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelUsuario/AlertasNotificaciones">Alertas y Notificaciones</router-link></li>
                 <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelUsuario/Peticiones">Peticiones</router-link></li>

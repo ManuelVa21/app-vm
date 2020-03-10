@@ -7,7 +7,7 @@
                 </div>
                 <div class="col-sm-8">
                     <br>                      
-                    <h2>Hola {{Project.propietario}} este es tu proyecto y características de los recursos asignados</h2>
+                    <h2>Hola {{this.user.name}} este es tu proyecto y características de los recursos asignados</h2>
                           
                    <div class="container" >
                       
@@ -332,6 +332,7 @@ export default {
             //Project: new Project(),
            Project: [],
            servers: [],
+           user:{}
           // cuota proyecto
            // be3f1add2a3d4a0f9bcf2042efc2278b    Id Proyecto OpenStack
 
@@ -342,20 +343,34 @@ export default {
         }
     },
     created(){
-       
-       this.getPool();
+      this.getStorage()
+      this.getPool();
     },
     components:{
         'SidebarUsuario': SidebarUsuario  
     },
 
     methods: {
+      getStorage: async function(){
+            console.log('Se ingresa a get storage')
+            var storage;
+            try {
+                if (localStorage.getItem) {
+                    storage = JSON.parse(localStorage.getItem('userInfo'))
+                    console.log('se muestra el storage ',storage)
+                    console.log('se muestra el name ',storage.name)
+                    this.user = storage
+                }
+            } catch(e) {
+                storage = {};
+            }
+        },
 
  //Traer información del pool del usuario 
  //Mirar de donde traer el ID_POOL      
 
         getPool: async function(){
-            let idPool = "5e5014d68ad92c484a0fa33b";
+            let idPool = "5e589dc671235a141e6ab393";
             //console.log('Se ingresa  getOneProject' + idPool)
             await axios.get('/api/pool_recursos/unpool?_id='+idPool)
                 .then(res => {

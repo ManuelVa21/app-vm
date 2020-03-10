@@ -28,7 +28,15 @@ module.exports = {
                 test: /\.txt$/,
                 exclude: /node_modules/, 
                 use: 'raw-loader' 
-            }
+            },
+            {
+                test: /\.(png|jpg|gif)$/,                      
+                use: [
+                  {
+                    loader: 'file-loader',
+                  },
+                ],
+              }
         ]
     },
     plugins:[

@@ -2,10 +2,6 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
-import axios from 'axios';
-import VueAxios from 'vue-axios';
-Vue.use(VueAxios, axios);
-
 //Importar components
 import App from './App.vue'
 import Inicio from './components/Inicio.vue'
@@ -29,85 +25,26 @@ import Sugerencias from './components/PanelAdmin/Sugerencias.vue'
 Vue.config.productionTip = false
 
 const routes = [
-  {
-    name: 'Pruebas',
-    path: '/Pruebas',
-    component: Pruebas
-  },
-  {
-    name: 'Inicio',
-    path: '/',
-    component: Inicio
-  },
-  {
-    name: 'Login',
-    path: '/Login',
-    component: Login
-  },
-  {
-    name: 'PanelUsuario',
-    path: '/PanelUsuario',
-    component: PanelUsuario
-  },
-  {
-    name: 'Registrar',
-    path: '/Registrar',
-    component: Registrar
-  },
-  {
-    name: 'PanelUsuario/PerfilUsuario',
-    path: '/PanelUsuario/PerfilUsuario',
-    component: PerfilUsuario
-  },
-  {
-    name: 'PanelUsuario/AlertasNotificaciones',
-    path: '/PanelUsuario/AlertasNotificaciones',
-    component: AlertasNotificaciones
-  },
-  {
-    name: 'PanelUsuario/MiProyecto',
-    path: '/PanelUsuario/MiProyecto',
-    component: MiProyecto
-  },
-  {
-    name: 'PanelUsuario/Peticiones',
-    path: '/PanelUsuario/Peticiones',
-    component: Peticiones
-  },
-  {
-    name: 'PanelAdmin/InfoUsuarios',
-    path: '/PanelAdmin/InfoUsuarios',
-    component: InfoUsuarios
-  },
-  {
-    name: 'PanelAdmin/Solicitudes',
-    path: '/PanelAdmin/Solicitudes',
-    component: Solicitudes
-  },
-  {
-    name: 'PanelAdmin/Recursos',
-    path: '/PanelAdmin/Recursos',
-    component: Recursos
-  },
-  {
-    name: 'PanelAdmin/Alertas',
-    path: '/PanelAdmin/Alertas',
-    component: Alertas
-  },
-  {
-    name: 'PanelAdmin/Sugerencias',
-    path: '/PanelAdmin/Sugerencias',
-    component: Sugerencias
-  },
-  {
-    name: 'PanelAdmin',
-    path: '/PanelAdmin',
-    component: PanelAdmin
-  }
+  { name: 'Pruebas', path: '/Pruebas', component: Pruebas },
+  { name: 'Inicio', path: '/', component: Inicio },
+  { name: 'Login', path: '/Login', component: Login },
+  { name: 'PanelUsuario', path: '/PanelUsuario', component: PanelUsuario },
+  { name: 'Registrar', path: '/Registrar', component: Registrar },
+  { name: 'PanelUsuario/PerfilUsuario', path: '/PanelUsuario/PerfilUsuario', component: PerfilUsuario },
+  { name: 'PanelUsuario/AlertasNotificaciones', path: '/PanelUsuario/AlertasNotificaciones', component: AlertasNotificaciones },
+  { name: 'PanelUsuario/MiProyecto', path: '/PanelUsuario/MiProyecto', component: MiProyecto },
+  { name: 'PanelUsuario/Peticiones', path: '/PanelUsuario/Peticiones', component: Peticiones },
+  { name: 'PanelAdmin/InfoUsuarios', path: '/PanelAdmin/InfoUsuarios', component: InfoUsuarios },
+  { name: 'PanelAdmin/Solicitudes', path: '/PanelAdmin/Solicitudes', component: Solicitudes },
+  { name: 'PanelAdmin/Recursos', path: '/PanelAdmin/Recursos', component: Recursos },
+  { name: 'PanelAdmin/Alertas', path: '/PanelAdmin/Alertas', component: Alertas },
+  { name: 'PanelAdmin/Sugerencias', path: '/PanelAdmin/Sugerencias', component: Sugerencias },
+  { name: 'PanelAdmin', path: '/PanelAdmin', component: PanelAdmin },
+  { path: '*', redirectTo: 'Inicio' }
 
 ];
 
-const router = new VueRouter({ mode: 'history', routes: routes });
-//new Vue(Vue.util.extend({router}, App)).$mount('#app');
+//const router = new VueRouter({ mode: 'history', routes: routes });
+const router = new VueRouter({ routes: routes });
 new Vue({ render: h => h(App), router }).$mount('#app')
 
