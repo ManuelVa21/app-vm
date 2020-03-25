@@ -29,6 +29,7 @@
                                                     <th scope="col">#</th>
                                                     <th scope="col">Fecha solicitud</th>
                                                     <th scope="col">Usuario</th>
+                                                    <th scope="col">Correo</th>
                                                     <th scope="col">Nombre Proyecto</th>
                                                     <th scope="col">Descripción</th>
                                                     <th scope="col">Tutor</th>
@@ -47,6 +48,7 @@
                                                     <th>{{index+1}}</th>
                                                     <td>{{solicitud.fecha}}</td>
                                                     <td>{{solicitud.usuario}}</td> 
+                                                    <td>{{solicitud.correo}}</td> 
                                                     <td>{{solicitud.nombre_proyecto}}</td>
                                                     <td>{{solicitud.descripcion}}</td>
                                                     <td>{{solicitud.tutor}}</td> 
@@ -68,7 +70,8 @@
                                                     <tr class="table-success">
                                                     <th>{{index+1}}</th>
                                                     <td>{{solicitud.fecha}}</td>
-                                                    <td>{{solicitud.usuario}}</td> 
+                                                    <td>{{solicitud.usuario}}</td>
+                                                    <td>{{solicitud.correo}}</td>  
                                                     <td>{{solicitud.nombre_proyecto}}</td>
                                                     <td>{{solicitud.descripcion}}</td>
                                                     <td>{{solicitud.tutor}}</td> 
@@ -112,6 +115,7 @@
                                                         <th scope="col">Fecha solicitud</th>
                                                         <th scope="col">Motivo</th>
                                                         <th scope="col">Usuario</th>
+                                                        <th scope="col">Correo</th>
                                                         <th scope="col">Nombre Proyecto</th>
                                                         <th scope="col">Extensión de tiempo</th>
                                                         <th scope="col">Almacenamiento nuevo</th>
@@ -128,6 +132,7 @@
                                                         <td>{{solicitud.fecha}}</td>
                                                         <td>{{solicitud.motivo}}</td> 
                                                         <td>{{solicitud.usuario}}</td>
+                                                        <td>{{solicitud.correo}}</td>
                                                         <td>{{solicitud.nombre_proyecto}}</td>
                                                         <td>{{solicitud.aumento_fecha_fin}}</td> 
                                                         <td>{{solicitud.aumento_disco_duro+' Gb'}}</td> 
@@ -148,6 +153,7 @@
                                                         <td>{{solicitud.fecha}}</td>
                                                         <td>{{solicitud.motivo}}</td> 
                                                         <td>{{solicitud.usuario}}</td>
+                                                        <td>{{solicitud.correo}}</td>
                                                         <td>{{solicitud.nombre_proyecto}}</td>
                                                         <td>{{solicitud.aumento_fecha_fin}}</td> 
                                                         <td>{{solicitud.aumento_disco_duro+' Gb'}}</td> 
@@ -185,7 +191,8 @@
                                                     <tr class="table-active">
                                                     <th scope="col">#</th>
                                                     <th scope="col">Fecha solicitud</th>
-                                                    <th scope="col">Usuario</th>                                                    
+                                                    <th scope="col">Usuario</th>
+                                                    <th scope="col">Correo</th>                                                     
                                                     <th scope="col">Nombre Proyecto</th>
                                                     <th scope="col">Motivo</th>
                                                     <th scope="col">Estado</th>
@@ -198,6 +205,7 @@
                                                         <th>{{index+1}}</th>
                                                         <td>{{solicitud.fecha}}</td>
                                                         <td>{{solicitud.usuario}}</td> 
+                                                        <td>{{solicitud.correo}}</td> 
                                                         <td>{{solicitud.nombre_proyecto}}</td>
                                                         <td>{{solicitud.motivo}}</td>
                                                         <td>Pendiente</td>
@@ -213,7 +221,8 @@
                                                         <tr class="table-success">
                                                         <th>{{index+1}}</th>
                                                         <td>{{solicitud.fecha}}</td>
-                                                        <td>{{solicitud.usuario}}</td> 
+                                                        <td>{{solicitud.usuario}}</td>
+                                                        <td>{{solicitud.correo}}</td>  
                                                         <td>{{solicitud.nombre_proyecto}}</td>
                                                         <td>{{solicitud.motivo}}</td>
                                                         <td>Resuelto</td>
@@ -299,26 +308,12 @@ export default{
     },
     created(){
         //this.getSolicitudesPool();
-        //this.getStorage();
 
     },
     components:{
         'SidebarAdmin': SidebarAdmin
     },
     methods:{
-        getStorage: async function(){
-            console.log('Se ingresa a get storage')
-            var storage;
-            try {
-                if (localStorage.getItem) {
-                    storage = localStorage;
-                    console.log('se muestra el storage')
-                    console.log(storage)
-                }
-            } catch(e) {
-                storage = {};
-            }
-        },
         getSolicitudes: async function(tipo){
             //console.log('Se ingresa a getSolicitudesPool')
             await axios.get('/api/solicitudes?tipo='+tipo)
@@ -568,6 +563,7 @@ export default{
                 contrasena: info.contrasenap,
                 descripcion: info.descripcion,
                 propietario: info.usuario,
+                emailPropietario: info.correo,
                 numero_vm: info.numvm,
                 disco_duro: info.disco_duro,
                 ram: info.ram,

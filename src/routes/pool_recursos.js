@@ -1,3 +1,6 @@
+
+
+
 const express = require('express');
 const router = express.Router();
 
@@ -22,7 +25,8 @@ router.get('/unpool', async (req,res) =>{
     //console.log('Ruta de un proyecto')
     console.log(req.query)
     try {
-        const pool_recursos = await Pool_recursos.findById(req.query);
+        const pool_recursos = await Pool_recursos.findOne(req.query);
+        //console.log(pool_recursos)
         if (!pool_recursos) {
             res.json({ status:404, content:pool_recursos })            
         } else {
@@ -37,7 +41,7 @@ router.get('/unpool', async (req,res) =>{
 router.post('/', async (req, res) => {
     try {
         //console.log('Se mira el request')
-        //console.log(req.body)
+        console.log(req.body)
         const pool_recursos = new Pool_recursos(req.body)
         await pool_recursos.save();
         res.json({ status:'200', answer:"Pool de recursos creado" });

@@ -5,7 +5,7 @@
                 <div class="col-sm-2 col-with-right-border">
                     <SidebarAdmin></SidebarAdmin>
                 </div>
-                <div class="col-sm-8">
+                <div class="col-sm-8 position-static">
                     <p>Descripción de las funciones que se pueden realizar en esta sección</p>
                     <div class="container">
                         <div class="accordion" id="accordionPU">

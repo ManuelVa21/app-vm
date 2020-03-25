@@ -39,7 +39,7 @@
             <a class="dropdown-item">usuario</a>
             <router-link class="dropdown-item" to="/"><small class="m-auto">Politicas de uso</small></router-link>
             <router-link class="dropdown-item" to="/PanelUsuario/PerfilUsuario"><small class="m-auto">Cuenta</small></router-link>
-            <a class="dropdown-item" href="http://10.55.6.31:4200/home">Salir</a>
+            <a v-on:click="logout()" class="dropdown-item" href="http://10.55.6.31:4200/home">Salir</a>
           </div>
         </div>
       </div>
@@ -64,9 +64,8 @@ export default {
   },
 
   methods: {
-    logout () {
-      localStorage.removeItem('usertoken');
-      this.$router.push({ name: 'Inicio' })
+    logout: async function() {
+      localStorage.removeItem('userInfo');
     }
   },
 
