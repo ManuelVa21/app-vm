@@ -293,14 +293,8 @@ export default{
             },
             configUseraddrole:{
                 headers:{
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
                     'X-Auth-Token':Token,
                     'User-Agent': 'python-keystoneclient',
-                    'Access-Control-Allow-Origin': '10.55.6.39',
-                    'Access-Control-Allow-Credentials':'true',
-                    'Access-Control-Expose-Headers': 'Authorization',
-                    'Access-Control-Max-Age':'86400'
                 }
             },
             solicitudes:[]
@@ -459,7 +453,7 @@ export default{
             console.log(id_project)
             console.log(id_user)
             //http://10.55.2.24/identity/v3/projects/{id proyecto}/users/{id usuario creado}/roles/{id role member}
-            await axios.put('http://'+configG.ipOpenstack+'/identity/v3/projects/'+id_project+'/users/'+id_user+'/roles/2e8eddef9f064c2db9b929420329f3dc',this.configUseraddrole)
+            await axios.put('http://'+configG.ipOpenstack+'/identity/v3/projects/'+id_project+'/users/'+id_user+'/roles/'+configG.roleMember,this.configUseraddrole)
             .then(res => {
                 console.log('Se muestra la respuesta del role add')
                 console.log(res)

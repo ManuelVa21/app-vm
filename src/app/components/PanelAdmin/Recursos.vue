@@ -277,14 +277,30 @@
                                                         </td>
                                                         <td>{{server.status}}</td>
                                                         <td>
-                                                            <div class="btn-group-sm" role="group" aria-label="Basic example">
-                                                                <div>
-                                                                    <!-- Material switch -->
-                                                                </div>                                                        
+                                                            <div class="dropdown dropleft">
+                                                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    Action
+                                                                </button>
+                                                                <div class="dropdown-menu">
+                                                                    <button v-on:click="editarServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>
+                                                                    <button v-on:click="apagarServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Apagar"><i class="fas fa-power-off"></i> Apagar</button>
+                                                                    <button v-on:click="reiniciarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fas fa-redo-alt"></i> Reiniciar</button>
+                                                                    <button v-on:click="consola(server.id)" type="button" class="btn btn-secondary dropdown-item" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i> Abrir</button>
+                                                                    <button v-on:click="backupServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i> Backup</button>
+                                                                    <button v-on:click="pausarServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Pausar"><i class="fas fa-pause"></i> Pausar</button>
+                                                                    <button v-on:click="bloquearServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Bloquear"><i class="fas fa-lock"></i> Bloquear</button>
+                                                                    <button v-on:click="suspenderServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Suspender"><i class="fas fa-moon"></i> Suspender</button>
+                                                                    <div class="dropdown-divider"></div>
+                                                                    <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i> Eliminar</button>
+                                                                </div>
+                                                            </div>
+                                                            <!--
+                                                            <div class="btn-group-sm" role="group" aria-label="Basic example">                                                      
                                                                 <button v-on:click="consola(server.id)" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i></button>
                                                                 <button v-on:click="backup(server.id)" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i></button>
                                                                 <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i></button>                                                        
                                                             </div>
+                                                            -->
                                                         </td>
                                                     </tr>
                                                 </template>
@@ -304,6 +320,24 @@
                                                         </td>
                                                         <td>{{server.status}}</td>
                                                         <td>
+                                                            <div class="dropdown dropleft">
+                                                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    Action
+                                                                </button>
+                                                                <div class="dropdown-menu">
+                                                                    <button v-on:click="encenderServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Encender"><i class="fas fa-power-off"></i> Encender</button>
+                                                                    <button v-on:click="consola(server.id)" type="button" class="btn btn-secondary dropdown-item" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i> Abrir</button>
+                                                                    <button v-on:click="editarServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>
+                                                                    <button v-on:click="reiniciarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fas fa-redo-alt"></i> Reiniciar</button>
+                                                                    <button v-on:click="backupServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i> Backup</button>
+                                                                    <button v-on:click="desPausarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Despausar"><i class="fas fa-play"></i> Despausar</button>
+                                                                    <button v-on:click="desBloquearServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Desbloquear"><i class="fas fa-lock-open"></i> Desbloquear</button>
+                                                                    <div class="dropdown-divider"></div>
+                                                                    <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i> Eliminar</button>
+                                                                </div>
+                                                            </div>
+
+
                                                             <div class="btn-group-sm" role="group" aria-label="Basic example">
                                                                 <div>
                                                                     <!-- Material switch -->
@@ -484,28 +518,6 @@ export default{
         //
         //
         //Buttons
-        consola: async function(idServer){
-            let data={
-                "os-getVNCConsole": {
-                    "type": "novnc"
-                }
-            };
-            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
-                .then(res => {
-                    //console.log(res.data)
-                    window.open(res.data.console.url)
-                })
-                .catch(error => { console.log('Error ',error); });
-        },
-        deleteServer: async function(idServer){
-            //console.log('Se ingresa a deleteServer')
-            await axios.delete('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer,this.config)
-                .then(res => {
-                    console.log(res.data)
-                })
-                .catch(error => { console.log('Error ',error); });
-                this.getServers();
-        },
         deleteProject: async function(idProject){
             await axios.delete('http://'+configG.ipOpenstack+'/identity/v3/projects/'+idProject,this.config)
                 .then(res => {
@@ -532,6 +544,7 @@ export default{
                 this.getProjects();
                 this.project = new Project();
         },
+//SERVER//
         addServer: async function(){
             console.log('Se ingresa a addServer')
             let data={
@@ -553,9 +566,58 @@ export default{
                 .catch(error => { console.log('Error ',error); });
                 this.getServers();
         },
-        backup: async function(idServer){
+        consola: async function(idServer){
+            let data={
+                "os-getVNCConsole": {
+                    "type": "novnc"
+                }
+            };
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
+                .then(res => {
+                    //console.log(res.data)
+                    window.open(res.data.console.url)
+                })
+                .catch(error => { console.log('Error ',error); });
+        },
+        deleteServer: async function(idServer){
+            //console.log('Se ingresa a deleteServer')
+            await axios.delete('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer,this.config)
+                .then(res => {
+                    console.log(res.data)
+                })
+                .catch(error => { console.log('Error ',error); });
+                this.getServers();
+        },
+        backupServer: async function(idServer){
             console.log('Se ingresa a backup')
-        }      
+        },
+        apagarServer: async function(idServer) {
+            console.log('Se ingresa a apagar')
+        },
+        encenderServer: async function(idServer) {
+            console.log('Se ingresa a encender')
+        },
+        editarServer: async function(idServer) {
+            console.log('Se ingresa a editar')
+        },
+        reiniciarServer: async function(idServer) {
+            console.log('Se ingresa a reiniciar')
+        },
+        pausarServer: async function(idServer) {
+            console.log('Se ingresa a pausar')
+        },
+        desPausarServer: async function(idServer) {
+            console.log('Se ingresa a despausar')
+        },
+        bloquearServer: async function(idServer) {
+            console.log('Se ingresa a bloquear')
+        },
+        desBloquearServer: async function(idServer) {
+            console.log('Se ingresa a desbloquear')
+        },
+        suspenderServer: async function(idServer) {
+            console.log('Se ingresa a suspender')
+        }
     }
 }
 </script>

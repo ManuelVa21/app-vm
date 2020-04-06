@@ -237,9 +237,16 @@
                             <div class="card">
                                 <div class="card-header" id="headingTwo">
                                 <h5 class="mb-0">
-                                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    Solicitud de aumento de pool de recursos
-                                    </button>
+                                    <template v-if="pool === true">
+                                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        Solicitud de aumento de pool de recursos
+                                        </button>
+                                    </template>
+                                    <template v-else>
+                                        <button disabled class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        Solicitud de aumento de pool de recursos
+                                        </button>
+                                    </template>
                                 </h5>
                                 </div>
                                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionPU">
@@ -303,9 +310,16 @@
                             <div class="card">
                                 <div class="card-header" id="headingThree">
                                 <h5 class="mb-0">
-                                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                    Solicitud de backup
-                                    </button>
+                                    <template v-if="pool === true">
+                                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        Solicitud de backup
+                                        </button>
+                                    </template>
+                                    <template v-else>
+                                        <button disabled class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        Solicitud de backup
+                                        </button>
+                                    </template>
                                 </h5>
                                 </div>                              
                                 <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionPU">
@@ -382,7 +396,9 @@ export default {
                 }
             },
             solicitudpool: new SolocitudPool(),
-            storage:{}
+            storage:{},
+            Project:[],
+            pool: false
         }
     },
     created(){
@@ -393,16 +409,36 @@ export default {
     },
     methods:{
         getStorage: async function(){
-        console.log('Se ingresa a get storage')
+        console.log('Se ingresa a get storage')            
+        var storage;
         try {
           if (localStorage.getItem) {
-              this.storage = JSON.parse(localStorage.getItem('userInfo'))
-              //console.log(this.storage.name)
+              storage = JSON.parse(localStorage.getItem('userInfo'))
+              console.log('se muestra el storage ',storage)
+              //console.log('se muestra el name ',storage.name)
+              this.user = storage
+              this.getPool(this.user.email)
           }
         } catch(e) {
             storage = {};
         }
       },
+      getPool: async function(email){
+            await axios.get('/api/pool_recursos/unpool?emailPropietario='+email)
+                .then(res => {
+                   console.log(res.data);
+                   if (res.data.status == '404' || res.data.status == '400') {
+                      this.pool = "false";                      
+                    }
+                    else{
+                        this.pool = true;
+                        this.Project = res.data.content; 
+                    }                    
+                })
+                .catch(error => { 
+                    console.log('Error ',error);                    
+                });            
+        },
         limpiar: async function(){this.solicitudpool = new SolocitudPool()},
         sendSolicitud: async function(tipoSol){
             await axios.post('/api/solicitudes',{

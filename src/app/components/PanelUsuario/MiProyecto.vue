@@ -284,13 +284,7 @@ export default {
             //Project: new Project(),
            Project: [],
            servers: [],
-           user:{}
-          // cuota proyecto
-           // be3f1add2a3d4a0f9bcf2042efc2278b    Id Proyecto OpenStack
-           // "779634de0b0040f28f6f99d09d9d5006"   Id project testbed_ims
-           //  "2dfeb6d3-9a12-4cb5-a823-bb639f05fd35"  Id project testbed_ims
-           //  4b7b34691b5a40d5a4be9b8a26c12ec3  usuario ID 
-            
+           user:{}            
         }
     },
     created(){
@@ -303,17 +297,12 @@ export default {
     methods: {
  //Se obtiene información del localStor
       getStorage: async function(){
-        console.log('Se ingresa a get storage')            
         var storage;
         try {
           if (localStorage.getItem) {
               storage = JSON.parse(localStorage.getItem('userInfo'))
-              console.log('se muestra el storage ',storage)
-              //console.log('se muestra el name ',storage.name)
               this.user = storage
               this.getPool(this.user.email)
-              
-              //this.getPool()
           }
         } catch(e) {
             storage = {};
@@ -321,109 +310,93 @@ export default {
       },
 //Se trae el pool de recursos con el correo del localStorage         
         getPool: async function(email){
-            //await axios.get('/api/pool_recursos/unpool?propietario='+propietario)
             await axios.get('/api/pool_recursos/unpool?emailPropietario='+email)
                 .then(res => {
-                   console.log(res.data);
                    if (res.data.status == '404' || res.data.status == '400') {
-                       console.log("ENTRE AL IF");
-                       this.Project = "false";  
-                       //console.log(Project.nombre_proyecto);                      
+                      this.Project = "false";                      
                     }
                     else{
-                        //this.verifyProject = "true";
-                        console.log("ENTRE AL ELSE");
                         this.Project = res.data.content; 
                     }                    
                 })
                 .catch(error => { 
                     console.log('Error ',error);                    
                 });            
-        }, 
+        },
+       
 // TRAER VM's del usuario por idProject_OPENSTACK 
 //                                              Poner ID proyecto OpenStack        
         getServers: async function(){
-            let server
-            let idProject = "779634de0b0040f28f6f99d09d9d5006";
-            //let idProject = "be3f1add2a3d4a0f9bcf2042efc2278b";
-            console.log('Se ingresa a getServers')
-           await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/servers/detail?all_tenants=True&project_id='+idProject, this.config)
-                .then(res => {
-                    //console.log(res);
-                    console.log(res.data.servers);
-                    this.servers = res.data.servers;
-                    //console.log(res.data.servers[4].addresses);
-                })
-                .catch(error => { console.log('Error ',error); });
-                 if (this.servers.length == 0 )
-                    {console.log("no hay servidores")}
-                else{
-                      console.log("Si hay servidores ")
-                      for await ( server of this.servers){
-                      server.image.id = await this.getOneImage(server.image.id);
-
-                     if (server.image.id) {
-                          server.image.id = await this.getOneImage(server.image.id);                        
-                      }
-                      else{
-                          server.image.id =server.image.id; 
-                      }
-                      server.flavor.id= await this.getOneFlavor(server.flavor.id);
-                    }
-                  }                 
-        },
+          let server
+          await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/servers/detail?all_tenants=True&project_id='+this.Project.id_openstack, this.config)
+          .then(res => {
+            //console.log(res.data.servers);
+            this.servers = res.data.servers;
+            //console.log(res.data.servers[4].addresses);
+          })
+          .catch(error => { console.log('Error ',error); });
+          if (this.servers.length == 0 )
+            {console.log("no hay servidores")}
+          else{
+              //console.log("Si hay servidores ")
+              for await ( server of this.servers){
+              server.image.id = await this.getOneImage(server.image.id);
+             if (server.image.id) {
+                  server.image.id = await this.getOneImage(server.image.id);                        
+              }
+              else{
+                  server.image.id =server.image.id; 
+              }
+              server.flavor.id= await this.getOneFlavor(server.flavor.id);
+            }
+          }                 
+        },       
         getOneImage: async function(idImage){
-            let answer
-            //console.log('Se ingresa  getOneImage')
-            await axios.get('http://'+configG.ipOpenstack+'/image/v2/images/'+idImage,this.config)
-                .then(res => {
-                    //console.log(res)
-                    //console.log(res.data.name)
-                    answer= res.data.name;
-                })
-                .catch(error => { 
-                    console.log('Error ',error);
-                    answer="error";
-                    });
-            return answer;
+          let answer
+          await axios.get('http://'+configG.ipOpenstack+'/image/v2/images/'+idImage,this.config)
+          .then(res => { answer= res.data.name; })
+          .catch(error => { 
+              console.log('Error ',error);
+              answer="error";
+              });
+          return answer;
         },        
         getOneFlavor: async function(idFlavor){
-            let answer=[] 
-            //console.log('Se ingresa  getOneFlavor')
-            await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/flavors/'+idFlavor, this.config)
-                .then(res => {
-                    //console.log(res.data);
-                    answer[0] = res.data.flavor.disk;
-                    answer[1] = res.data.flavor.ram;
-                    answer[2] = res.data.flavor.vcpus;
-                })
-                .catch(error => { console.log('Error ',error); });
-                return answer;
+          let answer=[] 
+          //console.log('Se ingresa  getOneFlavor')
+          await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/flavors/'+idFlavor, this.config)
+          .then(res => {
+              //console.log(res.data);
+              answer[0] = res.data.flavor.disk;
+              answer[1] = res.data.flavor.ram;
+              answer[2] = res.data.flavor.vcpus;
+          })
+          .catch(error => { console.log('Error ',error); });
+          return answer;
         },
 //ACCIONES VM's  Acceder por consola - Eliminar - Editar - Encender - Apagar - Reiniciar        
         consola: async function(idServer){
-            let data={
-                "os-getVNCConsole": {
-                    "type": "novnc"
-                }
-            };
-            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
-                .then(res => {
-                    //console.log(res.data)
-                    window.open(res.data.console.url)
-                })
-                .catch(error => { console.log('Error ',error); });
+          let data={
+              "os-getVNCConsole": {
+                  "type": "novnc"
+              }
+          };
+          await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
+          .then(res => {
+            //console.log(res.data)
+            window.open(res.data.console.url)
+          })
+          .catch(error => { console.log('Error ',error); });
         },
         deleteServer: async function(idServer){
-            //console.log('Se ingresa a deleteServer')
-            await axios.delete('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer,this.config)
-                .then(res => {
-                    console.log(res.data)
-                })
-                .catch(error => { console.log('Error ',error); });
-                this.getServers();
+          //console.log('Se ingresa a deleteServer')
+          await axios.delete('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer,this.config)
+          .then(res => {
+            console.log(res.data)
+          })
+          .catch(error => { console.log('Error ',error); });
+          this.getServers();
         },
-
         editServer: async function (idServer){
           console.log (idServer)
         }
