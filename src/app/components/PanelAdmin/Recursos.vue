@@ -336,16 +336,6 @@
                                                                     <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i> Eliminar</button>
                                                                 </div>
                                                             </div>
-
-
-                                                            <div class="btn-group-sm" role="group" aria-label="Basic example">
-                                                                <div>
-                                                                    <!-- Material switch -->
-                                                                </div>                                                        
-                                                                <button v-on:click="consola(server.id)" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i></button>
-                                                                <button v-on:click="backup(server.id)" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i></button>
-                                                                <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i></button>                                                        
-                                                            </div>
                                                         </td>
                                                     </tr>                                                        
                                                 </template>
@@ -554,12 +544,11 @@ export default{
                     "imageRef": "4ea30d31-e460-428e-9a32-4de90cabca2d", 
                     "flavorRef": "d1", 
                     "max_count": 1, 
-                    "min_count": 1,
-                    "host": "bl3-ProLiant-BL460c-Gen10",  
+                    "min_count": 1,  
                     "networks": [{"uuid": "f8ac43ad-01cb-44e4-806c-112cd26b0fdb"}]
                 }
             };
-            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers ',data,this.config)
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers',data,this.config)
                 .then(res => {
                     console.log(res.data)
                 })

@@ -444,8 +444,8 @@ export default {
             await axios.post('/api/solicitudes',{
                 tipo: tipoSol,
                 catUsuario: this.solicitudpool.catUsuario,
-                usuario : this.storage.name,
-                correo: this.storage.email,
+                usuario : this.user.name,
+                correo: this.user.email,
                 nombre_proyecto: this.solicitudpool.nombrep,
                 contrasenap: this.solicitudpool.contrasenap,
                 descripcion: this.solicitudpool.descripcionp,

@@ -279,6 +279,12 @@ export default{
                 'X-OpenStack-Nova-API-Version': '2.1' 
                 }
             },
+            configSimple:{
+                headers:{
+                'X-Auth-Token':Token,
+                'Content-Type': 'application/json'
+                }
+            },
             configOSS:{
                 headers:{
                     'Content-Type': 'application/json',
@@ -294,7 +300,8 @@ export default{
             configUseraddrole:{
                 headers:{
                     'X-Auth-Token':Token,
-                    'User-Agent': 'python-keystoneclient',
+                    'Accept': 'application/json',
+                    'User-Agent': 'python-keystoneclient'
                 }
             },
             solicitudes:[]
@@ -320,6 +327,8 @@ export default{
         },
         //Acciones
         aceptarPool: async function(info){
+            console.log('se muestra el info recibido en aceptar pool')
+            console.log(info)
             this.createProyecto(info)
             this.createUsuario(info)
             this.cambiarEstado(info._id)
@@ -407,8 +416,8 @@ export default{
         },
         setQuota: async function(id_project,info){
             //Se recibe el id y la información de la quota
-            console.log('se muestra el info que se recibe dentro de set quota')
-            console.log(info)
+            console.log('set quota')
+            //console.log(info)
             let data={
                 "quota_set":{
                     "instances": info.numvm, 
@@ -425,20 +434,20 @@ export default{
         },
         createUser: async function(id_project,info){
             console.log('se ingresa a createUser')
-            console.log('se muestra el info en create user')
-            console.log(info)
+            //console.log('se muestra el info en create user')
+            //console.log(info)
             let data={
                 "user":{
-                    "default_project_id" : id_project,
-                    "description" : info.descripcion,
-                    "email" : info.correo,
+                    //"default_project_id" : id_project,
+                    //"description" : 'Usuario del proyecto: '+id_project,
+                    //"email" : info.correo,
                     "enable" : true,
-                    "name" : info.usuario,
+                    "name" : info.nombre_proyecto,
                     "password" : info.contrasenap,
                     "domain_id" : "default"
                 }
             };
-            await axios.post('http://'+configG.ipOpenstack+'/identity/v3/users',data,this.configOS)
+            await axios.post('http://'+configG.ipOpenstack+'/identity/v3/users',data,this.configSimple)
             .then(res => {
                 console.log('Se muestra la respuesta del create user')
                 console.log(res)
@@ -450,9 +459,10 @@ export default{
         },
         roleAdd: async function(id_project,id_user){
             console.log('se ingresa a roleAdd')
-            console.log(id_project)
-            console.log(id_user)
+            //console.log(id_project)
+            //console.log(id_user)
             //http://10.55.2.24/identity/v3/projects/{id proyecto}/users/{id usuario creado}/roles/{id role member}
+            //http://10.55.2.24/identity/v3/projects/d4e480ee2284481b9bb7db926ba7cfb1/users/9ba3f2cf490b44a6aafe6d09deaac518/roles/e6dfb94eb95542a0b415279abe461aab
             await axios.put('http://'+configG.ipOpenstack+'/identity/v3/projects/'+id_project+'/users/'+id_user+'/roles/'+configG.roleMember,this.configUseraddrole)
             .then(res => {
                 console.log('Se muestra la respuesta del role add')
@@ -484,9 +494,9 @@ export default{
         },
         createSubNet: async function(id_net,info,id_project){
             console.log('se ingresa a createSubNet')
-            console.log('se muestra el info en create subnet')
-            console.log(info)
-            console.log(id_project)
+            //console.log('se muestra el info en create subnet')
+            //console.log(info)
+            //console.log(id_project)
             let data={
                 "subnet": {
                     "ip_version": 4, 

@@ -68,7 +68,6 @@
            <div class="card-body">
 <!-- MODAL CREAR VM -->          
            <div>
-             
              <p></p>
               <h3>
                 <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#ModalCrear">
@@ -76,8 +75,6 @@
                 </button>
                 <b> Crear máquina virtual</b>
               </h3>
-              
-             
              <div class="modal fade" id="ModalCrear" tabindex="-1" role="dialog" aria-labelledby="ModalCrearTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                        <div class="modal-content">
@@ -89,79 +86,39 @@
                        </div>
       <!-- BODY MODAL crear VM -->
                        <div class="modal-body">
-                           <form >
-                             <div class="form-group text-left">
-                               <label for="NombreVM">Nombre</label>
-                               <input type="text" class="form-control" id="NombreVM" placeholder="Ingresar Nombre">
+                          <form>
+                            <div class="form-group text-left">
+                              <label for="NombreVM">Nombre</label>
+                              <input v-model="vm.nombre" type="text" class="form-control" id="NombreVM" placeholder="Ingresar Nombre">
                             </div>
-                            <div class="form-row">
-           <!-- Colunma 1  Crear VM-->
-                              <div class="form-group col text-left">
-                                <div class="form-group">
-                                  <label for="SO">Sistema Operativo</label>
-                                  <select type="SO" class="form-control" id="SO">
-                                    <option selected>Seleccione el SO</option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                  </select>
-                              </div>
-                               <div class="form-group">
-                                 <label for="Disco">Almacenamiento</label>
-                                   <select type="Disco" class="form-control" id="Disco">
-                                    <option selected>Seleccione disco duro</option>
-                                     <option>1</option>
-                                     <option>2</option>
-                                     <option>3</option>
-                                   </select>
-                               </div>                                                    
-                               <div class="form-group">
-                                 <label for="CPU">Número de Procesadores</label>
-                                 <select type="CPU" class="form-control" id="CPU">
-                                     <option selected>Seleccione procesadores</option>
-                                     <option>1</option>
-                                     <option>2</option>
-                                     <option>3</option>
-                                 </select>
-                                </div>                                                                        
-                             </div>
-       <!-- Colunma 2 crear VM-->                                                                        
-                             <div class="form-group col text-left">
-                             <div class="form-group">
-                               <label for="Version">Versión o distribución</label>
+                            <div class="form-group">
+                              <label for="desciption">Descripción</label>
+                              <textarea v-model="vm.descripcion" name="desciption" class="form-control" id="desciption" placeholder="Descripción VM"> </textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="SO">Sistema Operativo</label>
                                 <select type="SO" class="form-control" id="SO">
-                                 <option selected>Seleccione la versión</option>
-                                 <option>1</option>
-                                 <option>2</option>
-                                 <option>3</option>
+                                  <option selected>Seleccione el SO</option>
+                                  <option>1</option>
+                                  <option>2</option>
+                                  <option>3</option>
                                 </select>
-                             </div>
-                             <div class="form-group">
-                             <label for="RAM">Memoria RAM</label>
-                               <select type="RAM" class="form-control" id="RAM">
-                                 <option selected>Seleccione RAM</option>
-                                   <option>1</option>
-                                   <option>2</option>
-                                   <option>3</option>
-                                 </select>
-                               </div>
-                                <div class="form-group">
-                                    <label for="Interfaces">Interfaces de Red</label>
-                                    <select type="Interfaces" class="form-control" id="Interfaces">
-                                       <option selected>Seleccione el número de interfaces</option>
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                    </select>
-                                </div>
-                               </div>
-                               </div>
-                            </form>
+                            </div>                                                    
+                            <div class="form-group">
+                              <label for="recursos">Recursos</label>
+                              <select type="recursos" class="form-control" id="recursos">
+                                <option selected>Seleccione combinacin de recursos</option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                              </select>
                             </div>
+                          </form>
+                        </div>
          <!-- Pie del MODAL-->
                             <div class="modal-footer">
                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                               <button type="button" class="btn btn-primary">Enviar</button>
+                               <button v-on:click="addServer()" type="button" class="btn btn-primary">Enviar</button>
                             </div>
                           </div>
                         </div>
@@ -259,20 +216,19 @@ import VueRouter from 'vue-router'
 import axios from 'axios'
 import SidebarUsuario from './SidebarUsuario.vue'
 import Token from '!!raw-loader!../PanelAdmin/Token.txt'
+import TokenProject from '!!raw-loader!../PanelAdmin/TokenProjects.txt'
 const configG = require('../../../config')
 //importar token de usuario para tener el dato del nombre del proyecto
 // si tiene nombre de proyecto mostrar información, sino diga que debe solicitar recursos
 
-
 export default {
-    
     data(){
         return{
             config:{
                 headers:{
                 'User-Agent': 'python-keystoneclient',
                 'X-Auth-Token':Token,
-                'Access-Control-Allow-Origin': '10.55.6.59',
+                'Access-Control-Allow-Origin': '10.55.6.39',
                 'Access-Control-Allow-Credentials':'true',
                 'Access-Control-Expose-Headers': 'Authorization',
                 'Access-Control-Max-Age':'86400',
@@ -281,26 +237,39 @@ export default {
                 'X-OpenStack-Nova-API-Version': '2.1' 
                 }
             },
-            //Project: new Project(),
+            configCreatetoken:{
+                headers:{
+                  'User-Agent': 'python-keystoneclient',
+                  'X-Auth-Token': TokenProject, 
+                  'Access-Control-Allow-Origin': '10.55.6.39', 
+                  'Access-Control-Allow-Credentials': 'true',
+                  'Access-Control-Expose-Headers': 'Authorization',
+                  'Access-Control-Max-Age':'86400',
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json',                  
+                  'X-OpenStack-Nova-API-Version': '2.1'
+                }
+            },
            Project: [],
            servers: [],
-           user:{}            
+           vm:{}       
         }
     },
     created(){
        this.getStorage()
-       //this.getPool();
     },
     components:{
         'SidebarUsuario': SidebarUsuario  
     },
     methods: {
- //Se obtiene información del localStor
+//Se obtiene información del localStor
       getStorage: async function(){
+        //console.log('Se ingresa a get storage')            
         var storage;
         try {
           if (localStorage.getItem) {
               storage = JSON.parse(localStorage.getItem('userInfo'))
+              //console.log('se muestra el storage ',storage)
               this.user = storage
               this.getPool(this.user.email)
           }
@@ -309,104 +278,120 @@ export default {
         }
       },
 //Se trae el pool de recursos con el correo del localStorage         
-        getPool: async function(email){
-            await axios.get('/api/pool_recursos/unpool?emailPropietario='+email)
-                .then(res => {
-                   if (res.data.status == '404' || res.data.status == '400') {
-                      this.Project = "false";                      
-                    }
-                    else{
-                        this.Project = res.data.content; 
-                    }                    
-                })
-                .catch(error => { 
-                    console.log('Error ',error);                    
-                });            
-        },
-       
+      getPool: async function(){
+        await axios.get('/api/pool_recursos/unpool?emailPropietario='+this.user.email)
+        .then(res => {
+          if (res.data.status == '404' || res.data.status == '400') {
+            this.Project = "false";                      
+          }
+          else{
+            this.Project = res.data.content;
+          }                    
+        })
+        .catch(error => { 
+            console.log('Error en getPool',error);                    
+        });            
+      }, 
 // TRAER VM's del usuario por idProject_OPENSTACK 
 //                                              Poner ID proyecto OpenStack        
-        getServers: async function(){
-          let server
-          await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/servers/detail?all_tenants=True&project_id='+this.Project.id_openstack, this.config)
-          .then(res => {
-            //console.log(res.data.servers);
-            this.servers = res.data.servers;
-            //console.log(res.data.servers[4].addresses);
-          })
-          .catch(error => { console.log('Error ',error); });
-          if (this.servers.length == 0 )
-            {console.log("no hay servidores")}
+      getServers: async function(){
+        let server
+        await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/servers/detail?all_tenants=True&project_id='+this.Project.id_openstack, this.config)
+        .then(res => {
+          //console.log(res.data.servers);
+          this.servers = res.data.servers;
+          //console.log(res.data.servers[4].addresses);
+        })
+        .catch(error => { console.log('Error en getServers',error); });
+        if (this.servers.length == 0 )
+          {console.log("no hay servidores")}
+        else{
+          //console.log("Si hay servidores ")
+          for await ( server of this.servers){
+          server.image.id = await this.getOneImage(server.image.id);
+          if (server.image.id) {
+            server.image.id = await this.getOneImage(server.image.id);                        
+          }
           else{
-              //console.log("Si hay servidores ")
-              for await ( server of this.servers){
-              server.image.id = await this.getOneImage(server.image.id);
-             if (server.image.id) {
-                  server.image.id = await this.getOneImage(server.image.id);                        
-              }
-              else{
-                  server.image.id =server.image.id; 
-              }
-              server.flavor.id= await this.getOneFlavor(server.flavor.id);
-            }
-          }                 
-        },       
-        getOneImage: async function(idImage){
-          let answer
-          await axios.get('http://'+configG.ipOpenstack+'/image/v2/images/'+idImage,this.config)
-          .then(res => { answer= res.data.name; })
-          .catch(error => { 
-              console.log('Error ',error);
-              answer="error";
-              });
-          return answer;
-        },        
-        getOneFlavor: async function(idFlavor){
-          let answer=[] 
-          //console.log('Se ingresa  getOneFlavor')
-          await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/flavors/'+idFlavor, this.config)
-          .then(res => {
-              //console.log(res.data);
-              answer[0] = res.data.flavor.disk;
-              answer[1] = res.data.flavor.ram;
-              answer[2] = res.data.flavor.vcpus;
-          })
-          .catch(error => { console.log('Error ',error); });
-          return answer;
-        },
+            server.image.id =server.image.id; 
+          }
+            server.flavor.id= await this.getOneFlavor(server.flavor.id);
+          }
+        }                 
+      },       
+      getOneImage: async function(idImage){
+        let answer
+        await axios.get('http://'+configG.ipOpenstack+'/image/v2/images/'+idImage,this.config)
+        .then(res => { answer= res.data.name; })
+        .catch(error => { 
+          console.log('Error en getOneImage',error);
+          answer="error";
+        });
+        return answer;
+      },        
+      getOneFlavor: async function(idFlavor){
+        let answer=[] 
+        //console.log('Se ingresa  getOneFlavor')
+        await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/flavors/'+idFlavor, this.config)
+        .then(res => {
+          //console.log(res.data);
+          answer[0] = res.data.flavor.disk;
+          answer[1] = res.data.flavor.ram;
+          answer[2] = res.data.flavor.vcpus;
+        })
+        .catch(error => { console.log('Error en getOneFlavor',error); });
+        return answer;
+      },
 //ACCIONES VM's  Acceder por consola - Eliminar - Editar - Encender - Apagar - Reiniciar        
-        consola: async function(idServer){
-          let data={
-              "os-getVNCConsole": {
-                  "type": "novnc"
-              }
-          };
-          await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
-          .then(res => {
-            //console.log(res.data)
-            window.open(res.data.console.url)
-          })
-          .catch(error => { console.log('Error ',error); });
-        },
-        deleteServer: async function(idServer){
-          //console.log('Se ingresa a deleteServer')
-          await axios.delete('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer,this.config)
-          .then(res => {
-            console.log(res.data)
-          })
-          .catch(error => { console.log('Error ',error); });
-          this.getServers();
-        },
-        editServer: async function (idServer){
-          console.log (idServer)
-        }
-
+      consola: async function(idServer){
+        let data={
+          "os-getVNCConsole": {
+            "type": "novnc"
+          }
+        };
+        await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
+        .then(res => {
+          //console.log(res.data)
+          window.open(res.data.console.url)
+        })
+        .catch(error => { console.log('Error en consola',error); });
+      },
+      deleteServer: async function(idServer){
+        //console.log('Se ingresa a deleteServer')
+        await axios.delete('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer,this.config)
+        .then(res => {
+          console.log(res.data)
+        })
+        .catch(error => { console.log('Error en delete server',error); });
+        this.getServers();
+      },
+      editServer: async function (idServer){
+        console.log (idServer)
+      },
 //Crear VM
-
-//Modificar VM
-
-       
-       
+      addServer: async function(){
+        console.log('Se ingresa a addServer')
+        console.log(Project)
+        let data={
+          "server": {
+            "name": "vm-app-test", 
+            "imageRef": "2cb8d00f-dbe6-475f-b8b4-7eec7763da29", 
+            "flavorRef": "d3",
+            "availability_zone": "nova", 
+            "max_count": 1, 
+            "min_count": 1,  
+            "networks": [{"uuid": "ae6a58bd-3418-4804-b07d-09963a2ebfe5"}]
+          }
+        }
+        
+        await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers',data,this.configCreatetoken)
+        .then(res => {
+          console.log('Respuesta del post')
+          console.log(res.data)
+        })
+        .catch(error => { console.log('Error en addServer',error); });
+        
+      }   
     }
 }
 </script>

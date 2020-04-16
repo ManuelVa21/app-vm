@@ -66,4 +66,5 @@ app.use(express.static(path.join(__dirname, 'public')));
 /*Server y listening */
 app.listen(app.get('port'), () => {
     console.log('Server on port', app.get('port'));
+    
 }); 
