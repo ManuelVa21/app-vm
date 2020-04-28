@@ -9,7 +9,7 @@ const axios = require('axios');
 const app=express();
 
 //mongoose.Promise =global.Promise;
-mongoose.connect('mongodb://localhost/gestiontelco',{ useUnifiedTopology: true, useNewUrlParser: true })
+mongoose.connect('mongodb://localhost/gestiontelco',{ useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false  })
     .then(db => console.log('DB is connected'))
     .catch(err => console.log(err));
 

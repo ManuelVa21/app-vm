@@ -18,11 +18,11 @@ var solicitudesSchema = new Schema({
     ram: {type:Number},
     cpu: {type:Number},
     //detalle_aumento
-        aumento_fecha_fin: {type: Date},
+        /*aumento_fecha_fin: {type: Date},
         aumento_disco_duro: {type: Number},
         aumento_ram: {type:Number},
         aumento_cpu: {type:Number},
-        aumento_vm: {type:Number},
+        aumento_vm: {type:Number},*/
     motivo: {type: String},
     maquina: {type: String},
     estado: {type: Boolean, default:false}

@@ -89,36 +89,42 @@
                           <form>
                             <div class="form-group text-left">
                               <label for="NombreVM">Nombre</label>
-                              <input v-model="vm.nombre" type="text" class="form-control" id="NombreVM" placeholder="Ingresar Nombre">
+                              <input v-model="vm.nombre" type="text" class="form-control" id="NombreVM" placeholder="Ingresar Nombre" required>
                             </div>
                             <div class="form-group">
                               <label for="desciption">Descripción</label>
-                              <textarea v-model="vm.descripcion" name="desciption" class="form-control" id="desciption" placeholder="Descripción VM"> </textarea>
+                              <textarea v-model="vm.descripcion" name="desciption" class="form-control" id="desciption" placeholder="Descripción VM" required> </textarea>
                             </div>
                             <div class="form-group">
                                 <label for="SO">Sistema Operativo</label>
-                                <select type="SO" class="form-control" id="SO">
-                                  <option selected>Seleccione el SO</option>
-                                  <option>1</option>
-                                  <option>2</option>
-                                  <option>3</option>
+                                <select v-model="vm.SO" type="SO" class="form-control" id="SO" required>
+                                  <option v-for="image in images" v-bind:key="image.id">{{image.name}}</option>
                                 </select>
-                            </div>                                                    
+                            </div>
                             <div class="form-group">
-                              <label for="recursos">Recursos</label>
-                              <select type="recursos" class="form-control" id="recursos">
-                                <option selected>Seleccione combinacin de recursos</option>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                              </select>
+                              <div class="form-row">
+                                <div class="form-group col">
+                                  <div class="form-group">
+                                      <label for="disco">Disco duro</label>
+                                      <input v-model="vm.disco_duro" type="number" class="form-control" id="disco" placeholder="Seleccione el disco duro" min="1" max="6" required>
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="cpu">CPU</label>
+                                      <input v-model="vm.cpu" type="number" class="form-control" id="cpu" placeholder="Seleccione CPU" min="1" max="8" required> 
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="ram">Ram</label>
+                                      <input v-model="vm.ram" type="number" class="form-control" id="ram" placeholder="Seleccione RAM" min="1" max="8" required>
+                                  </div>
+                                </div>
+                              </div>                                                 
                             </div>
                           </form>
                         </div>
          <!-- Pie del MODAL-->
                             <div class="modal-footer">
                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                               <button v-on:click="addServer()" type="button" class="btn btn-primary">Enviar</button>
+                               <button v-on:click="createFlavor(vm)" type="button" class="btn btn-primary">Enviar</button>
                             </div>
                           </div>
                         </div>
@@ -132,14 +138,15 @@
             <template v-else>
                 <p>Estas son las máquinas virtuales creadas y sus características:</p>
                 <h3>Máquinas virtuales</h3>
-                
+                <div class="table-responsive">
                 <table class="table table-striped table-hover  text-center">
                  <thead class="thead-dark">
                   <tr class="table-active">
                     <th scope="col">#</th>
                     <th scope="col">Nombre</th>
+                    <th scope="col">Creada</th>
                     <th scope="col">S.O.</th>                                        
-                    <th scope="col">Almacenamiento</th>
+                    <th scope="col">Disco</th>
                     <th scope="col">RAM</th>
                     <th scope="col">CPU</th>
                     <th scope="col">IP</th>
@@ -152,49 +159,69 @@
                   <template v-if="server.status === 'ACTIVE'">
                   <tr class="table-success">
                     <th>{{index+1}}</th>
-                        <td>{{server.name}}</td>
-                        <td>{{server.image.id}}</td>
-                        <td>{{server.flavor.id[0]+' Gb'}}</td>
-                        <td>{{server.flavor.id[1]+' Gb'}}</td>
-                        <td>{{server.flavor.id[2]+' vcpu'}}</td>
-                        <td>-</td>
-                        <td>{{server.status}}</td>
-                        <td>
-                          <div class="btn-group-sm" role="group" aria-label="Basic example">
-                              <div>
-                            <!-- Material switch -->
-                              </div>                                                        
-                              <button v-on:click="consola(server.id)" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i></button>
-                              <button v-on:click="editServer(server.id)" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Editar VM"><i class="fas fa-edit"></i></button>
-                              <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar VM"><i class="fas fa-trash"></i></button>                                                        
-                          </div>
-                        </td>
-                      </tr> 
-                     </template>
-                     <template v-else>
-                      <tr class="table-danger">
-                       <th>{{index+1}}</th>
-                       <td>{{server.name}}</td>
-                           <td>{{server.image.id}}</td>
-                           <td>{{server.flavor.id[0]+' Gb'}}</td>
-                           <td>{{server.flavor.id[1]+' Gb'}}</td>
-                           <td>{{server.flavor.id[2]+' vcpu'}}</td>
-                           <td>-</td>
-                           <td>{{server.status}}</td>
-                           <td>
-                               <div class="btn-group-sm" role="group" aria-label="Basic example">
-                                 <div>
-                                <!-- Material switch -->
-                                 </div>                                                        
-                                 <button v-on:click="consola(server.id)" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i></button>
-                                 <button v-on:click="editServer(server.id)" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Editar VM"><i class="fas fa-edit"></i></button>
-                                 <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar VM"><i class="fas fa-trash"></i></button>                                                        
-                             </div>
-                           </td>
-                        </tr>
-                       </template>
+                    <td>{{server.name}}</td>
+                    <td>{{server.created}}</td>
+                    <td>{{server.image.id}}</td>
+                    <td>{{server.flavor.id[0]+' Gb'}}</td>
+                    <td>{{server.flavor.id[1]+' Mb'}}</td>
+                    <td>{{server.flavor.id[2]+' vcpu'}}</td>
+                    <td>-</td>
+                    <td>{{server.status}}</td>
+                    <td>
+                      <div class="dropdown dropleft">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Action
+                        </button>
+                        <div class="dropdown-menu">
+                            <button v-on:click="editarServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>
+                            <button v-on:click="apagarServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Apagar"><i class="fas fa-power-off"></i> Apagar</button>
+                            <button v-on:click="reiniciarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fas fa-redo-alt"></i> Reiniciar</button>
+                            <button v-on:click="consola(server.id)" type="button" class="btn btn-secondary dropdown-item" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i> Abrir</button>
+                            <button v-on:click="backupServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i> Backup</button>
+                            <button v-on:click="pausarServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Pausar"><i class="fas fa-pause"></i> Pausar</button>
+                            <button v-on:click="bloquearServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Bloquear"><i class="fas fa-lock"></i> Bloquear</button>
+                            <button v-on:click="suspenderServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Suspender"><i class="fas fa-moon"></i> Suspender</button>
+                            <div class="dropdown-divider"></div>
+                            <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i> Eliminar</button>
+                        </div>
+                      </div>
+                    </td>
+                  </tr> 
+                  </template>
+                  <template v-else>
+                    <tr class="table-danger">
+                    <th>{{index+1}}</th>
+                    <td>{{server.name}}</td>
+                    <td>{{server.created}}</td>
+                    <td>{{server.image.id}}</td>
+                    <td>{{server.flavor.id[0]+' Gb'}}</td>
+                    <td>{{server.flavor.id[1]+' Gb'}}</td>
+                    <td>{{server.flavor.id[2]+' vcpu'}}</td>
+                    <td>-</td>
+                    <td>{{server.status}}</td>
+                    <td>
+                      <div class="dropdown dropleft">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Action
+                        </button>
+                        <div class="dropdown-menu">
+                            <button v-on:click="encenderServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Encender"><i class="fas fa-power-off"></i> Encender</button>
+                            <button v-on:click="consola(server.id)" type="button" class="btn btn-secondary dropdown-item" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i> Abrir</button>
+                            <button v-on:click="editarServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>
+                            <button v-on:click="reiniciarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fas fa-redo-alt"></i> Reiniciar</button>
+                            <button v-on:click="backupServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i> Backup</button>
+                            <button v-on:click="desPausarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Despausar"><i class="fas fa-play"></i> Despausar</button>
+                            <button v-on:click="desBloquearServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Desbloquear"><i class="fas fa-lock-open"></i> Desbloquear</button>
+                            <div class="dropdown-divider"></div>
+                            <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i> Eliminar</button>
+                        </div>
+                      </div>
+                    </td>
+                    </tr>
+                   </template>
                       </tbody>
                      </table>
+                </div>
                     </template>
                   </div>     
                 </div>
@@ -252,11 +279,16 @@ export default {
             },
            Project: [],
            servers: [],
-           vm:{}       
+           flavors: [],
+           images: [],
+           vm:{},
+           checked:false 
         }
     },
     created(){
-       this.getStorage()
+      this.getStorage()
+      this.getImage()
+      
     },
     components:{
         'SidebarUsuario': SidebarUsuario  
@@ -286,6 +318,7 @@ export default {
           }
           else{
             this.Project = res.data.content;
+            this.getNetwork()
           }                    
         })
         .catch(error => { 
@@ -369,29 +402,71 @@ export default {
         console.log (idServer)
       },
 //Crear VM
-      addServer: async function(){
-        console.log('Se ingresa a addServer')
-        console.log(Project)
+      addServer: async function(vm,id_flavor){
+        console.log('Se ingresa a addServer') 
+        console.log(vm)
         let data={
           "server": {
-            "name": "vm-app-test", 
-            "imageRef": "2cb8d00f-dbe6-475f-b8b4-7eec7763da29", 
-            "flavorRef": "d3",
+            "name": vm.nombre, 
+            "imageRef": vm.SO, 
+            "flavorRef": id_flavor,
+            "description": vm.descripcion,
             "availability_zone": "nova", 
             "max_count": 1, 
             "min_count": 1,  
-            "networks": [{"uuid": "ae6a58bd-3418-4804-b07d-09963a2ebfe5"}]
+            "networks": [{"uuid": this.network}]
           }
         }
-        
         await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers',data,this.configCreatetoken)
         .then(res => {
           console.log('Respuesta del post')
           console.log(res.data)
         })
         .catch(error => { console.log('Error en addServer',error); });
-        
-      }   
+      },
+      getImage: async function(){
+        console.log('Se ingresa a getImage')
+        await axios.get('http://'+configG.ipOpenstack+'/image/v2/images',this.config)
+        .then(res => {
+          console.log('Respuesta del post')
+          console.log(res.data.images)
+          this.images = res.data.images
+        })
+        .catch(error => { console.log('Error en getImage',error); });        
+      },
+      getNetwork: async function(){
+        console.log('Se ingresa a getNetwrk ')
+        await axios.get('http://'+configG.ipOpenstack+':9696/v2.0/networks?tenant_id='+this.Project.id_openstack,this.config)
+        .then(res => {
+          //console.log('Respuesta del post')
+          //console.log(res.data.networks[0].id)
+          this.network = res.data.networks[0].id
+        })
+        .catch(error => { console.log('Error en getNetwork',error); }); 
+      },
+      createFlavor: async function(vm){
+        //console.log('Se ingresa a createFlavor')
+        let data={
+          "flavor": {
+            "vcpus": vm.cpu, 
+            "disk": vm.disco_duro, 
+            "name": "flavor", 
+            "os-flavor-access:is_public": true, 
+            "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral": 0, 
+            "ram": (vm.ram*1024), 
+            "id": null, 
+            "swap": 0
+          }
+        }
+        await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/flavors',data,this.config)
+        .then(res => {
+          console.log('Respuesta del post')
+          console.log(res.data.flavor.id)
+          this.addServer(vm,res.data.flavor.id)
+        })
+        .catch(error => { console.log('Error en createFlavor',error); }); 
+      }
+
     }
 }
 </script>

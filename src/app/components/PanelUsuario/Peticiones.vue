@@ -13,9 +13,16 @@
                             <div class="card">
                                 <div class="card-header" id="headingOne">
                                 <h5 class="mb-0">
-                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    Solicitud de Pool de recursos
-                                    </button>
+                                    <template v-if="pool === true">
+                                        <button disabled class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        Solicitud de Pool de recursos
+                                        </button>
+                                    </template>
+                                    <template v-else>
+                                        <button  class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        Solicitud de Pool de recursos
+                                        </button>
+                                    </template>
                                 </h5>
                                 </div>
                                 <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionPU">
@@ -252,55 +259,37 @@
                                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionPU">
                                     <div class="card-body">
                                         <p>Seleccione las características de su pool de recursos</p>
-                                        <form @submit.prevent="sendSolicitud('Aumento Pool de Recursos')">
-                                            <div class="form-group">
-                                                <p>Por favor escriba el motivo por el cual desea ampliar sus recursos.</p>
-                                                <textarea name="" id="" cols="30" rows="10" placeholder="Motivo de ampliación de recursos"></textarea>
-                                            </div>                                            
+                                        <form @submit.prevent="sendSolicitud('Aumento Pool de Recursos')">                                           
                                             <div class="form-row">
                                                 <div class="form-group col-md-6">                                            
                                                     <div class="form-group">
-                                                        <label for="Disco">Almacenamiento Actual X</label>
-                                                        <select type="Disco" class="form-control" id="Disco">
-                                                            <option selected>Seleccione nuevo valor disco duro</option>
-                                                            <option>1</option>
-                                                            <option>2</option>
-                                                            <option>3</option>
-                                                        </select>
+                                                        <label for="Disco">Almacenamiento Actual: <b>{{this.Project.disco_duro}}</b></label>
+                                                        <input v-model="solicitudpool.disco_duro" type="number" class="form-control" id="Disco" placeholder="Seleccione el disco duro" min="1" max="100" required>
                                                     </div>                                                    
                                                     <div class="form-group">
-                                                        <label for="CPU">Número de Procesadores Actual X</label>
-                                                        <select type="CPU" class="form-control" id="CPU">
-                                                            <option selected>Seleccione nuevo valor de procesadores</option>
-                                                            <option>1</option>
-                                                            <option>2</option>
-                                                            <option>3</option>
-                                                        </select>
-                                                    </div>                                                    
+                                                        <label for="CPU">Número de Procesadores Actual: <b>{{this.Project.cpu}}</b></label>
+                                                        <input v-model="solicitudpool.cpu" type="number" class="form-control" id="CPU" placeholder="Seleccione CPU" min="1" max="8" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="vms">Número de VM Actual: <b>{{this.Project.numero_vm}}</b></label>
+                                                        <input v-model="solicitudpool.numvm" type="number" class="form-control" id="vms" placeholder="Ingrese el número de máquinas virtuales" min="1" max="50" required>
+                                                    </div>                                                     
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <div class="form-group">
-                                                        <label for="RAM">Memoria RAM Actual X</label>
-                                                        <select type="RAM" class="form-control" id="RAM">
-                                                            <option selected>Seleccione nuevo valor de RAM</option>
-                                                            <option>1</option>
-                                                            <option>2</option>
-                                                            <option>3</option>
-                                                        </select>
+                                                        <label for="RAM">Memoria RAM Actual: <b>{{this.Project.ram}}</b></label>
+                                                        <input v-model="solicitudpool.ram" type="number" class="form-control" id="RAM" placeholder="Seleccione RAM" min="1" max="50" required>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="CPU">Fecha Finalización Actual X/X/X</label>
-                                                        <select type="CPU" class="form-control" id="CPU">
-                                                            <option selected>Seleccione nueva fecha finalización</option>
-                                                            <option>1</option>
-                                                            <option>2</option>
-                                                            <option>3</option>
-                                                        </select>
+                                                        <label for="fechafin">Fecha Finalización Actual: <b>{{this.Project.fecha_fin}}</b></label>
+                                                        <input v-model="solicitudpool.fechafin" class="form-control" type="date" id="fechafin" value="2020-01-01" min="2020-01-01" max="2026-12-31" required>
                                                     </div> 
-
                                                 </div>                                               
-
                                             </div>
+                                            <div class="form-group">
+                                                <p>Por favor escriba el motivo por el cual desea ampliar sus recursos.</p>
+                                                <textarea v-model="solicitudpool.motivo" name="" id="" cols="30" rows="10" placeholder="Motivo de ampliación de recursos"></textarea>
+                                            </div> 
                                             <div class="text-center"><button type="submit" class="btn btn-primary">Enviar</button></div>
                                         </form>
                                     </div>
@@ -324,24 +313,17 @@
                                 </div>                              
                                 <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionPU">
                                     <div class="card-body">
-                                        <p>Aqui va el form de solicitud de backup</p>
+                                        <p>Diligencie los datos requeridos para realizar la solicitud de Backup</p>
                                         <form @submit.prevent="sendSolicitud('Backup')">
                                             <div class="form-group">
-                                                <div class="form-row">
-                                                <div class="form-group col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="Proyecto">Proyecto</label>
-                                                        <input v-model="solicitudpool.nombrep" type="text" class="form-control" id="Proyecto" placeholder="Ingrese el nombre del proyecto">
-                                                    </div>                                                            
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="maquina">Máquina virtual</label>
-                                                        <input v-model="solicitudpool.maquina" type="text" class="form-control" id="maquina" placeholder="Ingrese el nombre de la máquina" required>
-                                                    </div>
-                                                </div>
-                                                </div>  
-                                                <p>Por favor escriba el motivo por el cual desea ampliar sus recursos.</p>
+                                                <div class="form-group col">
+                                                    <label for="maquina">Máquina virtual</label>
+                                                    <select v-model="solicitudpool.maquina" type="maquina" class="form-control" id="maquina" required>
+                                                        <option v-for="server in servers" v-bind:key="server.id">{{server.name}}</option>
+                                                    </select>
+                                                    
+                                                </div> 
+                                                <p>Por favor escriba el motivo por el cual desea realizar el Backup.</p>
                                                 <textarea v-model="solicitudpool.motivo" name="" id="" cols="30" rows="10" placeholder="Motivo de ampliación de recursos"></textarea>
                                             </div>
                                         <div class="text-center"><button type="submit" class="btn btn-primary">Enviar</button></div>
@@ -361,9 +343,11 @@
 import VueRouter from 'vue-router'
 import axios from 'axios'
 import SidebarUsuario from './SidebarUsuario.vue'
+import Token from '!!raw-loader!../PanelAdmin/Token.txt'
+const configG = require('../../../config')
 
 class SolocitudPool{
-    constructor(catUsuario,correo,nombrep,contrasenap,descripcionp,tutorp,correotp,numvm,disco_duro,ram,cpu,fechafin,aumento_fecha_fin,aumento_disco_duro,aumento_ram,aumento_cpu,motivo,maquina){
+    constructor(catUsuario,correo,nombrep,contrasenap,descripcionp,tutorp,correotp,numvm,disco_duro,ram,cpu,fechafin,motivo,maquina){
         this.catUsuario = catUsuario;
         this.correo = correo;
         this.nombrep = nombrep;
@@ -376,10 +360,6 @@ class SolocitudPool{
         this.ram = ram;
         this.cpu = cpu;
         this.fechafin= fechafin;
-        this.aumento_fecha_fin = aumento_fecha_fin;
-        this.aumento_disco_duro= aumento_disco_duro;
-        this.aumento_ram= aumento_ram;
-        this.aumento_cpu= aumento_cpu;
         this.motivo= motivo;
         this.maquina=maquina;
     }
@@ -390,14 +370,21 @@ export default {
         return{
             config:{
                 headers:{
+                'User-Agent': 'python-keystoneclient',
+                'X-Auth-Token':Token,
+                'Access-Control-Allow-Origin': '10.55.6.39',
+                'Access-Control-Allow-Credentials':'true',
+                'Access-Control-Expose-Headers': 'Authorization',
+                'Access-Control-Max-Age':'86400',
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                "Access-Control-Allow-Origin":"*"
+                'X-OpenStack-Nova-API-Version': '2.1' 
                 }
             },
             solicitudpool: new SolocitudPool(),
             storage:{},
             Project:[],
+            servers: [],
             pool: false
         }
     },
@@ -409,12 +396,12 @@ export default {
     },
     methods:{
         getStorage: async function(){
-        console.log('Se ingresa a get storage')            
+        //console.log('Se ingresa a get storage')            
         var storage;
         try {
           if (localStorage.getItem) {
               storage = JSON.parse(localStorage.getItem('userInfo'))
-              console.log('se muestra el storage ',storage)
+              //console.log('se muestra el storage ',storage)
               //console.log('se muestra el name ',storage.name)
               this.user = storage
               this.getPool(this.user.email)
@@ -426,18 +413,28 @@ export default {
       getPool: async function(email){
             await axios.get('/api/pool_recursos/unpool?emailPropietario='+email)
                 .then(res => {
-                   console.log(res.data);
+                   //console.log(res.data);
                    if (res.data.status == '404' || res.data.status == '400') {
                       this.pool = "false";                      
                     }
                     else{
                         this.pool = true;
-                        this.Project = res.data.content; 
+                        this.Project = res.data.content;
+                        this.getServers(); 
                     }                    
                 })
                 .catch(error => { 
                     console.log('Error ',error);                    
                 });            
+        },
+        getServers: async function(){
+            let server
+            await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/servers/detail?all_tenants=True&project_id='+this.Project.id_openstack, this.config)
+            .then(res => {
+            console.log(res.data.servers);
+            this.servers = res.data.servers;
+            })
+            .catch(error => { console.log('Error en getServers',error); });                
         },
         limpiar: async function(){this.solicitudpool = new SolocitudPool()},
         sendSolicitud: async function(tipoSol){
@@ -456,10 +453,6 @@ export default {
                 disco_duro: this.solicitudpool.disco_duro,
                 ram: this.solicitudpool.ram,
                 cpu: this.solicitudpool.cpu,
-                aumento_fecha_fin: this.solicitudpool.aumento_fecha_fin,
-                aumento_disco_duro: this.solicitudpool.aumento_disco_duro,
-                aumento_ram: this.solicitudpool.aumento_ram,
-                aumento_cpu: this.solicitudpool.aumento_cpu,
                 motivo: this.solicitudpool.motivo,
                 maquina: this.solicitudpool.maquina
                 }, this.config)

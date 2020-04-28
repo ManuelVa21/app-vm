@@ -335,6 +335,8 @@ export default{
             this.getSolicitudes(info.tipo)
         },
         aceptarAumento: async function(info){
+            //Cambiar pool
+            //Actualizar la quota
 
         },
         aceptarBackup: async function(info){
@@ -421,7 +423,7 @@ export default{
             let data={
                 "quota_set":{
                     "instances": info.numvm, 
-                    "ram": info.ram, 
+                    "ram": (info.ram*1024), 
                     "cores": info.cpu
                 }
             };

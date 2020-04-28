@@ -49,36 +49,18 @@ router.post('/', async (req, res) => {
 });
 
 //Para actualizar los datos
-/*
-router.put('/:id', async (req, res, next) =>{
-    await pool_recursos.findById(req.params.id), function(err,pool_recursos){
-        if (!pool_recursos) {
-            return next(new Error('No se puede cargar documento'));
-        }
-        else{
-            pool_recursos.nombre_proyecto= req.body.pool_recursos.nombre_proyecto;
-            pool_recursos.descripcion = req.body.pool_recursos.descripcion;
-            pool_recursos.propietario = req.body.pool_recursos.propietario;
-            pool_recursos.numero_vm = req.body.pool_recursos.numero_vm;
-            pool_recursos.disco_duro = req.body.pool_recursos.disco_duro;
-            pool_recursos.ram = req.body.pool_recursos.ram;
-            pool_recursos.cpu = req.body.pool_recursos.cpu;
-            pool_recursos.fecha_inicio = req.body.pool_recursos.fecha_inicio;
-            pool_recursos.fecha_fin = req.body.pool_recursos.fecha_fin;
-            pool_recursos.vms = req.body.pool_recursos.vms;
-
-
-            pool_recursos.save()
-                .then(pool_recursos =>{
-                    res.json('Actualización completa')
-                })
-                .catch(err =>{
-                    res.status(400).send({pool_recursos:'Error al actualizar'});
-                });
-        }
+router.put('/', async (req,res) =>{
+    try {
+        console.log('Se mira el req.body', req.body)
+        console.log('Se mira el req.query', req.query._id)
+        const pool = new Pool_recursos(req.body)
+        const idpool = req.query._id
+        await Pool_recursos.findByIdAndUpdate(idpool,{$set: pool },{ new: true} );
+        res.json({ status:'200', answer:"Pool actualizado" });
+    } catch (error) {
+        res.json({ status:400, content:error })
     }
 });
-*/
 
 router.delete('/', async (req,res) => {
     console.log('Se va a eliminar')

@@ -251,7 +251,7 @@
                                                 <th scope="col">Propietario</th>
                                                 <th scope="col">Nombre VM</th>
                                                 <th scope="col">Creado</th>
-                                                <th scope="col">SO</th>
+                                                <th scope="col">S.O.</th>
                                                 <th scope="col">Disco</th>
                                                 <th scope="col">RAM</th>
                                                 <th scope="col">CPU</th>
@@ -270,7 +270,7 @@
                                                         <td>{{server.created}}</td>
                                                         <td>{{server.image.id}}</td>
                                                         <td>{{server.flavor.id[0]+' Gb'}}</td>
-                                                        <td>{{server.flavor.id[1]+' Gb'}}</td>
+                                                        <td>{{server.flavor.id[1]+' Mb'}}</td>
                                                         <td>{{server.flavor.id[2]+' vcpu'}}</td>
                                                         <td>
                                                             <!-- {{server.addresses[Object.keys(server.addresses)[0]][1].addr}}-->
@@ -292,15 +292,39 @@
                                                                     <button v-on:click="suspenderServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Suspender"><i class="fas fa-moon"></i> Suspender</button>
                                                                     <div class="dropdown-divider"></div>
                                                                     <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i> Eliminar</button>
+                                                                    <!--<button v-on:click="reconstruirServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Reconstruir"><i class="fas fa-circle-notch"></i> Reconstruir</button>-->
                                                                 </div>
                                                             </div>
-                                                            <!--
-                                                            <div class="btn-group-sm" role="group" aria-label="Basic example">                                                      
-                                                                <button v-on:click="consola(server.id)" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i></button>
-                                                                <button v-on:click="backup(server.id)" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i></button>
-                                                                <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i></button>                                                        
+                                                        </td>
+                                                    </tr>
+                                                </template>
+                                                <template v-else-if="server.status === 'VERIFY_RESIZE'">
+                                                    <tr class="table-danger">
+                                                        <th>{{index+1}}</th>
+                                                        <td>{{server.tenant_id}}</td>
+                                                        <td>-</td>
+                                                        <td>{{server.name}}</td>
+                                                        <td>{{server.created}}</td>
+                                                        <td>{{server.image.id}}</td>
+                                                        <td>{{server.flavor.id[0]+' Gb'}}</td>
+                                                        <td>{{server.flavor.id[1]+' Mb'}}</td>
+                                                        <td>{{server.flavor.id[2]+' vcpu'}}</td>
+                                                        <td>
+                                                            <!-- {{server.addresses[Object.keys(server.addresses)[0]][1].addr}}-->
+                                                        </td>
+                                                        <td>{{server.status}}</td>
+                                                        <td>
+                                                            <div class="dropdown dropleft">
+                                                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    Action
+                                                                </button>
+                                                                <div class="dropdown-menu">
+                                                                    <button v-on:click="confirmEditarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Desbloquear"><i class="far fa-check-circle"></i> Confirmar edición</button>
+                                                                    <div class="dropdown-divider"></div>
+                                                                    <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i> Eliminar</button>
+                                                                    <!--<button v-on:click="reconstruirServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Reconstruir"><i class="fas fa-circle-notch"></i> Reconstruir</button>-->
+                                                                </div>
                                                             </div>
-                                                            -->
                                                         </td>
                                                     </tr>
                                                 </template>
@@ -313,7 +337,7 @@
                                                         <td>{{server.created}}</td>
                                                         <td>{{server.image.id}}</td>
                                                         <td>{{server.flavor.id[0]+' Gb'}}</td>
-                                                        <td>{{server.flavor.id[1]+' Gb'}}</td>
+                                                        <td>{{server.flavor.id[1]+' Mb'}}</td>
                                                         <td>{{server.flavor.id[2]+' vcpu'}}</td>
                                                         <td>
                                                             <!-- {{server.addresses[Object.keys(server.addresses)[0]][1].addr}}-->
@@ -326,6 +350,7 @@
                                                                 </button>
                                                                 <div class="dropdown-menu">
                                                                     <button v-on:click="encenderServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Encender"><i class="fas fa-power-off"></i> Encender</button>
+                                                                    <button v-on:click="reanudarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reanudar"><i class="fas fa-tv"></i> Reanudar</button>
                                                                     <button v-on:click="consola(server.id)" type="button" class="btn btn-secondary dropdown-item" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i> Abrir</button>
                                                                     <button v-on:click="editarServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>
                                                                     <button v-on:click="reiniciarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fas fa-redo-alt"></i> Reiniciar</button>
@@ -334,6 +359,7 @@
                                                                     <button v-on:click="desBloquearServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Desbloquear"><i class="fas fa-lock-open"></i> Desbloquear</button>
                                                                     <div class="dropdown-divider"></div>
                                                                     <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i> Eliminar</button>
+                                                                    <!--<button v-on:click="reconstruirServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Reconstruir"><i class="fas fa-circle-notch"></i> Reconstruir</button>-->
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -394,6 +420,15 @@ export default{
                 'Access-Control-Allow-Credentials':'true',
                 'Access-Control-Expose-Headers': 'Authorization',
                 'Access-Control-Max-Age':'86400',
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-OpenStack-Nova-API-Version': '2.1' 
+                }
+            },
+            configEdit:{
+                headers:{
+                'User-Agent': 'python-novaclient',
+                'X-Auth-Token':Token,
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 'X-OpenStack-Nova-API-Version': '2.1' 
@@ -499,11 +534,11 @@ export default{
         getrecursosTelco: async function(){
             //console.log('Se ingresa a recursosTelco')
             await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/os-hypervisors/detail', this.config)
-                .then(res => {
-                    //console.log(res.data.hypervisors[0]);
-                    this.recursosTs = res.data.hypervisors;
-                })
-                .catch(error => { console.log('Error recursos telco',error); });
+            .then(res => {
+                //console.log(res.data.hypervisors[0]);
+                this.recursosTs = res.data.hypervisors;
+            })
+            .catch(error => { console.log('Error recursos telco',error); });
         },
         //
         //
@@ -572,7 +607,7 @@ export default{
             //console.log('Se ingresa a deleteServer')
             await axios.delete('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer,this.config)
                 .then(res => {
-                    console.log(res.data)
+                    console.log(res)
                 })
                 .catch(error => { console.log('Error ',error); });
                 this.getServers();
@@ -582,30 +617,124 @@ export default{
         },
         apagarServer: async function(idServer) {
             console.log('Se ingresa a apagar')
+            let data={ "os-stop": null }
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(error => { console.log('Error ',error); });
+            this.getServers();
         },
         encenderServer: async function(idServer) {
             console.log('Se ingresa a encender')
+            let data={ "os-start": null }
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(error => { console.log('Error ',error); });
+            this.getServers();
         },
         editarServer: async function(idServer) {
             console.log('Se ingresa a editar')
+            let data={"resize": {"flavorRef": "d3"}}
+            // para revertir {"revertResize": null}
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(error => { console.log('Error ',error); });
+            this.getServers();
+        },
+        confirmEditarServer: async function(idServer){
+            console.log('Se ingresa a confirmEditarServer')
+            let data={"confirmResize": null}
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(error => { console.log('Error ',error); });
+            this.getServers();
         },
         reiniciarServer: async function(idServer) {
             console.log('Se ingresa a reiniciar')
+            let data={"reboot": {"type": "SOFT"}}
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(error => { console.log('Error ',error); });
+            this.getServers();
         },
         pausarServer: async function(idServer) {
             console.log('Se ingresa a pausar')
+            let data={"pause": null}
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(error => { console.log('Error ',error); });
+            this.getServers();
         },
         desPausarServer: async function(idServer) {
             console.log('Se ingresa a despausar')
+            let data={"unpause": null}
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(error => { console.log('Error ',error); });
+            this.getServers();
         },
         bloquearServer: async function(idServer) {
             console.log('Se ingresa a bloquear')
+            let data={"lock": null}
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(error => { console.log('Error ',error); });
+            this.getServers();
         },
         desBloquearServer: async function(idServer) {
             console.log('Se ingresa a desbloquear')
+            let data={"unlock": null}
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(error => { console.log('Error ',error); });
+            this.getServers();
         },
         suspenderServer: async function(idServer) {
             console.log('Se ingresa a suspender')
+            let data={"suspend": null}
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(error => { console.log('Error ',error); });
+            this.getServers();
+        },
+        reanudarServer: async function(idServer) {
+            console.log('Se ingresa a reanudar')
+            let data={"resume": null}
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(error => { console.log('Error ',error); });
+            this.getServers();
+        },
+        reconstruirServer: async function(idServer) {
+            console.log('Se ingresa a reanudar')
+            let data={"resume": null}
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(error => { console.log('Error ',error); });
+            this.getServers();
         }
     }
 }
