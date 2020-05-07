@@ -5,5 +5,12 @@ module.exports={
     roleMember:'e6dfb94eb95542a0b415279abe461aab',//Ejecutar comando openstack role list y copiar id member
     roleAdmin:'fb348ad631eb4f76af256f5ee056ee1f',
     headersOpenStack:{},
+    headersDataBase:{
+        headers:{
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            "Access-Control-Allow-Origin":"*"
+            }
+    },
     tokenOpenStack:''
 };

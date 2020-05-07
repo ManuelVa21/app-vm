@@ -5,7 +5,7 @@ const usuariosSchema = new Schema({
     //Datos generales suscriptores
     nombre: {type:String},
     correo: {type:String},
-    //contrasena: {type:String},
+    estado: {type: String},
     categoria_us: {type:String},
     tutor_proy: {type:String},
     correo_tutor: {type:String},

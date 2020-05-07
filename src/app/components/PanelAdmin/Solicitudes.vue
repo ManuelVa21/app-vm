@@ -121,6 +121,7 @@
                                                         <th scope="col">Almacenamiento nuevo</th>
                                                         <th scope="col">RAM nueva</th>
                                                         <th scope="col">CPU nuevo</th>
+                                                        <th scope="col">VMs</th>
                                                         <th scope="col">Estado</th>
                                                         <th scope="col">Acciones</th>
                                                     </tr>
@@ -134,14 +135,15 @@
                                                         <td>{{solicitud.usuario}}</td>
                                                         <td>{{solicitud.correo}}</td>
                                                         <td>{{solicitud.nombre_proyecto}}</td>
-                                                        <td>{{solicitud.aumento_fecha_fin}}</td> 
-                                                        <td>{{solicitud.aumento_disco_duro+' Gb'}}</td> 
-                                                        <td>{{solicitud.aumento_ram+' Gb'}}</td>
-                                                        <td>{{solicitud.aumento_cpu+' vcpu'}}</td>
+                                                        <td>{{solicitud.fecha_fin}}</td> 
+                                                        <td>{{solicitud.disco_duro+' Gb'}}</td> 
+                                                        <td>{{solicitud.ram+' Gb'}}</td>
+                                                        <td>{{solicitud.cpu+' vcpu'}}</td>
+                                                        <td>{{solicitud.numvm}}</td>
                                                         <td>Pendiente</td>
                                                         <td>
                                                         <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
-                                                            <button v-on:click="aceptarAumento(solicitud)" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Aceptar"><i class="fas fa-check"></i></button>
+                                                            <button v-on:click="getPool(solicitud)" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Aceptar"><i class="fas fa-check"></i></button>
                                                             <button v-on:click="negarSolicitud(solicitud._id,solicitud.tipo)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-times"></i></button>                                                   
                                                         </div>
                                                         </td>                                              
@@ -155,10 +157,11 @@
                                                         <td>{{solicitud.usuario}}</td>
                                                         <td>{{solicitud.correo}}</td>
                                                         <td>{{solicitud.nombre_proyecto}}</td>
-                                                        <td>{{solicitud.aumento_fecha_fin}}</td> 
-                                                        <td>{{solicitud.aumento_disco_duro+' Gb'}}</td> 
-                                                        <td>{{solicitud.aumento_ram+' Gb'}}</td>
-                                                        <td>{{solicitud.aumento_cpu+' vcpu'}}</td>
+                                                        <td>{{solicitud.fecha_fin}}</td> 
+                                                        <td>{{solicitud.disco_duro+' Gb'}}</td> 
+                                                        <td>{{solicitud.ram+' Gb'}}</td>
+                                                        <td>{{solicitud.cpu+' vcpu'}}</td>
+                                                        <td>{{solicitud.numvm}}</td>
                                                         <td>Resuelto</td>
                                                         <td>
                                                             <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
@@ -320,7 +323,7 @@ export default{
             await axios.get('/api/solicitudes?tipo='+tipo)
             .then(res => {
                 //console.log('Se muestra respuesta get')
-                console.log(res.data.content);
+                //console.log(res.data.content);
                 this.solicitudes = res.data.content;                    
             })
             .catch(error => { console.log('Error en get solicitudes',error); });
@@ -334,11 +337,41 @@ export default{
             this.cambiarEstado(info._id)
             this.getSolicitudes(info.tipo)
         },
-        aceptarAumento: async function(info){
+        aceptarAumento: async function(id,info){
+            console.log('Se ingresa a aceptarAumento y se muestra el info ', info)
             //Cambiar pool
-            //Actualizar la quota
-
+            await axios.put('/api/pool_recursos',{
+                _id: id,
+                numero_vm: info.numvm,
+                disco_duro: info.disco_duro,
+                ram: info.ram,
+                cpu: info.cpu,
+                fecha_fin: info.fecha_fin
+            },this.config)
+                .then(res => { 
+                    console.log('Respuesta del put ',res)
+                })
+                .catch(error => { console.log('Error en aceptarAumento',error); });
         },
+        getPool: async function(info){
+            //console.log('Se muestra el info en getpool ',info)
+            await axios.get('/api/pool_recursos/unpool?emailPropietario='+info.correo)
+            .then(res => {
+            if (res.data.status == '404' || res.data.status == '400') {
+                console.log('Error al obtener pool de OpenStack')                    
+            }
+            else{
+                //console.log('Se obtiene el pool')
+                //console.log(res.data.content.id_openstack)
+                this.setQuota(res.data.content.id_openstack,info)
+                this.aceptarAumento(res.data.content._id,info)
+                this.cambiarEstado(info._id)
+            }                    
+            })
+            .catch(error => { 
+                console.log('Error en getPool',error);                    
+            });            
+        }, 
         aceptarBackup: async function(info){
 
         },
@@ -364,6 +397,7 @@ export default{
                 await axios.post('/api/usuarios',{
                     nombre: info.usuario,
                     correo: info.correo,
+                    estado: 'Activo',
                     categoria_us: info.catUsuario,
                     tutor_proy: info.tutor,
                     correo_tutor: info.correo_tutor,
@@ -418,8 +452,6 @@ export default{
         },
         setQuota: async function(id_project,info){
             //Se recibe el id y la información de la quota
-            console.log('set quota')
-            //console.log(info)
             let data={
                 "quota_set":{
                     "instances": info.numvm, 
@@ -489,7 +521,7 @@ export default{
                 console.log(res)
                 if (res.status == '201') {
                     this.createSubNet(res.data.network.id,info,id_project)
-                    this.createRouter(id_project,info.nombre_proyecto)
+                    
                 } else { console.log('Error al crear ') }
             })
             .catch(error => { console.log('Error en create network',error); });
@@ -512,10 +544,12 @@ export default{
             .then(res => {
                 console.log('Se muestra la respuesta del create sub network')
                 console.log(res)
+                this.createRouter(id_project,info.nombre_proyecto,res.data.subnet.id)
+
             })
             .catch(error => { console.log('Error en create subnet',error); });
         },
-        createRouter: async function(id_project,nombre_pro){
+        createRouter: async function(id_project,nombre_pro,idSubnet){
             console.log('se ingresa a createRouter')
             let data={
                 "router": {
@@ -530,13 +564,17 @@ export default{
             .then(res => {
                 console.log('Se muestra la respuesta del create router')
                 console.log(res)
-                this.routerAddSubnet(res.data.router.id)
+                this.routerAddSubnet(res.data.router.id,idSubnet)
             })
             .catch(error => { console.log('Error en create router',error); });
         },
-        routerAddSubnet: async function(id_router){
+        routerAddSubnet: async function(id_router,idSubnet){
             console.log('Se ingresa a routerAdd Subnet')
-            await axios.put('http://'+configG.ipOpenstack+':9696/v2.0/routers/'+id_router+'/add_router_interface',this.configOSS)
+            console.log('Los datos recibidos son ',id_router,' y ',idSubnet)
+            let data={
+                "subnet_id": idSubnet
+            }
+            await axios.put('http://'+configG.ipOpenstack+':9696/v2.0/routers/'+id_router+'/add_router_interface',data,this.configOSS)
             .then(res => {
                 console.log('Se muestra la respuesta del add router')
                 console.log(res)

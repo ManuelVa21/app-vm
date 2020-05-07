@@ -74,22 +74,16 @@ router.post('/', async (req, res) => {
 //Para actualizar los datos
 
 router.put('/:_id', async (req, res, next) =>{
-    //console.log(req)
-   // console.log(req.params)
-    //console.log(req.body)
     try {
-        //console.log('Se entra a editar estado')
-        //console.log(req)
-        await Usuarios.findByIdAndUpdate(req.params,req.body)
-        res.json({ status:'200', answer:"Usuario Editado" });
-        
+        console.log('Se ingresa a put usuario')
+        console.log('Se mira el req.body', req.body)
+        const usuario = new Usuarios(req.body)
+        const idusuario = req.body._id
+        await Usuarios.findOneAndUpdate(idusuario,{$set: usuario },{ new: true} );
+        res.json({ status:'200', answer:"Usuario actualizado" });
     } catch (error) {
         res.json({ status:400, content:error })
-    }
-    
-   // await usuarios.findById(req.params.id), function(err,usuarios){
-        
-     
+    }    
     
 });
 

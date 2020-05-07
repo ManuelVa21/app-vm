@@ -51,10 +51,10 @@ router.post('/', async (req, res) => {
 //Para actualizar los datos
 router.put('/', async (req,res) =>{
     try {
+        console.log('Se ingresa a put pool')
         console.log('Se mira el req.body', req.body)
-        console.log('Se mira el req.query', req.query._id)
         const pool = new Pool_recursos(req.body)
-        const idpool = req.query._id
+        const idpool = req.body._id
         await Pool_recursos.findByIdAndUpdate(idpool,{$set: pool },{ new: true} );
         res.json({ status:'200', answer:"Pool actualizado" });
     } catch (error) {
@@ -65,7 +65,7 @@ router.put('/', async (req,res) =>{
 router.delete('/', async (req,res) => {
     console.log('Se va a eliminar')
     console.log(req.query)
-    await Pool_recursos.findByIdAndRemove(req.query._id);
+    await Pool_recursos.findOneAndRemove(req.query.id_openstack);
     res.json({ status:'200', answer:"Pool de recursos eliminado" });
 });
 

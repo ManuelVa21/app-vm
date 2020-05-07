@@ -264,31 +264,31 @@
                                                 <div class="form-group col-md-6">                                            
                                                     <div class="form-group">
                                                         <label for="Disco">Almacenamiento Actual: <b>{{this.Project.disco_duro}}</b></label>
-                                                        <input v-model="solicitudpool.disco_duro" type="number" class="form-control" id="Disco" placeholder="Seleccione el disco duro" min="1" max="100" required>
+                                                        <input v-model="solicitudpool.disco_duro" type="number" class="form-control" id="Disco" placeholder="Seleccione el disco duro" min="1" max="100">
                                                     </div>                                                    
                                                     <div class="form-group">
                                                         <label for="CPU">Número de Procesadores Actual: <b>{{this.Project.cpu}}</b></label>
-                                                        <input v-model="solicitudpool.cpu" type="number" class="form-control" id="CPU" placeholder="Seleccione CPU" min="1" max="8" required>
+                                                        <input v-model="solicitudpool.cpu" type="number" class="form-control" id="CPU" placeholder="Seleccione CPU" min="1" max="50">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="vms">Número de VM Actual: <b>{{this.Project.numero_vm}}</b></label>
-                                                        <input v-model="solicitudpool.numvm" type="number" class="form-control" id="vms" placeholder="Ingrese el número de máquinas virtuales" min="1" max="50" required>
+                                                        <input v-model="solicitudpool.numvm" type="number" class="form-control" id="vms" placeholder="Ingrese el número de máquinas virtuales" min="1" max="50">
                                                     </div>                                                     
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <div class="form-group">
                                                         <label for="RAM">Memoria RAM Actual: <b>{{this.Project.ram}}</b></label>
-                                                        <input v-model="solicitudpool.ram" type="number" class="form-control" id="RAM" placeholder="Seleccione RAM" min="1" max="50" required>
+                                                        <input v-model="solicitudpool.ram" type="number" class="form-control" id="RAM" placeholder="Seleccione RAM" min="1" max="50">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="fechafin">Fecha Finalización Actual: <b>{{this.Project.fecha_fin}}</b></label>
-                                                        <input v-model="solicitudpool.fechafin" class="form-control" type="date" id="fechafin" value="2020-01-01" min="2020-01-01" max="2026-12-31" required>
+                                                        <input v-model="solicitudpool.fechafin" class="form-control" type="date" id="fechafin" value="2020-01-01" min="2020-01-01" max="2026-12-31">
                                                     </div> 
                                                 </div>                                               
                                             </div>
                                             <div class="form-group">
                                                 <p>Por favor escriba el motivo por el cual desea ampliar sus recursos.</p>
-                                                <textarea v-model="solicitudpool.motivo" name="" id="" cols="30" rows="10" placeholder="Motivo de ampliación de recursos"></textarea>
+                                                <textarea v-model="solicitudpool.motivo" name="" id="" cols="30" rows="10" placeholder="Motivo de ampliación de recursos" required></textarea>
                                             </div> 
                                             <div class="text-center"><button type="submit" class="btn btn-primary">Enviar</button></div>
                                         </form>
@@ -420,6 +420,7 @@ export default {
                     else{
                         this.pool = true;
                         this.Project = res.data.content;
+                        this.solicitudpool.nombrep = this.Project.nombre_proyecto
                         this.getServers(); 
                     }                    
                 })
