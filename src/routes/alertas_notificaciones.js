@@ -1,58 +1,55 @@
 const express = require('express');
 const router = express.Router();
 
-const alertas_notificaciones = require('../models/alertas_notificaciones');
+const Alertas_notificaciones = require('../models/alertas_notificaciones');
 
 //Para obtener la listas de alertas y notificaciones
 router.get('/', async (req,res) =>{
-    await alertas_notificaciones.find(function(err, alertas_notificaciones){
-        if (err) {throw errr;}
-        else{
-            res.json(alertas_notificaciones);
+    try {        
+        //const solicitudes = await Solicitudes.find();
+        const alertas_notificaciones = await Alertas_notificaciones.find(req.query);
+        if (!alertas_notificaciones) {
+            res.json({ status:404, content:alertas_notificaciones })            
+        } else {
+            res.json({ status:200, content:alertas_notificaciones })            
         }
-    })
+    } catch (error) {
+        res.json({ status:400, content:error })
+    }
 });
 
 //Para enviar del cliente a la bd
 router.post('/', async (req, res) => {
-    //Guardar el dato que envia el navegador
-    const alertas_notificaciones = new alertas_notificaciones(req.body);
-    await alertas_notificaciones.save()
-    .then(alertas_notificaciones => {
-        res.status(200).json({alertas_notificaciones: 'Enviado correctamente'});
-    })
-    .catch(err =>{
-        res.status(400).send({alertas_notificaciones: 'Error al enviar'});
-    });
-});
-
-//Para actualizar los datos
-router.put('/:id', async (req, res, next) =>{
-    await alertas_notificaciones.findById(req.params.id), function(err,alertas_notificaciones){
-        if (!alertas_notificaciones) {
-            return next(new Error('No se puede cargar documento'));
-        }
-        else{
-            alertas_notificaciones.descripcion= req.body.alertas_notificaciones.descripcion;
-            alertas_notificaciones.estado= req.body.alertas_notificaciones.estado;
-            alertas_notificaciones.save()
-                .then(alertas_notificaciones =>{
-                    res.json('Actualización completa')
-                })
-                .catch(err =>{
-                    res.status(400).send({alertas_notificaciones:'Error al actualizar'});
-                });
-        }
+    try {
+        //console.log('Se mira el request')
+        //console.log(req.body)
+        const alertas_notificaciones = new Alertas_notificaciones(req.body)
+        await alertas_notificaciones.save();
+        res.json({ status:'200', answer:"Notificación Creada" });
+        
+    } catch (error) {
+        res.json({ status:400, content:error })
     }
 });
 
-router.delete('/:id', async (req,res)=>{
-    await alertas_notificaciones.findByIdAndRemove(req.params.id, function(err,alertas_notificaciones){
-        if (err) { res.json(err);}
-        else{
-            res.json('Se elimino satisfactoriamente');
-        }
-    })
+//Para actualizar los datos
+router.put('/:_id', async (req, res, next) =>{
+    try {
+        //console.log('Se entra a editar estado')
+        //console.log(req)
+        const cambiarestado = await Alertas_notificaciones.findByIdAndUpdate(req.params,req.body)
+        res.json({ status:'200', answer:"Estado modificado", content: cambiarestado });
+
+    } catch (error) {
+        res.json({ status:400, content:error })
+    }
+});
+
+router.delete('/', async (req,res)=>{
+    //console.log('Se va a eliminar')
+    //console.log(req.query)
+    await Alertas_notificaciones.findByIdAndRemove(req.query._id);
+    res.json({ status:'200', answer:"Eliminado correctamente" });
 });
 
 module.exports = router;

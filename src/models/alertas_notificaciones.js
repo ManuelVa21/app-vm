@@ -5,13 +5,14 @@ const alertas_notificaciones = new Schema({
     tipo: {type: String},
     fecha: {type: Date, default: Date.now},
     descripcion: {type:String},
-    detalles: [{
+    /*detalles: [{
         disco_duro: {type:Number},
         ram: {type:Number},
         cpu: {type:Number},
-    }],
-    estado: {type:Boolean},
-    usuario_destino: {type: String} 
+    }],*/
+    estado: {type:String, default:"Sin atender"},
+    usuario_destino: {type: String},
+    correo_usuario: {type: String}
 
 },{
     collection: 'alertas_notificaciones'

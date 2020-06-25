@@ -106,7 +106,7 @@
                                 <div class="form-group col">
                                   <div class="form-group">
                                       <label for="disco">Disco duro</label>
-                                      <input v-model="vm.disco_duro" type="number" class="form-control" id="disco" placeholder="Seleccione el disco duro" min="1" max="6" required>
+                                      <input v-model="vm.disco_duro" type="number" class="form-control" id="disco" placeholder="Seleccione el disco duro" min="1" max="20" required>
                                   </div>
                                   <div class="form-group">
                                       <label for="cpu">CPU</label>
@@ -450,7 +450,7 @@ export default {
           "flavor": {
             "vcpus": vm.cpu, 
             "disk": vm.disco_duro, 
-            "name": "flavor", 
+            "name": "flavor-"+vm.nombre, 
             "os-flavor-access:is_public": true, 
             "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral": 0, 
             "ram": (vm.ram*1024), 

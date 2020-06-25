@@ -25,7 +25,7 @@ var solicitudesSchema = new Schema({
         aumento_vm: {type:Number},*/
     motivo: {type: String},
     maquina: {type: String},
-    estado: {type: Boolean, default:false}
+    estado: {type: String, default:"Pendiente"}
 });
 
 /*Se crea el modelo (que debe interactuar con la app) para exportar y poder conectar 

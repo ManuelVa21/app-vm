@@ -15,12 +15,12 @@
                                 <h5 class="mb-0">
                                     <template v-if="pool === true">
                                         <button disabled class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        Solicitud de Pool de recursos
+                                        Pool de recursos
                                         </button>
                                     </template>
                                     <template v-else>
                                         <button  class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        Solicitud de Pool de recursos
+                                        Pool de recursos
                                         </button>
                                     </template>
                                 </h5>
@@ -246,12 +246,12 @@
                                 <h5 class="mb-0">
                                     <template v-if="pool === true">
                                         <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                        Solicitud de aumento de pool de recursos
+                                        Aumento de pool de recursos
                                         </button>
                                     </template>
                                     <template v-else>
                                         <button disabled class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                        Solicitud de aumento de pool de recursos
+                                        Aumento de pool de recursos
                                         </button>
                                     </template>
                                 </h5>
@@ -301,12 +301,12 @@
                                 <h5 class="mb-0">
                                     <template v-if="pool === true">
                                         <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                        Solicitud de backup
+                                        Backup
                                         </button>
                                     </template>
                                     <template v-else>
                                         <button disabled class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                        Solicitud de backup
+                                        Backup
                                         </button>
                                     </template>
                                 </h5>
@@ -456,7 +456,7 @@ export default {
                 cpu: this.solicitudpool.cpu,
                 motivo: this.solicitudpool.motivo,
                 maquina: this.solicitudpool.maquina
-                }, this.config)
+                }, configG.headersDataBase)
                 .then(res => { console.log(res) })
                 .catch(error => { console.log('Error ',error); });
                 this.solicitudpool = new SolocitudPool();

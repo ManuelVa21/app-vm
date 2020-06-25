@@ -43,23 +43,6 @@ router.put('/:_id', async (req, res, next) =>{
     } catch (error) {
         res.json({ status:400, content:error })
     }
-    /*
-    await solicitudes.findById(req.params.id), function(err,solicitudes){
-        if (!solicitudes) {
-            return next(new Error('No se puede cargar documento'));
-        }
-        else{
-            solicitudes.motivo= req.body.solicitudes.motivo;
-            solicitudes.save()
-                .then(solicitudes =>{
-                    res.json('Actualización completa')
-                })
-                .catch(err =>{
-                    res.status(400).send({solicitudes:'Error al actualizar'});
-                });
-        }
-    }
-    */
 });
 
 //Para eliminar datos

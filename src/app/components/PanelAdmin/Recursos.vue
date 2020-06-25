@@ -152,6 +152,7 @@
                                 </div>
                                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionPU">                                    
                                     <div class="card-body">
+                                        
                                         <div>
                                             <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#ModalAddProject">
                                             <span data-toggle="tooltip" data-placement="top" title="Agregar proyecto"><i class="fas fa-plus"></i></span>
@@ -187,6 +188,7 @@
                                             </div>
                                             </div>
                                         </div>
+
                                         <div>
                                         <div class="table-responsive">
                                         <table class="table table-striped table-hover w-auto text-center">

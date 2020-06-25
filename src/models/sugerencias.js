@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const sugerencias = new Schema({
-    nombre_usuario: {type: String},
+    usuario: {type: String},
     fecha: {type: Date, default: Date.now},
-    descripcion: {type:String}
+    descripcion: {type:String},
+    estado: {type:String, default:"Sin atender"},
 },{
     collection: 'sugerencias'
 });

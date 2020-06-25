@@ -43,7 +43,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody v-for="(solicitud, index) in solicitudes" v-bind:key="solicitud.id">
-                                                    <template v-if="solicitud.estado === false">
+                                                    <template v-if="solicitud.estado === 'Pendiente'">
                                                         <tr class="table-danger">
                                                     <th>{{index+1}}</th>
                                                     <td>{{solicitud.fecha}}</td>
@@ -61,7 +61,7 @@
                                                     <td> 
                                                         <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
                                                             <button v-on:click="aceptarPool(solicitud)" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Aceptar"><i class="fas fa-check"></i></button>
-                                                            <button v-on:click="negarSolicitud(solicitud._id,solicitud.tipo)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-times"></i></button>                                            
+                                                            <button v-on:click="negarSolicitud(solicitud)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-times"></i></button>                                            
                                                         </div>
                                                     </td>                                              
                                                     </tr> 
@@ -127,7 +127,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody v-for="(solicitud, index) in solicitudes" v-bind:key="solicitud.id">
-                                                    <template v-if="solicitud.estado === false">
+                                                    <template v-if="solicitud.estado === 'Pendiente'">
 						                            <tr class="table-danger">
                                                         <th>{{index+1}}</th>
                                                         <td>{{solicitud.fecha}}</td>
@@ -144,7 +144,7 @@
                                                         <td>
                                                         <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
                                                             <button v-on:click="getPool(solicitud)" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Aceptar"><i class="fas fa-check"></i></button>
-                                                            <button v-on:click="negarSolicitud(solicitud._id,solicitud.tipo)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-times"></i></button>                                                   
+                                                            <button v-on:click="negarSolicitud(solicitud)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-times"></i></button>                                                   
                                                         </div>
                                                         </td>                                              
                                                     </tr>
@@ -203,7 +203,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody v-for="(solicitud, index) in solicitudes" v-bind:key="solicitud.id">
-                                                    <template v-if="solicitud.estado === false">
+                                                    <template v-if="solicitud.estado === 'Pendiente'">
 						                                <tr class="table-danger">
                                                         <th>{{index+1}}</th>
                                                         <td>{{solicitud.fecha}}</td>
@@ -262,13 +262,6 @@ const configG = require('../../../config')
 export default{
     data(){
         return{
-            config:{
-                headers:{
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                "Access-Control-Allow-Origin":"*"
-                }
-            },
             configOS:{
                 headers:{
                 'User-Agent': 'python-keystoneclient',
@@ -312,7 +305,6 @@ export default{
     },
     created(){
         //this.getSolicitudesPool();
-
     },
     components:{
         'SidebarAdmin': SidebarAdmin
@@ -336,6 +328,7 @@ export default{
             this.createUsuario(info)
             this.cambiarEstado(info._id)
             this.getSolicitudes(info.tipo)
+            this.sendNotificacion(info,'aceptada')
         },
         aceptarAumento: async function(id,info){
             console.log('Se ingresa a aceptarAumento y se muestra el info ', info)
@@ -347,9 +340,12 @@ export default{
                 ram: info.ram,
                 cpu: info.cpu,
                 fecha_fin: info.fecha_fin
-            },this.config)
+            },configG.headersDataBase)
                 .then(res => { 
                     console.log('Respuesta del put ',res)
+                    this.cambiarEstado(info.id)
+                    this.getSolicitudes(info.tipo)
+                    this.sendNotificacion(info,'aceptada')
                 })
                 .catch(error => { console.log('Error en aceptarAumento',error); });
         },
@@ -373,21 +369,42 @@ export default{
             });            
         }, 
         aceptarBackup: async function(info){
+            //this.sendNotificacion(info,'aceptada')
 
         },
-        negarSolicitud: async function(id,tipo){
+        negarSolicitud: async function(info){
             console.log('Se ingresa a negarPool')
-            this.cambiarEstado(id)
-            this.getSolicitudes(tipo)
+            this.cambiarEstado(info.id)
+            this.getSolicitudes(info.tipo)
+            this.getSolicitudes(info.tipo)
+            this.sendNotificacion(info,'negada')
+        },
+        sendNotificacion: async function(info,res){
+            await axios.post('/api/alertas_notificaciones',{
+                tipo: "Notificación",
+                descripcion: 'Se le notifica que la solicitud de '+info.tipo+' ha sido '+res+'. Para mayor información contactese con el administrador.',
+                usuario_destino: info.usuario,
+                correo_usuario: info.correo
+                }, configG.headersDataBase)
+                .then(res => { 
+                    console.log('Respuesta sendNotificacion')
+                    console.log(res) })
+                .catch(error => { console.log('Error en sendNotificacion ',error); });
         },
         eliminarSolicitud: async function(id,tipo){
             //console.log('Se ingresa a eliminarSolicitud')
-            await axios.delete('/api/solicitudes?_id='+id, this.config)
+            await axios.delete('/api/solicitudes?_id='+id, configG.headersDataBase)
             .then(res => { 
                 //console.log(res)
                 this.getSolicitudes(tipo)
                 })
             .catch(error => { console.log('Error en eliminar solicitud',error); });
+        },
+        cambiarEstado: async function(id){
+            console.log('Se va a cambiar el estado de la solicitud')
+            await axios.put('/api/solicitudes/'+id,{estado: "Resuelto" },configG.headersDataBase)
+                .then(res => { console.log(res)})
+                .catch(error => { console.log('Error en cambiar estado',error); });
         },
         createUsuario: async function(info){
             //Se crea el registro del usuario
@@ -402,7 +419,7 @@ export default{
                     tutor_proy: info.tutor,
                     correo_tutor: info.correo_tutor,
                     pool_asociado: info.nombre_proyecto
-                },this.config)
+                },configG.headersDataBase)
                 .then(res => { console.log(res)})
                 .catch(error => { console.log('Error en create usuario',error); });
             } else if (info.categoria_us === 'Docente'){
@@ -411,7 +428,7 @@ export default{
                     correo: info.correo,
                     categoria_us: info.catUsuario,
                     pool_asociado: info.nombre_proyecto
-                },this.config)
+                },configG.headersDataBase)
                 .then(res => { console.log(res)})
                 .catch(error => { console.log('Error ',error); });
             }else {
@@ -420,7 +437,7 @@ export default{
                     correo: info.correo,
                     categoria_us: info.catUsuario,
                     pool_asociado: info.nombre_proyecto
-                },this.config)
+                },configG.headersDataBase)
                 .then(res => { console.log(res)})
                 .catch(error => { console.log('Error ',error); });
             }
@@ -613,15 +630,9 @@ export default{
                 ram: info.ram,
                 cpu: info.cpu,
                 fecha_fin: info.fecha_fin
-            },this.config)
+            },configG.headersDataBase)
                 .then(res => { console.log(res)})
                 .catch(error => { console.log('Error en create pool',error); });
-        },
-        cambiarEstado: async function(id){
-            console.log('Se va a cambiar el estado de la solicitud')
-            await axios.put('/api/solicitudes/'+id,{estado: true }, this.config)
-                .then(res => { console.log(res)})
-                .catch(error => { console.log('Error en cambiar estado',error); });
         }
     }
 }

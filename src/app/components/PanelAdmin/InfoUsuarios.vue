@@ -24,12 +24,11 @@
                                         <p>usuarios registrados en la plataforma Telco2.0</p>
                                     
                                     <!-- Modal -->
-                                         <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#ModalAddUser">
-                                            <span data-toggle="tooltip" data-placement="top" title="Agregar usuario"><i class="fas fa-plus"></i></span>
-                                            </button>
+                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#ModalAddUser">
+                                           <span data-toggle="tooltip" data-placement="top" title="Agregar usuario"><i class="fas fa-plus"></i></span>
+                                        </button>
                                       <!-- Modal -->
-
-                                      <div class="modal fade" id="ModalAddUser" tabindex="-1" role="dialog" aria-labelledby="ModalAddUserLabel" aria-hidden="true">
+                                        <div class="modal fade" id="ModalAddUser" tabindex="-1" role="dialog" aria-labelledby="ModalAddUserLabel" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
                                                 <div class="modal-header">
@@ -100,14 +99,11 @@
                                                 <td>{{usuario.pool_asociado}}</td> 
                                                 <td>
                                                     <div class="btn-group btn-sm" role="group" aria-label="Basic example">
-                                                                                                            
-                                                       
                                                     <div>
-                                                             <button v-on:click="getOneUser(usuarios[index]._id)" type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#EditUsuario">
-                                                                <span data-toggle="tooltip" data-placement="top" title="Editar Usuario"><i class="fas fa-edit"></i></span>
-                                                            </button>
-                                                              
-                                                            <div class="modal fade" id="EditUsuario" tabindex="-1" role="dialog" aria-labelledby="EditUsuarioLabel" aria-hidden="true">
+                                                        <button v-on:click="getOneUser(usuarios[index]._id)" type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#EditUsuario">
+                                                            <span data-toggle="tooltip" data-placement="top" title="Editar Usuario"><i class="fas fa-edit"></i></span>
+                                                        </button>          
+                                                        <div class="modal fade" id="EditUsuario" tabindex="-1" role="dialog" aria-labelledby="EditUsuarioLabel" aria-hidden="true">
                                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
@@ -117,7 +113,6 @@
                                                                         </button>
                                                                     </div>
                                                                 <div class="modal-body">
-
                                                                      <form>
                                                                       
                                                                             <div class="form-group text-left required">
@@ -147,15 +142,49 @@
                                                                         
                                                                  </div>
                                                                 </div>
-                                                               
-                                                                
-                                                               
                                                             </div>
                                                             </div>
                                                      </div>
-                                                        
-                                                     <button v-on:click="confirmarDelete(usuarios[index]._id)" type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i></button>                                                        
-                                                    
+                                                        <button v-on:click="confirmarDelete(usuarios[index]._id)" type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                                        <!-- Boton enviar notificación -->
+                                                        <div>
+                                                            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#ModalSendNotificacion">
+                                                            <span data-toggle="tooltip" data-placement="top" title="Enviar notificación"><i class="fas fa-envelope"></i></span>
+                                                            </button>
+                                                            <!-- Modal -->
+                                                            <div class="modal fade" id="ModalSendNotificacion" tabindex="-1" role="dialog" aria-labelledby="ModalSendNotificacion" aria-hidden="true">
+                                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="ModalSendNotificacion">Enviar Notificación</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <form>
+                                                                        <div class="form-group text-left">
+                                                                            <label class="control-label" for="UsuarioDes">Usuario Destino: {{usuario.nombre}}</label>
+                                                                        </div>
+                                                                        <div class="form-group text-left">
+                                                                            <label class="control-label" for="CorreoDes">Correo: {{usuario.correo}}</label>
+                                                                        </div>
+                                                                        <div class="form-group text-left required">
+                                                                            <label class="control-label" for="DescripcionNoti">Descripción
+                                                                            </label>
+                                                                            <textarea v-model="notificacion.descripcion" name="" id="DescripcionNoti" rows="4" cols="40" class="form-control" placeholder="Ingresar Descripción"></textarea>   
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                                                    <button v-on:click="sendNotificacion(usuario,notificacion)" type="button" class="btn btn-success" data-dismiss="modal">Enviar</button>
+                                                                </div>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+
                                                     </div>
                                                 </td>  
                                                 </tr>                                                
@@ -183,13 +212,13 @@ import SidebarAdmin from './SidebarAdmin.vue'
 const configG = require('../../../config')
 
 class User {
-      constructor (id, nombre, correo, categoria_us){
-          this.id = id;
-          this.nombre = nombre;
-          this.correo = correo;
-          this.categoria_us = categoria_us;
-      }
-  } 
+    constructor (id, nombre, correo, categoria_us){
+        this.id = id;
+        this.nombre = nombre;
+        this.correo = correo;
+        this.categoria_us = categoria_us;
+    }
+} 
 
 export default{
    data(){
@@ -203,6 +232,7 @@ export default{
             },
             User: new User (),
             usuarios:[],
+            notificacion:[]
         }
     },    
     created(){  
@@ -211,8 +241,8 @@ export default{
     components:{
         'SidebarAdmin': SidebarAdmin
     },
-   methods:{
-       //CREAR nuevo usuario   
+    methods:{
+        //CREAR nuevo usuario   
         limpiarUser: async function(){this.User = new User()},
         addUser: async function(){     
            let info={
@@ -243,7 +273,7 @@ export default{
             }
         },
 //Se obtienen los Usuarios       
-       getUsuarios: async function(){            
+        getUsuarios: async function(){            
             await axios.get('/api/usuarios')
                 .then(res => {
                     //console.log(res.data.content);
@@ -294,7 +324,7 @@ export default{
                 this.getUsuarios();
             }
         },
-       deleteUser(idUser){         
+        deleteUser(idUser){         
             axios.delete('/api/usuarios?_id='+idUser, this.config)
                 .then(res => {
                     //console.log(res.data);
@@ -303,7 +333,21 @@ export default{
                 .catch(error => {
                     console.log('Error ',error);
                 });
+        },
+        sendNotificacion: async function(usuario,notificacion){
+            //console.log('Se ingresa a send notificación')
+            await axios.post('/api/alertas_notificaciones',{
+                tipo: "Notificación",
+                descripcion: notificacion.descripcion,
+                usuario_destino: usuario.nombre,
+                correo_usuario: usuario.correo
+                }, configG.headersDataBase)
+                .then(res => { 
+                    console.log('Respuesta sendNotificacion')
+                    console.log(res) })
+                .catch(error => { console.log('Error en sendNotificacion ',error); });
+
         }
-   }
+    }
 }
 </script>
