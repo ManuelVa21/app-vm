@@ -376,7 +376,6 @@ export default{
             console.log('Se ingresa a negarPool')
             this.cambiarEstado(info.id)
             this.getSolicitudes(info.tipo)
-            this.getSolicitudes(info.tipo)
             this.sendNotificacion(info,'negada')
         },
         sendNotificacion: async function(info,res){

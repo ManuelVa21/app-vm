@@ -15,7 +15,7 @@
                    Hola {{this.user.name}}, aún no tienes un Pool de recursos signado, 
                 </p>
                 <p>  puedes solicitarlo ingresando a la siguiente 
-                     <button @click="$router.push('/PanelUsuario/Peticiones')"
+                     <button @click="$router.push('/PanelUsuario/SolicitudesUsuario')"
                      class="btn btn-link">
                      ruta,        
                      </button>en la sección "Solicitud de Pool de recursos"
@@ -411,6 +411,7 @@ export default {
             "imageRef": vm.SO, 
             "flavorRef": id_flavor,
             "description": vm.descripcion,
+            //"adminPass ": vm.contrasena,
             "availability_zone": "nova", 
             "max_count": 1, 
             "min_count": 1,  
@@ -428,8 +429,8 @@ export default {
         console.log('Se ingresa a getImage')
         await axios.get('http://'+configG.ipOpenstack+'/image/v2/images',this.config)
         .then(res => {
-          console.log('Respuesta del post')
-          console.log(res.data.images)
+          //console.log('Respuesta del post')
+          //console.log(res.data.images)
           this.images = res.data.images
         })
         .catch(error => { console.log('Error en getImage',error); });        
@@ -438,8 +439,8 @@ export default {
         console.log('Se ingresa a getNetwrk ')
         await axios.get('http://'+configG.ipOpenstack+':9696/v2.0/networks?tenant_id='+this.Project.id_openstack,this.config)
         .then(res => {
-          //console.log('Respuesta del post')
-          //console.log(res.data.networks[0].id)
+          console.log('Respuesta del get network')
+          console.log(res)
           this.network = res.data.networks[0].id
         })
         .catch(error => { console.log('Error en getNetwork',error); }); 
@@ -451,17 +452,19 @@ export default {
             "vcpus": vm.cpu, 
             "disk": vm.disco_duro, 
             "name": "flavor-"+vm.nombre, 
-            "os-flavor-access:is_public": true, 
-            "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral": 0, 
+            //"os-flavor-access:is_public": true, 
+            "description": "Flavor creado para máquina "+vm.nombre,
+            "rxtx_factor": 1.0, 
+            //"OS-FLV-EXT-DATA:ephemeral": 0, 
             "ram": (vm.ram*1024), 
-            "id": null, 
-            "swap": 0
+            "id": "id-"+vm.nombre
+            //"swap": 0
           }
         }
         await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/flavors',data,this.config)
         .then(res => {
           console.log('Respuesta del post')
-          console.log(res.data.flavor.id)
+          console.log(res.data)
           this.addServer(vm,res.data.flavor.id)
         })
         .catch(error => { console.log('Error en createFlavor',error); }); 

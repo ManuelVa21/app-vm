@@ -1,10 +1,13 @@
 #!/bin/sh
 
-export OS_USERNAME=gestion
-export OS_PROJECT_NAME=gestion
+#export OS_USERNAME=gestion
+export OS_USERNAME=$1
+#export OS_PROJECT_NAME=gestion
+export OS_PROJECT_NAME=$2
 export OS_PROJECT_DOMAIN_NAME=default
 export OS_USER_DOMAIN_NAME=Default
-export OS_PASSWORD=gestion
+#export OS_PASSWORD=gestion
+export OS_PASSWORD=$3
 export OS_AUTH_URL=http://10.55.2.24/identity/v3
 
 

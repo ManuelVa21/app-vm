@@ -145,7 +145,6 @@
                                                             </div>
                                                             </div>
                                                      </div>
-                                                        <button v-on:click="confirmarDelete(usuarios[index]._id)" type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i></button>
                                                         <!-- Boton enviar notificación -->
                                                         <div>
                                                             <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#ModalSendNotificacion">
@@ -184,8 +183,8 @@
                                                             </div>
                                                             </div>
                                                         </div>
-
-                                                    </div>
+                                                        <button v-on:click="confirmarDelete(usuarios[index]._id)" type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                                        </div>
                                                 </td>  
                                                 </tr>                                                
                                             </tbody>
@@ -342,11 +341,23 @@ export default{
                 usuario_destino: usuario.nombre,
                 correo_usuario: usuario.correo
                 }, configG.headersDataBase)
-                .then(res => { 
+                .then(res => {
+                    //this.makeToast('success','Notificación')
                     console.log('Respuesta sendNotificacion')
                     console.log(res) })
                 .catch(error => { console.log('Error en sendNotificacion ',error); });
-
+        },
+        makeToast(variant = null,tipo) {
+            $('#element').toast('show')
+            
+/*
+            this.$bvToast.toast('Enviado correctamente', {
+            title: tipo,
+            toaster: 'b-toaster-top-right',
+            variant: variant,
+            appendToast: false,
+            solid: true
+            })*/
         }
     }
 }

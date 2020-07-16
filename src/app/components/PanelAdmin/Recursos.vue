@@ -558,6 +558,7 @@ export default{
         //Recursos Telco
         getrecursosTelco: async function(){
             //console.log('Se ingresa a recursosTelco')
+            console.log('Se muestra token config',configG.tokenOpenStack)
             await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/os-hypervisors/detail', this.config)
             .then(res => {
                 //console.log(res.data.hypervisors[0]);

@@ -1,4 +1,8 @@
 module.exports={
+    OS_USERNAME: 'gestion',
+    OS_PROJECT_NAME: 'gestion',
+    OS_PASSWORD: 'gestion',
+    tokenOpenStack: '',
     ipOpenstack: '10.55.2.24',
     ipServerUsuarios: '10.55.6.31',
     idNetPublic:'73234f4d-fcc6-40b5-b166-7795b977b89d',//Ejecutar comando openstack network list y copiar id public
@@ -11,6 +15,5 @@ module.exports={
             'Accept': 'application/json',
             "Access-Control-Allow-Origin":"*"
             }
-    },
-    tokenOpenStack:''
+    }
 };

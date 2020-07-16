@@ -63,7 +63,7 @@ export default {
     },
     getAlertas: async function(correo){
       //console.log('Se ingresa a getAlertas')
-      await axios.get('/api/alertas_notificaciones?correo_usuario='+correo+'&tipo=Alerta&estado=false')
+      await axios.get('/api/alertas_notificaciones?correo_usuario='+correo+'&tipo=Alerta&estado=Sin atender')
       .then(res => {
           //console.log('Se muestra respuesta get del sidebar usuario get notificaciones')
           //console.log(res.data.content);
