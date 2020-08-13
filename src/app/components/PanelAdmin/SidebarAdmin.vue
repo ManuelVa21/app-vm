@@ -8,10 +8,10 @@
             <!-- <img src="..." alt="..." class="rounded-circle"> -->
             <div class="sidebar-heading text-center text-primary">Admin Telco 2.0</div>
               <ul class="list-group list-group-flush">
-                <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/InfoUsuarios">InfoUsuarios</router-link></li>
+                <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/InfoUsuarios">Información usuarios</router-link></li>
                 <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/Recursos">Recursos</router-link></li>
                 <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/Solicitudes">Solicitudes <span class="badge badge-danger">{{solicitudes.length}}</span></router-link></li>
-                <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/Alertas">Alertas <span class="badge badge-danger">{{alertas.length}}</span></router-link></li>
+                <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/AlertasYNot">Alertas y notificaciones <span class="badge badge-danger">{{alertas.length}}</span></router-link></li>
                 <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/Sugerencias">Sugerencias <span class="badge badge-danger">{{sugerencias.length}}</span></router-link></li>
             </ul>
           </div>

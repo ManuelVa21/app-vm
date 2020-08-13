@@ -3,10 +3,10 @@
         <section>
           
             <div class="row">
-                <div class="col-sm-2 col-with-right-border">
+                <div class="col-2 col-with-right-border">
                     <SidebarUsuario></SidebarUsuario> 
                 </div>
-            <div class="col-sm-8"> 
+            <div class="col-10"> 
              <div class="container">
 <!-- En esta sección se verifica si el usuario que ingresa tiene proyecto asignado -->            
              <template v-if="Project == 'false'">
@@ -301,7 +301,7 @@ export default {
         try {
           if (localStorage.getItem) {
               storage = JSON.parse(localStorage.getItem('userInfo'))
-              //console.log('se muestra el storage ',storage)
+              console.log('se muestra el storage ',storage)
               this.user = storage
               this.getPool(this.user.email)
           }

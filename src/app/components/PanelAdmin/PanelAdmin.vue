@@ -2,10 +2,10 @@
     <div>
         <section class="content">
             <div class="row">
-                <div class="col-sm-2 col-with-right-border">
+                <div class="col-2 col-with-right-border">
                     <SidebarAdmin></SidebarAdmin>
                 </div>
-                <div class="col-sm-8">
+                <div class="col-10">
                     <div>
                         <InfoGen></InfoGen>
                     </div>

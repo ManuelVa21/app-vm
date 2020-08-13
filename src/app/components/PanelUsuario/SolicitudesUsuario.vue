@@ -2,24 +2,24 @@
     <div>
         <section>
             <div class="row">
-                <div class="col-sm-2 col-with-right-dorder">
+                <div class="col-2 col-with-right-dorder">
                     <SidebarUsuario></SidebarUsuario> 
                 </div>
-                <div class="col-sm-8">
+                <div class="col-10" style="padding-left: 0;">
                     <p>Descripción de las funciones que se pueden realizar en esta sección</p>
                     <div class="container">
                         <div class="accordion" id="accordionPU">
                             <!-- Solicitud de Pool de recursos -->
                             <div class="card">
                                 <div class="card-header" id="headingOne">
-                                <h5 class="mb-0">
+                                <h5 class="mb-0" style="display: flex; align-items: center">
                                     <template v-if="pool === true">
-                                        <button disabled class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <button disabled class="btn btn-outline-info btn-lg btn-block" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                         Pool de recursos
                                         </button>
                                     </template>
                                     <template v-else>
-                                        <button  class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <button  class="btn btn-outline-info btn-lg btn-block" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                         Pool de recursos
                                         </button>
                                     </template>
@@ -245,12 +245,12 @@
                                 <div class="card-header" id="headingTwo">
                                 <h5 class="mb-0">
                                     <template v-if="pool === true">
-                                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        <button class="btn btn-outline-info btn-lg btn-block" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                                         Aumento de pool de recursos
                                         </button>
                                     </template>
                                     <template v-else>
-                                        <button disabled class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        <button disabled class="btn btn-outline-info btn-lg btn-block" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                                         Aumento de pool de recursos
                                         </button>
                                     </template>
@@ -300,12 +300,12 @@
                                 <div class="card-header" id="headingThree">
                                 <h5 class="mb-0">
                                     <template v-if="pool === true">
-                                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        <button class="btn btn-outline-info btn-lg btn-block" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                                         Backup
                                         </button>
                                     </template>
                                     <template v-else>
-                                        <button disabled class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        <button disabled class="btn btn-outline-info btn-lg btn-block" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                                         Backup
                                         </button>
                                     </template>

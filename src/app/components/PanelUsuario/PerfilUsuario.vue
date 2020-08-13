@@ -2,10 +2,10 @@
     <div>
         <section>
             <div class="row">
-                <div class="col-sm-2 col-with-right-dorder">
+                <div class="col-2 col-with-right-dorder">
                     <SidebarUsuario></SidebarUsuario> 
                 </div>
-                <div class="col-sm-8">
+                <div class="col-10">
                     <p>Descripción de las funciones que se pueden realizar en esta sección TIGRE</p>
                     <p>  Modificando un archivo antes de subi </p>
                     <div class="container">

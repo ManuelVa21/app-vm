@@ -18,6 +18,21 @@ router.get('/', async (req,res) =>{
     }
 });
 
+// obtener una solicitud
+router.get('/unasolicitud', async (req,res) =>{
+    try {        
+        //const solicitudes = await Solicitudes.find();
+        const solicitudes = await Solicitudes.findById(req.query);
+        if (!solicitudes) {
+            res.json({ status:404, content:solicitudes })            
+        } else {
+            res.json({ status:200, content:solicitudes })            
+        }
+    } catch (error) {
+        res.json({ status:400, content:error })
+    }
+});
+
 //Para enviar del cliente a la bd
 router.post('/', async (req, res) => {
     try {

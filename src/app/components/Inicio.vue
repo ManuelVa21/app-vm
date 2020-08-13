@@ -16,7 +16,6 @@
 <script>
 import VueRouter from 'vue-router'
 import axios from 'axios'
-
 export default{
     data(){
         return {
@@ -24,39 +23,35 @@ export default{
         }
     },
     created(){
-        this.limpiar();
+        this.geturl();
     },
     methods:{
-        limpiar: async function(){
-            
-  //          localStorage.clear();
-            this.geturl();
-        },
         geturl: async function(){
             var URLsearch = window.location.search
-            console.log('Se muestra el windowlocation ',URLsearch)
-            this.token = URLsearch.substr(1)
-            //localStorage.setItem('userToken',this.token)
-            console.log('Quitando la poscion 0 queda ',this.token)
-            await axios.get('http://10.55.6.31:3000/auth/verify', {headers : {'x-access-token': this.token,'Content-Type':'application/json'}})
-            .then(res => { 
-                console.log('Se muestra la respuesta del axios de info usuario ',res.data.user)
-                //this.$router.push({ name: 'PanelUsuario' })                
-                localStorage.setItem('userInfo', JSON.stringify(res.data.user))
-                window.location.replace('/')
-
-                //this.user(res.data.user)
-                })
-            .catch(error => { console.log('Error en el axios del servidor ',error); });            
-        },//Fin de getUrl
-        user: async function(data){
-            console.log('se ingresa a funcion user ', data)
-            if (data.role === 'guest') {
-                console.log('Se ingresa a panel usuario ')
-                window.location.replace('/')
-            } else {
-                console.log('Se ingresa a panel admin')
+            if (URLsearch) {
+                //console.log('Hay token en la url')
+                this.token = URLsearch.substr(1)
+                localStorage.setItem('userToken',this.token)
+                this.consulta(this.token)
             }
+        },
+        consulta: async function(token){
+            await axios.get('http://10.55.6.31:3000/auth/verify', {headers : {'x-access-token': token,'Content-Type':'application/json'}})
+            .then(res => { 
+                //console.log('Se muestra la respuesta del axios de info usuario ',res.data.user)
+                localStorage.setItem('userInfo', JSON.stringify(res.data.user))
+                //Se compara el role
+                if (res.data.user.role === 'guest') {
+                    //console.log('Se ingresa a panel usuario ')
+                    window.location.replace('/')
+                    //this.$router.push({ name: 'PanelUsuario' })
+                } else {
+                    //console.log('Se ingresa a panel admin')
+                    window.location.replace('/')
+                    //this.$router.push({ name: 'PanelAdmin' })
+                }
+                })
+            .catch(error => { console.log('Error en el axios del inicio ',error); });
         }
     }
 }

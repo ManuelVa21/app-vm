@@ -79,7 +79,7 @@ router.put('/:_id', async (req, res, next) =>{
         console.log('Se mira el req.body', req.body)
         const usuario = new Usuarios(req.body)
         const idusuario = req.body._id
-        await Usuarios.findOneAndUpdate(idusuario,{$set: usuario },{ new: true} );
+        await Usuarios.findByIdAndUpdate(usuario._id ,{$set: usuario }, { new: true} );
         res.json({ status:'200', answer:"Usuario actualizado" });
     } catch (error) {
         res.json({ status:400, content:error })

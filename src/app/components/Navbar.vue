@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="http://localhost:4000/"><img class="img-fluid" src="../../assets/telcoLogo.png" alt="Telco" style="max-height: 50px;"></a>
+    <a class="navbar-brand" href="/"><img class="img-fluid" src="../../assets/telcoLogo.png" alt="Telco" style="max-height: 50px;"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar1" aria-controls="navbar1" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -17,11 +17,11 @@
           <router-link class="nav-link" to="/">Contacto</router-link>
           <!-- <a class="nav-link" [routerLink]="['contact']" tabindex="-1">Contacto</a> --> 
         </li>
-        <li v-if="auth===''" class="nav-item">
-          <router-link class="nav-link" to="/PanelUsuario">Usuario</router-link>
+        <li v-if="auth==='user'" class="nav-item">
+          <router-link class="nav-link" to="/PanelUsuario">Panel Usuario</router-link>
         </li>
-        <li v-if="auth===''" class="nav-item">
-          <router-link class="nav-link" to="/PanelAdmin">Admin</router-link>
+        <li v-if="auth==='admin'" class="nav-item">
+          <router-link class="nav-link" to="/PanelAdmin">Panel Admin</router-link>
           </li>
       </ul>
       <div class="input-group-append">
@@ -38,7 +38,6 @@
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item">usuario</a>
             <router-link class="dropdown-item" to="/"><small class="m-auto">Politicas de uso</small></router-link>
-            <router-link class="dropdown-item" to="/PanelUsuario/PerfilUsuario"><small class="m-auto">Cuenta</small></router-link>
             <a v-on:click="logout()" class="dropdown-item" href="http://10.55.6.31:4200/home">Salir</a>
           </div>
         </div>
@@ -48,12 +47,13 @@
 </template>
 
 <script>
-import EventBus from './EventBus.vue'
+//import EventBus from './EventBus.vue'
 import VueRouter from 'vue-router'
-
+/*
 EventBus.$on('logged-in', test => {
-  console.log(test)
+  console.log('Se ingresa al eventBus.on ',test)
 })
+*/
 
 export default {
   data () {
@@ -62,17 +62,36 @@ export default {
       user: ''
     }
   },
+  created(){
+    this.getStorage();
+  },
 
   methods: {
     logout: async function() {
       localStorage.removeItem('userInfo');
+      localStorage.removeItem('userToken');
+    },
+    getStorage: async function(){
+      var storage;
+      try {
+      if (localStorage.getItem) {
+        storage = JSON.parse(localStorage.getItem('userInfo'))
+        //console.log('se muestra el storage ',storage)
+        if (storage.role=='admin') {
+          //console.log('Se ingresa como admin')
+          this.auth= 'admin'
+        }else{
+          //console.log('Se ingresa como guest')
+          this.auth= 'user'
+        }
+      }
+      } catch(e) {
+        storage = {};
+      }
     }
   },
 
   mounted () {
-    EventBus.$on('logged-in', status => {
-      this.auth = status
-    })
   }
 }
 </script>
