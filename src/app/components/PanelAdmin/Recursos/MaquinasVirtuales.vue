@@ -7,11 +7,15 @@
         </div>
         <div class="col-10" style="padding-left: 0;">
           
-          <div class="btn-group btn-group-lg" style="display: flex; align-items: center;">   
-            <button @click="$router.push('/PanelAdmin/Recursos/RecursosTelco')" class="btn btn-outline-info">Recursos Telco</button>
-            <button @click="$router.push('/PanelAdmin/Recursos/Proyectos')" class="btn btn-outline-info">Proyectos</button>
-            <button @click="$router.push('/PanelAdmin/Recursos/Estadisticas')" class="btn btn-outline-info">Estadísticas</button>
-          </div> 
+        <div style=" float: right;">
+            <span>/</span>
+            <router-link to="/PanelAdmin">Panel Admin</router-link>
+            <span>/</span>
+            <router-link to="/PanelAdmin/Recursos">Recursos</router-link>
+            <span>/</span>
+            <strong class="final-path">Máquinas Virtuales</strong>
+            <span>/</span>
+        </div><br>
             <br>
              <button v-on:click="addServer()" type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Agregar máquina"><i class="fas fa-plus"></i></button>
                                         
@@ -111,9 +115,7 @@ import VueComp from '@vue/composition-api'
 import SidebarAdmin from '../SidebarAdmin.vue'
 import VueyeTable from 'vueye-table'
 import Token from '!!raw-loader!../../PanelAdmin/Token.txt'
-import LineChart from '../Chart/LineChart.vue';
-const configG = require('../../../../config')
-
+const configG = require('../../../../config') 
 
 
 export default {
@@ -126,7 +128,7 @@ export default {
     data(){
         return{
 
-             /* config:{
+            config:{
                headers:{
                 'User-Agent': 'python-keystoneclient',
                 'X-Auth-Token':Token,
@@ -151,9 +153,9 @@ export default {
                 'Accept': 'application/json',
                 'X-OpenStack-Nova-API-Version': '2.1' 
                 }
-            },*/
+            },
             servers: [],
-          columns:[              
+            columns:[              
                 {key: "tenant_id", label: "Proyecto", display: true, sortable: true},
                 {key: "", label: "Usuario", display: true},
                 {key: "name", label: "Nombre VM", display: true},                
@@ -165,20 +167,13 @@ export default {
                 {key: "", label: "IP", display: true},
                 {key: "status", label: "Estado", display: true},
                 {key: "id", label: "Acciones", display: true},                              
-            ]
-
-            
+            ]  
         }
-
-
     },
     created(){
-       // this.getServers();
-
+        this.getServers();
     },
-   
     methods:{
-        
         getServers: async function(){
             let server
             //console.log('Se ingresa a getServers')

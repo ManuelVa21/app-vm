@@ -22,10 +22,10 @@ router.post('/', async (req, res) => {
 
 
     let mailOptions = {
-        from: 'diegofernandov@unicauca.edu.co', // TODO: email sender
-        to: req.body.correo_usuario, // TODO: email receiver
-        subject: 'Probando',
-        text: req.body.descripcion
+        from: 'diegofernandov@unicauca.edu.co', // Quie envía el correo
+        to: req.body.correo_usuario, // Quien recibe el correo
+        subject: 'Notificación plataforma Telco 2.0',        // 
+        text: req.body.mensaje
     };
 
     //

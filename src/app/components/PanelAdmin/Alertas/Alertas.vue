@@ -7,22 +7,18 @@
             
             <div class="col-10">
 
-                <div>
-                    <router-link to="/PanelAdmin">Panel Admin</router-link>
-                    <span>/</span>
-                    <router-link to="/PanelAdmin/AlertasYNot">Alertas y Notificaciones</router-link>
-                    <span>/</span>
-                    <strong class="final-path">Alertas</strong>
-                    <span>/</span>
-                </div>
-                    
-                <div class="btn-group btn-group-lg" style="display: flex; align-items: center;">   
-                  <button @click="$router.push('/PanelAdmin/AlertasYNot/Notificaciones')" class="btn btn-outline-info">Notificaciones</button>
-                </div>             
-                            
+            <div style=" float: right;">
+                <span>/</span>
+                <router-link to="/PanelAdmin">Panel Admin</router-link>
+                <span>/</span>
+                <router-link to="/PanelAdmin/AlertasYNot">Alertas y Notificaciones</router-link>
+                <span>/</span>
+                <strong class="final-path">Alertas</strong>
+                <span>/</span>
+            </div><br>
+            
+            <div class="table-responsive">
                 
-
-                <div class="table-responsive">
                 <VueyeTable 
                 :data="alertas" 
                 :columns="columns" 
@@ -30,7 +26,9 @@
                 filter-by="estado">
                 </VueyeTable>
 
-                </div> 
+            </div> 
+
+
             </div>
         </div>      
     </div>

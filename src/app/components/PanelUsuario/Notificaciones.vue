@@ -5,12 +5,14 @@
                 <SidebarUsuario></SidebarUsuario> 
             </div>
             <div class="col-10">
-                <div style=" float: right">
-                    <router-link to="/PanelUsuario">Panel Usuario</router-link>
-                    <span>/</span>
-                    <strong class="final-path">Notificaciones</strong>
-                    <span>/</span>
-                </div><br>
+            
+            <div style=" float: right">
+                <router-link to="/PanelUsuario">Panel Usuario</router-link>
+                <span>/</span>
+                <strong class="final-path">Notificaciones</strong>
+                <span>/</span>
+            </div><br>
+            
                 <div class="table-responsive">
                 <VueyeTable 
                 :data="notificaciones" 

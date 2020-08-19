@@ -45,16 +45,16 @@ export default {
       try {
         if (localStorage.getItem) {
           storage = JSON.parse(localStorage.getItem('userInfo'))
-          this.user = storage
-          //this.getAlertas(this.user.email)
+          this.storage = storage
+          this.getAlertas(this.storage.email)
         }
       } catch(e) {
           storage = {};
       }
     },
-    getSolicitudes: async function(correo){
+    getSolicitudes: async function(){
       //console.log('Se ingresa a getNotificaciones')
-      await axios.get('/api/solicitudes?estado=Pendiente')
+      await axios.get('/api/solicitudes?estado=Sin Atender')
       .then(res => {
           //console.log('Se muestra respuesta get del sidebar usuario get solicitudes')
           //console.log(res.data);
@@ -64,7 +64,7 @@ export default {
     },
     getAlertas: async function(correo){
       //console.log('Se ingresa a getAlertas')
-      await axios.get('/api/alertas_notificaciones?correo_usuario='+correo+'&tipo=Alerta&estado=Sin atender')
+      await axios.get('/api/alertas_notificaciones?correo_usuario='+correo+'&estado=Sin atender')
       .then(res => {
           //console.log('Se muestra respuesta get del sidebar usuario get alertas')
           //console.log(res.data.content);

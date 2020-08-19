@@ -7,11 +7,15 @@
         </div>
         <div class="col-10" style="padding-left: 0;">
           
-             <div class="btn-group btn-group-lg" style="display: flex; align-items: center;">   
-            <button @click="$router.push('/PanelAdmin/Recursos/RecursosTelco')" class="btn btn-outline-info">Recursos Telco</button>
-            <button @click="$router.push('/PanelAdmin/Recursos/MaquinasVirtuales')" class="btn btn-outline-info">Máquinas Virtuales</button>
-            <button @click="$router.push('/PanelAdmin/Recursos/Estadisticas')" class="btn btn-outline-info">Estadísticas</button>
-            </div> 
+        <div style=" float: right;">
+            <span>/</span>
+            <router-link to="/PanelAdmin">Panel Admin</router-link>
+            <span>/</span>
+            <router-link to="/PanelAdmin/Recursos">Recursos</router-link>
+            <span>/</span>
+            <strong class="final-path">Proyectos</strong>
+            <span>/</span>
+        </div><br>
 
             <p> Aquí va la información de proyectos </p>
 
@@ -89,11 +93,9 @@ import axios from 'axios'
 import VueComp from '@vue/composition-api'
 import SidebarAdmin from '../SidebarAdmin.vue'
 import VueyeTable from 'vueye-table'
-/*import Token from '!!raw-loader!../PanelAdmin/Token.txt'
-import LineChart from './Chart/LineChart.vue';
-const configG = require('../../../config') */
 
-
+import Token from '!!raw-loader!../../PanelAdmin/Token.txt'
+const configG = require('../../../../config') 
 
 export default {
     
@@ -104,7 +106,7 @@ export default {
 
     data(){
         return{
-            /* config:{
+            config:{
                headers:{
                 'User-Agent': 'python-keystoneclient',
                 'X-Auth-Token':Token,
@@ -129,7 +131,7 @@ export default {
                 'Accept': 'application/json',
                 'X-OpenStack-Nova-API-Version': '2.1' 
                 }
-            },*/
+            },
             projects:[],
             project:[],
            
@@ -146,17 +148,11 @@ export default {
                 {key: "_id", label: "Acciones", display: true},                                              
             ] 
         }
-
-
-        
-
-
     },
     created(){
-        //this.getProjects();
+        this.getProjects();
 
     },
-   
     methods:{
         getProjects: async function(){
             await axios.get('http://'+configG.ipOpenstack+'/identity/v3/projects/', this.config)
@@ -167,7 +163,6 @@ export default {
                 .catch(error => { console.log('Error getProjects',error); });                
         },
         addProject: async function(){
-            
             let data={
                 "project": {
                     "tags": [], 
@@ -177,15 +172,13 @@ export default {
                 }
             };
             console.log(data)
-            /*await axios.post('http://'+configG.ipOpenstack+'/identity/v3/projects',data,this.config)
+            await axios.post('http://'+configG.ipOpenstack+'/identity/v3/projects',data,this.config)
                 .then(res => {
                     console.log(res.data)
                 })
                 .catch(error => { console.log('Error addProject',error); });
-                this.getProjects();*/
-                
+                this.getProjects();
         },
-
         deleteProject: async function(info){
             //Delete project openstack
             await axios.delete('http://'+configG.ipOpenstack+'/identity/v3/projects/'+info.id,this.config)

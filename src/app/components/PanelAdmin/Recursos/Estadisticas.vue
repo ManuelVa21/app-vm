@@ -7,11 +7,15 @@
         </div>
         <div class="col-10" style="padding-left: 0;">
           
-             <div class="btn-group btn-group-lg" style="display: flex; align-items: center;">   
-            <button @click="$router.push('/PanelAdmin/Recursos/RecursosTelco')" class="btn btn-outline-info">Recursos Telco</button>
-            <button @click="$router.push('/PanelAdmin/Recursos/Proyectos')" class="btn btn-outline-info">Proyectos</button>
-            <button @click="$router.push('/PanelAdmin/Recursos/MaquinasVirtuales')" class="btn btn-outline-info">Máquinas Virtuales</button>
-            </div> 
+            <div style=" float: right;">
+                <span>/</span>
+                <router-link to="/PanelAdmin">Panel Admin</router-link>
+                <span>/</span>
+                <router-link to="/PanelAdmin/Recursos">Recursos</router-link>
+                <span>/</span>
+                <strong class="final-path">Estadísticas</strong>
+                <span>/</span>
+            </div> <br>
 
             <p> Aquí va la información de estadístias </p>
 
@@ -29,7 +33,8 @@ import VueComp from '@vue/composition-api'
 import SidebarAdmin from '../SidebarAdmin.vue'
 import VueyeTable from 'vueye-table'
 
-
+import Token from '!!raw-loader!../../PanelAdmin/Token.txt'
+const configG = require('../../../../config') 
 
 export default {
     

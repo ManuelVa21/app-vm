@@ -1,18 +1,21 @@
 <template>
-    <div>
-        <section>
-            <div class="row">
-                <div class="col-2 col-with-right-dorder">
-                    <SidebarUsuario></SidebarUsuario> 
-                </div>
-                <div class="col-10">
-                    <div style=" float: right">
-                        <router-link to="/PanelUsuario">Panel Usuario</router-link>
-                        <span>/</span>
-                        <strong class="final-path">Alertas</strong>
-                        <span>/</span>
-                    </div><br>
-                    <div class="table-responsive">
+    <div class="content">
+        <div class="row">
+                
+            <div class="col-2 col-with-right-dorder">
+                <SidebarUsuario></SidebarUsuario> 
+            </div>
+                
+            <div class="col-10">
+                    
+            <div style=" float: right">
+                <router-link to="/PanelUsuario">Panel Usuario</router-link>
+                <span>/</span>
+                <strong class="final-path">Alertas</strong>
+                <span>/</span>
+            </div><br>
+
+                <div class="table-responsive">
                     <VueyeTable 
                     :data="alertas" 
                     :columns="columns" 
@@ -32,9 +35,9 @@
                         </template>  
                     </VueyeTable>
                     </div>
-                </div>
-            </div> 
-        </section>
+
+            </div>                
+        </div>     
     </div>
 </template>
 

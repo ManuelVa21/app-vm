@@ -1,20 +1,22 @@
 <template>
-    <div>
-        <section class="content">
-            <div class="row">
-                <div class="col-2 col-with-right-border">
-                    <SidebarAdmin></SidebarAdmin>
-                </div>
-                <div class="col-10">
+    <div class="content">
+        <div class="row">
+                
+            <div class="col-2 col-with-right-border">
+                <SidebarAdmin></SidebarAdmin>
+            </div>
+            
+            <div class="col-10">
                     
-                    <div>
-                        <router-link to="/PanelAdmin">Panel Admin</router-link>
-                        <span>/</span>
-                        <strong class="final-path">Sugerencias</strong>
-                        <span>/</span>
-                    </div>
+            <div style=" float: right;">
+                <span>/</span>
+                <router-link to="/PanelAdmin">Panel Admin</router-link>
+                <span>/</span>
+                <strong class="final-path">Sugerencias</strong>
+                <span>/</span>
+            </div><br>
                     
-                    <div class="table-responsive">
+                <div class="table-responsive">
                     <VueyeTable 
                         :data="sugerencias" 
                         :columns="columns" 
@@ -57,10 +59,9 @@
                                               
                                                                          
                                             
-                    </div>
                 </div>
             </div>
-        </section>
+        </div>
     </div>
 </template>
 

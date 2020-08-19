@@ -2,20 +2,29 @@
     <div class="content">
         <div class="row">
             
-            <div class="col-2">
-                <SidebarAdmin></SidebarAdmin>
-            </div>
+        <div class="col-2">
+            <SidebarAdmin></SidebarAdmin>
+        </div>
 
-            <div class="col-10 " style="padding-left: 0;">
+        <div class="col-10 " style="padding-left: 0;">
+
+            <div style=" float: right;">
+                    <span>/</span>
+                    <router-link to="/PanelAdmin">Panel Admin</router-link>
+                    <span>/</span>
+                    <strong class="final-path">Recursos</strong>
+                    <span>/</span>
+            </div><br>
+
                 <br><br><p>
                 <div class="btn-group-vertical btn-group-lg" style="display: flex; align-items: center">   
                 <button @click="$router.push('/PanelAdmin/Recursos/RecursosTelco')" class="btn btn-outline-info">Recursos Telco</button>
                 <button @click="$router.push('/PanelAdmin/Recursos/Proyectos')" class="btn btn-outline-info">Proyectos</button>
                 <button @click="$router.push('/PanelAdmin/Recursos/MaquinasVirtuales')" class="btn btn-outline-info">Máquinas Virtuales</button>
                 <button @click="$router.push('/PanelAdmin/Recursos/Estadisticas')" class="btn btn-outline-info">Estadísticas</button>
-                </div>      
-            </div>
-
+                </div> 
+                     
+        </div>
         </div>
     </div>
 </template>
@@ -74,9 +83,9 @@ export default{
         }
     },
     created(){
-        this.getrecursosTelco();
-        this.getServers();
-        this.getProjects();
+        //this.getrecursosTelco();
+        //this.getServers();
+        //this.getProjects();
         //this.getPools();
     },
     components:{

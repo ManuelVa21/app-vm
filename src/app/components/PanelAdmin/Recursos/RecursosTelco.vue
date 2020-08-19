@@ -1,17 +1,22 @@
 <template>
-    
     <div class="content">
     <div class="row">
+        
         <div class="col-2">
           <SidebarAdmin></SidebarAdmin>
         </div>
+        
         <div class="col-10" style="padding-left: 0;">
           
-             <div class="btn-group btn-group-lg" style="display: flex; align-items: center;">   
-             <button @click="$router.push('/PanelAdmin/Recursos/Proyectos')" class="btn btn-outline-info">Proyectos</button>
-             <button @click="$router.push('/PanelAdmin/Recursos/MaquinasVirtuales')" class="btn btn-outline-info">Máquinas Virtuales</button>
-             <button @click="$router.push('/PanelAdmin/Recursos/Estadisticas')" class="btn btn-outline-info">Estadísticas</button> 
-            </div> 
+        <div style=" float: right;">
+            <span>/</span>
+            <router-link to="/PanelAdmin">Panel Admin</router-link>
+            <span>/</span>
+            <router-link to="/PanelAdmin/Recursos">Recursos</router-link>
+            <span>/</span>
+            <strong class="final-path">Recursos Telco</strong>
+            <span>/</span>
+        </div><br>
 
             <p>Infomación correspondiente a los recursos de la plataforma Telco 2.0</p>    
             <h3>Recursos Totales Telco: OpenStack</h3>
@@ -92,9 +97,8 @@ import VueComp from '@vue/composition-api'
 import SidebarAdmin from '../SidebarAdmin.vue'
 import VueyeTable from 'vueye-table'
 
-/*import Token from '!!raw-loader!../PanelAdmin/Token.txt'
-import LineChart from './Chart/LineChart.vue';
-const configG = require('../../../config') */
+import Token from '!!raw-loader!../../PanelAdmin/Token.txt'
+const configG = require('../../../../config')
 
 
 
@@ -107,9 +111,8 @@ export default {
 
     data(){
         return{
-
-            //    Definir el TOKEN
-            /*config:{
+            //Definir el TOKEN
+            config:{
                 headers:{
                 'User-Agent': 'python-keystoneclient',
                 'X-Auth-Token':Token,
@@ -121,11 +124,10 @@ export default {
                 'Accept': 'application/json',
                 'X-OpenStack-Nova-API-Version': '2.1' 
                 }
-            },*/
+            },
             recursosTs:[],
             
             //               PARA VUEYE-TABLE
-            /*
             columns:[              
                 {key: "usuario", label: "Usuario", display: true, sortable: true},
                 {key: "correo", label: "Correo usuario", display: true},
@@ -137,13 +139,11 @@ export default {
                 //{key: "_id", label: "Recursos", display: true},
                 {key: "_id", label: "Acciones", display: true},
                 //{key: "fecha", label: "fecha", display: true}                               
-            ]*/
+            ]
         }
-
-
     },
     created(){
-        //this.getrecursosTelco();
+        this.getrecursosTelco();
 
     },
    
@@ -151,8 +151,10 @@ export default {
 
         getrecursosTelco: async function(){
             //console.log('Se ingresa a recursosTelco')
+            console.log('Se ingresa a recursosTelco ',this.config)
             await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/os-hypervisors/detail', this.config)
             .then(res => {
+                console.log(res);
                 //console.log(res.data.hypervisors[0]);
                 this.recursosTs = res.data.hypervisors;
             })

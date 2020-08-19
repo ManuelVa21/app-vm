@@ -5,116 +5,194 @@
           <SidebarAdmin></SidebarAdmin>
         </div>
         <div class="col-10">
-        <div class="btn-group btn-group-lg" style="display: flex; align-items: center;">   
+            
+        <div style=" float: right;">
+            <span>/</span>
+            <router-link to="/PanelAdmin">Panel Admin</router-link>
+            <span>/</span>
+            <router-link to="/PanelAdmin/Solicitudes">Solicitudes</router-link>
+            <span>/</span>
+            <strong class="final-path">Pool Recursos</strong>
+            <span>/</span>
+        </div> <br>
+        <!--<div class="btn-group btn-group-lg" style="display: flex; align-items: center;">   
             <button @click="$router.push('/PanelAdmin/Solicitudes/AumentoPool')" class="btn btn-outline-info">Aumento de recursos</button>
             <button @click="$router.push('/PanelAdmin/Solicitudes/Backup')" class="btn btn-outline-info ">Backup</button>
-        </div>
+        </div> -->
         
         <div class="table-responsive">
       
-                        <VueyeTable 
-                            :data="solicitudes" 
-                            :columns="columns" 
-                            title="Solicitudes de recursos"                           
-                            filter-by="estado">                            
-        <!-- Mostrar estado solicitud -->     
-                            <template v-slot:estado="{item}">
-                               <template v-if="item.estado == 'true'">                                        
-                                <td class="bg-success text-white"><b>Resuelto</b></td>                                        
-                               </template>
-                               <template v-else>
-                                <td class="bg-danger text-white"><b> Pendiente </b></td>
-                               </template>                                                                        
-                            </template> 
-        <!-- Ver recursos solicitados -->               
-                            <template v-slot:_id="{item}">                                                                                                                                 
-                                <button v-on:click="getUnaSolicitud(item._id)" class="btn-sm btn-primary" data-toggle="modal" data-target="#modalRecursos" data-placement="top" title="Ver y aceptar recursos"><i class="far fa-eye"></i></button>                                            
+        <VueyeTable 
+            :data="solicitudes" 
+            :columns="columns" 
+            title="Solicitudes de recursos"                           
+            filter-by="estado">                            
+<!-- Mostrar estado solicitud -->     
+            <template v-slot:estado="{item}">
+                <template v-if="item.estado == 'Aceptada'">                                        
+                    <div class="pl-2">
+                    <td class="bg-success text-white"><b>Aceptada</b></td>   
+                    </div>                                     
+               </template>
+               <template v-else-if="item.estado == 'Sin Atender'">
+                    <td class="bg-danger text-white"><b>Sin Atender</b></td>
+                </template>
+                <template v-else>
+                    <div class="pl-1">
+                    <td style="background-color: #ff9800 ; color: white"><b>Rechazada</b></td>
+                    </div>
+                </template>                                                                        
+            </template> 
+<!-- Ver recursos solicitados -->               
+            <template v-slot:_id="{item}">                                                                                                                                 
+                <div class="pl-3">
+                <button v-on:click="getUnaSolicitud(item._id)" class="btn-sm btn-primary" data-toggle="modal" data-target="#modalRecursos" data-placement="top" title="Ver y aceptar recursos"><i class="far fa-eye"></i></button>                                            
                                                                    
-                                 <div class="modal fade" id="modalRecursos" tabindex="-1" role="dialog" aria-labelledby="ModalRecursosLabel" aria-hidden="true">
-                                  <div class="modal-dialog modal-dialog-centered" role="document">
-                                   <div class="modal-content">
-                                    <div class="modal-header text-white bg-primary"> 
-                                        <h5 class="modal-title modal-dark" id="modalID"><b>Recursos solicitados</b></h5>
-                                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                        </button>                                        
-                                    </div>
-                                    <div class="modal-body">
-                                     <div class="container">
-                                         <div class="row"> <div class="col">
-                                            <label> <b>El usuario: {{solicitud.usuario}} requiere {{solicitud.numvm}} 
-                                                VM's y el siguiente Pool de recursos</b></label>
-                                         </div></div>  
-                                         <hr>    
-                                        <div class="row">
-                                         <div class="col"> 
-                                            <label><b> Cat Usuario: </b></label><br>
-                                            <label>{{solicitud.catUsuario}}</label><br>
-                                            <label><b> Fecha Solicitud: </b></label><br>
-                                            <label>{{solicitud.fecha}}</label><br>
-                                            <label><b> Fecha Finalización: </b></label><br>
-                                            <label>{{solicitud.fecha_fin}}</label>                                           
-                                         </div>
-                                         <div class="col">
-                                            <label><b> RAM: </b></label><br>
-                                            <label>{{solicitud.ram}} Gb</label><br>
-                                            <label><b> Disco duro: </b></label><br>
-                                            <label>{{solicitud.disco_duro}} Gb</label><br>
-                                            <label><b> CPU: </b></label><br>
-                                            <label>{{solicitud.cpu}}</label>
-                                         </div>
-                                        </div>                                        
-                                        <div class="row"> <div class="col">
-                                            <label><b> Descripción: </b></label>
-                                            <br>
-                                            <label>{{solicitud.descripcion}}</label>
-                                        </div></div>                                   
-                                     </div>                                         
-                                    </div>
-                                    <div class="modal-footer">
+                <div class="modal fade" id="modalRecursos" tabindex="-1" role="dialog" aria-labelledby="ModalRecursosLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header text-white bg-primary"> 
+                        <h5 class="modal-title modal-dark" id="modalID"><b>Recursos solicitados</b></h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>                                        
+                    </div>
+                    <div class="modal-body">
+                    <div class="container">
+                        <div class="row"> <div class="col">
+                            <label> <b>El usuario: {{solicitud.usuario}} requiere {{solicitud.numvm}} 
+                                     VM's y el siguiente Pool de recursos</b></label>
+                        </div></div>  
+                        <hr>    
+                        <div class="row">
+                            <div class="col"> 
+                                <label><b> Cat Usuario: </b></label><br>
+                                <label>{{solicitud.catUsuario}}</label><br>
+                                <label><b> Fecha Solicitud: </b></label><br>
+                                <label>{{solicitud.fecha}}</label><br>
+                                <label><b> Fecha Finalización: </b></label><br>
+                                <label>{{solicitud.fecha_fin}}</label>                                           
+                            </div>
+                            <div class="col">
+                               <label><b> RAM: </b></label><br>
+                               <label>{{solicitud.ram}} Gb</label><br>
+                               <label><b> Disco duro: </b></label><br>
+                               <label>{{solicitud.disco_duro}} Gb</label><br>
+                               <label><b> CPU: </b></label><br>
+                               <label>{{solicitud.cpu}}</label>
+                            </div>
+                        </div>                                        
+                            <div class="row"> <div class="col">
+                                <label><b> Descripción: </b></label>
+                                <br>
+                                <label>{{solicitud.descripcion}}</label>
+                            </div></div>                                   
+                         </div>                                         
+                        </div>
+                        <div class="modal-footer">
+<!-- Mostrar el footer del Modal segun el estado de la solicitud -->
+                            <template v-if="solicitud.estado == 'Aceptada'">  
+                               <button class="btn btn-success" data-dismiss="modal" aria-label="Close">
+                                <b>Solicitud Aceptada</b>
+                               </button>
+                            </template>
 
-                                     <template v-if="solicitud.estado == 'true'">  
-                                        <button type="button" class="btn btn-success" data-dismiss="modal" aria-label="Close">
-                                         Solicitud Aceptada
-                                        </button>                                                                                                
-                                         
-                                     </template>
-                                     <template v-else>
-                                      <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
-                                       <button v-on:click="aceptarPool(solicitud)" type="button" class="btn btn-success" data-dismiss="modal" aria-label="Close"><b>Aceptar solicitud </b></button>
-                                       <button v-on:click="negarSolicitud(solicitud._id, solicitud.tipo)" type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close"> <b>Negar solicitud </b></button>                                            
-                                      </div>
-                                     </template> 
+                            <template v-else-if="solicitud.estado == 'Rechazada'">  
+                               <button style="background-color: #ff9800 ; color: white" class="btn" data-dismiss="modal" aria-label="Close">
+                                <b>Solicitud Rechazada</b>
+                               </button>
+                            </template>
 
-                                    </div>                                  
-                                   </div>
-                                  </div>
-                                 </div>                                                                                                       
-                            </template>                              
-        <!-- Acciones -->                   
-                            <template v-slot:acciones="{item}"> 
-                                <template v-if="item.estado == 'true'">
-                                    <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
-                                        <button  type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Aceptar" disabled><i class="fas fa-check"></i></button>
-                                        <button  type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Rechazar" disabled><i class="fas fa-times"></i></button>                                            
-                                    </div>
-                                </template>
+                            <template v-else>
+                             <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
+                              <button v-on:click="aceptarPool(solicitud)" type="button" class="btn btn-success" data-dismiss="modal" aria-label="Close"><b>Aceptar solicitud </b></button>
+                              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalCancelarSolicitud" data-dismiss="modal"> <b>Rechazar solicitud </b></button>                                            
+                             </div>
+                            </template> 
 
-                                <template v-else>
-                                    <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
-                                        <button v-on:click="confirmarSolicitud(item._id)" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Aceptar"><i class="fas fa-check"></i></button>
-                                        <button v-on:click="confirmarNegar(item._id)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-times"></i></button>                                            
-                                    </div>
-                                </template>
-                            </template>                         
-                        </VueyeTable>
+                        </div>                                  
+                       </div>
+                      </div>
+                     </div>
+                </div>                                                                                                       
+                </template>                              
+<!-- Acciones -->                   
+                    <template v-slot:acciones="{item}">
+                        <template v-if="item.estado == 'Aceptada'">  
+                         <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
+                            <button  type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Aceptar" disabled><i class="fas fa-check"></i></button>
+                            <button  type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Rechazar" disabled><i class="fas fa-times"></i></button>                                            
+                         </div>
+                        </template>
+
+                        <template v-else-if="item.estado == 'Rechazada'" style="text-align: center">  
+                         <div class="pl-3">                                                                                                                                     
+                            <button v-on:click="getUnaSolicitud(item._id)" type="button" class="btn-sm btn-info" data-toggle="modal" data-target="#ModalMotivoRechazo" data-placement="top" title="Motivo rechazo"><i class="fas fa-question-circle"></i></button>                                            
+                         </div>
+                        </template>
+
+                        <template v-else>
+                         <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
+                            <button v-on:click="confirmarSolicitud(item._id)" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Aceptar"><i class="fas fa-check"></i></button>
+                            <button v-on:click="getUnaSolicitud(item._id)" type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalCancelarSolicitud" data-placement="top" title="Rechazar"><i class="fas fa-times"></i></button>                                            
+                         </div>
+                        </template>
+                    </template>                         
+                </VueyeTable>
+                </div>
+
+<!--MODAL cancelar solicitud  -->  
+            <div class="modal fade" id="ModalCancelarSolicitud" tabindex="-1" role="dialog" aria-labelledby="ModalCancelarSolicitud" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header text-white bg-primary">
+                        <h5 class="modal-title" id="ModalCancelarSolicitud"><b>Enviar motivo del rechazo</b></h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span> </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group text-left">
+                            <label class="control-label" for="UsuarioDes">Usuario Destino: {{solicitud.usuario}}</label>
+                        </div>
+                        <div class="form-group text-left">
+                            <label class="control-label" for="CorreoDes">Correo: {{solicitud.correo}}</label>
+                        </div>
+                        <div class="form-group text-left required">
+                            <label class="control-label" for="DescripcionNoti">Motivo: </label>
+                                <textarea v-model="solicitud.motivo" id="MotivoCancelacion" rows="4" cols="40" class="form-control" placeholder="Ingrese el motivo por el cuál se rechaza la solicitud"></textarea>   
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button v-on:click="negarSolicitud()" type="button" class="btn btn-success">Enviar</button>
+                    <button class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+            </div>
+            </div>
+<!--MODAL Motivo Rechazo  -->  
+            <div class="modal fade bg-modal-sm" id="ModalMotivoRechazo" tabindex="-1" role="dialog" aria-labelledby="ModalMotivoRechazo" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                <div class="modal-content">
+                 <div class="modal-header text-white bg-primary">
+                        <div class="modal-title" id="ModalMotivoRechazo"><b>Motivo de rechazo:</b></div>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span> </button>
+                </div>
+                <div class="modal-body">
+                 
+                  {{this.solicitud.motivo}}
+                </div>
+                </div>
+              </div>
             </div>
 
-             </div> 
-        </div>
-        </div>
 
-        
+            
+        </div> 
+    </div>
+    </div>
    
 </template>
 
@@ -140,7 +218,7 @@ export default {
                 "Access-Control-Allow-Origin":"*"
                 }
             },
-           /* configOS:{
+            configOS:{
                 headers:{
                 'User-Agent': 'python-keystoneclient',
                 'X-Auth-Token':Token,
@@ -177,8 +255,7 @@ export default {
                     'Accept': 'application/json',
                     'User-Agent': 'python-keystoneclient'
                 }
-            },*/
-
+            },
             solicitudes:[],
             solicitud:[],
             columns:[              
@@ -187,31 +264,24 @@ export default {
                 {key: "nombre_proyecto", label: "Proyecto", display: true},                
                 {key: "tutor", label: "Director", display: true},
                 {key: "correo_tutor", label: "Correo director", display: true},
-                {key: "numvm", label: "# VM's", display: true},                             
+               // {key: "numvm", label: "# VM's", display: true},                             
                 {key: "estado", label: "Estado", display: true, sortable: true},
                 {key: "_id", label: "Recursos", display: true},
                 {key: "acciones", label: "Acciones", display: true},
                 //{key: "fecha", label: "fecha", display: true}                             
             ]
-        
         }
-
-
     },
     created(){
-        this.getSolicitudes('Pool de Recursos');
-
+        this.getSolicitudes();
     },
     components:{        
         VueyeTable,
         'SidebarAdmin': SidebarAdmin,
-       
     },
     methods:{
-       
-        
-
-        getSolicitudes: async function(tipo){
+        getSolicitudes: async function(){
+            let tipo = 'Pool de Recursos'
             //console.log('Se ingresa a getSolicitudesPool')
             await axios.get('/api/solicitudes?tipo='+tipo)            
             .then(res => {
@@ -219,71 +289,73 @@ export default {
                 //console.log(res.data.content);
                 this.solicitudes = res.data.content; 
                 //console.log(this.solicitudes)               
-    // Cambiar de true a resuelto y de false a pendiente
-             /*this.solicitudes.forEach(function(element) {
-                    if (element.estado) {
-                        element.estado = "Resuelto"
-                    }
-                    else{
-                        element.estado = "Pendiente"
-                    }                    
-                });*/                  
-                console.log(this.solicitudes);
+                            // Cambiar de true a resuelto y de false a pendiente
+                                     /*this.solicitudes.forEach(function(element) {
+                                            if (element.estado) {
+                                                element.estado = "Resuelto"
+                                            }
+                                            else{
+                                                element.estado = "Pendiente"
+                                            }                    
+                                        });*/                  
+                //console.log(this.solicitudes);
             })            
             .catch(error => { console.log('Error en get solicitudes',error); });
         },
-         getUnaSolicitud: async function(id){
-            console.log('Se ingresa a get una solicitud' + id)
+        getUnaSolicitud: async function(id){
+            //console.log('Se ingresa a get una solicitud' + id)
             await axios.get('/api/solicitudes/unasolicitud?_id='+id)            
             .then(res => {
                 //console.log('Se muestra respuesta get')
                 //console.log(res.data.content);
                 this.solicitud = res.data.content;    
-                //console.log(this.solicitud);
+                console.log(this.solicitud);
             })            
             .catch(error => { console.log('Error en get solicitudes',error); });
         },
 //Acciones
         confirmarSolicitud: async function (idSolicitud){            
             await this.getUnaSolicitud(idSolicitud);
-            console.log(this.solicitud)
+            //console.log(this.solicitud)
             var respuesta = confirm ('¿Estás seguro de aceptar esta solicitud?');
             if (respuesta == true)
             {
-                //this.aceptarPool(this.solicitud)                
+                this.aceptarPool(this.solicitud)                
             }
             else{
                 console.log("canceló")
-                //this.getUsuarios();
             }
         },
-        confirmarNegar: async function (idSolicitud){
-            await this.getUnaSolicitud(idSolicitud)
-            console.log(this.solicitud)
-            var respuesta = confirm ('¿Estás seguro de negar esta solicitud?');
-            if (respuesta == true)
-            {
-                console.log("negó la solicitud aquí enviar el motivo al usuario")
-                this.negarSolicitud(this.solicitud._id, this.solicitud.tipo)                
+       negarSolicitud: async function(){
+            if(!this.solicitud.motivo){
+                //alert("El nombre de usuario es obligatorio")
+                this.$toastr.w("El motivo de cancelación es obligatorio")
+                MotivoCancelacion.focus()                                        
             }
-            else{
-                console.log("canceló")
-                //this.getUsuarios();
-            }            
-        },
-        negarSolicitud: async function(id,tipo){
-            console.log('Se ingresa a negarPool')
-            this.cambiarEstado(id)
-            this.getSolicitudes(tipo)
+            else 
+            {   
+                //console.log('Se ingresa a negarPool')
+                this.solicitud.estado = "Rechazada"
+                await this.cambiarEstado(this.solicitud._id)
+                $('#ModalCancelarSolicitud').modal('hide')
+                this.solicitud.motivo = "Solicitud de pool de recursos para el proyecto '"+ this.solicitud.nombre_proyecto +"' rechazada por el siguiente motivo: "+ this.solicitud.motivo
+                await this.enviarCorreo ()
+                this.getSolicitudes()                 
+            }           
             
         },
         aceptarPool: async function(info){
             //console.log('se muestra el info recibido en aceptar pool')
-            console.log(info)          
-            /*this.createProyecto(info)
+            //console.log(info)    
+            
+            this.solicitud.estado = "Aceptada"
+            await this.cambiarEstado(info._id)
+            this.solicitud.motivo = "Pool de recursos asignado a su proyecto: "+ this.solicitud.nombre_proyecto
+            this.enviarCorreo()            
+            this.getSolicitudes()
+            $('#modalRecursos').modal('hide')         
+            this.createProyecto(info)
             this.createUsuario(info)
-            this.cambiarEstado(info._id)
-            this.getSolicitudes(info.tipo)*/
         },
         createUsuario: async function(info){
             //Se crea el registro del usuario
@@ -516,10 +588,30 @@ export default {
         },
         cambiarEstado: async function(id){
             console.log('Se va a cambiar el estado de la solicitud')
-            await axios.put('/api/solicitudes/'+id,{estado: 'true' }, this.config)
+            await axios.put('/api/solicitudes/'+id,{estado: this.solicitud.estado, motivo: this.solicitud.motivo}, this.config)
                 .then(res => { console.log(res)})
                 .catch(error => { console.log('Error en cambiar estado',error); });
-        }
+        },
+
+   //ENVIAR CORREO
+        enviarCorreo: async function(){
+            console.log('Se ingresa a send notificación')
+            await axios.post('/api/enviar_correo',{
+                mensaje: this.solicitud.motivo,
+                correo_usuario: this.solicitud.correo
+                })
+                .then(res => {
+                    this.$toastr.s("Notificación enviada al usuario: "+ this.solicitud.usuario)
+                    //console.log('Respuesta sendNotificacion')
+                    //console.log(res) 
+                    })
+                .catch(error => { 
+                    //console.log('Error en sendNotificacion ',error);
+                    this.$toastr.e("Error al enviar notificación: "+ error)
+                    //console.log(error) 
+                });                                        
+        }, 
+     
     }
 }
 </script>

@@ -6,11 +6,17 @@
           <SidebarAdmin></SidebarAdmin>
         </div>
         <div class="col-10" style="padding-left: 0;">
-          
-             <div class="btn-group btn-group-lg" style="display: flex; align-items: center;">   
-            <button @click="$router.push('/PanelAdmin/Solicitudes/PoolRecursos')" class="btn btn-outline-info">Solicitudes de recursos</button>
-            <button @click="$router.push('/PanelAdmin/Solicitudes/AumentoPool')" class="btn btn-outline-info">Aumento de recursos</button>
-            </div> 
+            
+        <div style=" float: right;">
+            <span>/</span>
+            <router-link to="/PanelAdmin">Panel Admin</router-link>
+            <span>/</span>
+            <router-link to="/PanelAdmin/Solicitudes">Solicitudes</router-link>
+            <span>/</span>
+            <strong class="final-path">Backup</strong>
+            <span>/</span>
+        </div>
+                       
 
             <div class="table-responsive">     
               <VueyeTable 
@@ -20,14 +26,21 @@
                     filter-by="estado"
                     >  
 <!-- Mostrar estado solicitud --> 
-                    <template v-slot:estado="{item}">
-                            <template v-if="item.estado == 'true'">                                        
-                         <td class="bg-success text-white"><b>Resuelto</b></td>                                        
-                            </template>
-                        <template v-else>
-                         <td class="bg-danger text-white"><b> Pendiente </b></td>
-                        </template>                                                                      
-                    </template> 
+            <template v-slot:estado="{item}">
+                <template v-if="item.estado == 'Aceptada'">                                        
+                    <div class="pl-2">
+                    <td class="bg-success text-white"><b>Aceptada</b></td>   
+                    </div>                                     
+               </template>
+               <template v-else-if="item.estado == 'Sin Atender'">
+                    <td class="bg-danger text-white"><b> Sin Atender </b></td>
+                </template>
+                <template v-else>
+                    <div class="pl-1">
+                    <td style="background-color: #ff9800 ; color: white"><b> Rechazada </b></td>
+                    </div>
+                </template>                                                                        
+            </template> 
 
 <!-- Ver recursos solicitados -->
                     <template v-slot:_id="{item}">                                                                                                                                 
@@ -119,14 +132,15 @@ export default {
 
     },
     created(){
-        this.getSolicitudes('Pool de Recursos');
+        this.getSolicitudes();
 
     },
    
     methods:{
         
 
-        getSolicitudes: async function(tipo){
+        getSolicitudes: async function(){
+            let tipo = 'Pool de Recursos'   //  OJOOOOOOOOOO cambiar a Backup
             //console.log('Se ingresa a getSolicitudesPool')
             await axios.get('/api/solicitudes?tipo='+tipo)            
             .then(res => {

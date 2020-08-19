@@ -88,7 +88,7 @@ app.get('/:token', (req, res) => {
             myShellScript.stdout.on('data', (data)=>{
                 console.log('Aqui la data ',data)
             });
-            var task = cron.schedule('16 * * * *', () =>  {
+            var task = cron.schedule('45 * * * *', () =>  {
                 exec('sh src/scripts/CreateToken.sh '+config.OS_USERNAME+' '+config.OS_PROJECT_NAME+' '+config.OS_PASSWORD+'> /home/gestion/app-vm/src/app/components/PanelAdmin/Token.txt');
             }, {
                 scheduled: false

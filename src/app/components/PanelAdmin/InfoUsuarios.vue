@@ -5,6 +5,15 @@
             <SidebarAdmin></SidebarAdmin>
         </div>
         <div class="col-10">            
+            
+        <div style=" float: right;">
+            <span>/</span>
+            <router-link to="/PanelAdmin">Panel Admin</router-link>
+            <span>/</span>
+            <strong class="final-path">Info Usuarios</strong>
+            <span>/</span>
+        </div> <br>
+            
             <!--  esto es para agregar un usuario sirve para probar-->                                                                                 
             <button @click="limpiarUsuario()" class="btn btn-success btn-sm" data-toggle="modal" data-target="#ModalAddUser">
                 <span data-toggle="tooltip" data-placement="top" title="Agregar usuario"><i class="fas fa-plus"></i></span>
@@ -216,7 +225,7 @@ export default{
             .then(res => { 
                 this.$toastr.s("El usuario: "+ this.usuario.nombre +" fue creado correctamente")
                    
-                console.log(res)
+                //console.log(res)
             })
             .catch(error => { console.log('Error ',error); });
             this.getUsuarios();     
@@ -225,7 +234,7 @@ export default{
        getUsuarios: async function(){            
             await axios.get('/api/usuarios')
                 .then(res => {
-                    console.log(res.data.content);
+                    //console.log(res.data.content);
                     this.usuarios = res.data.content; 
                     this.limpiarUsuario()
                     //console.log(this.usuarios);                    
@@ -236,7 +245,7 @@ export default{
         },
 //Obtener un usuario para luego editarlo
         getOneUser: async function(idUser){
-               console.log(idUser);
+               //console.log(idUser);
                await axios.get('/api/usuarios/unusuario?_id='+idUser)
                 .then(res => {
                     this.usuario = res.data.content;
@@ -255,7 +264,7 @@ export default{
                 .then(res => {
                     this.getUsuarios();
                     this.$toastr.s("Usuario editado correctamente")
-                    console.log(res)                    
+                    //console.log(res)                    
                 })
                 .catch(error => { console.log('Error ',error); });
         },

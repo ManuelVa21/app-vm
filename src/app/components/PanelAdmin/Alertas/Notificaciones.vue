@@ -5,25 +5,28 @@
                 <SidebarAdmin></SidebarAdmin>
             </div>
             <div class="col-10">
-                <div>
-                    <router-link to="/PanelAdmin">Panel Admin</router-link>
-                    <span>/</span>
-                    <router-link to="/PanelAdmin/AlertasYNot">Alertas y Notificaciones</router-link>
-                    <span>/</span>
-                    <strong class="final-path">Notificaciones</strong>
-                    <span>/</span>
-                </div>
-                <div class="btn-group btn-group-lg" style="display: flex; align-items: center;">   
-                  <button @click="$router.push('/PanelAdmin/AlertasYNot/Alertas')" class="btn btn-outline-info ">Alertas</button>
-                </div>  
-                <div class="table-responsive">
+            
+            <div style=" float: right;">
+                <span>/</span>
+                <router-link to="/PanelAdmin">Panel Admin</router-link>
+                <span>/</span>
+                <router-link to="/PanelAdmin/AlertasYNot">Alertas y Notificaciones</router-link>
+                <span>/</span>
+                <strong class="final-path">Notificaciones</strong>
+                <span>/</span>
+            </div><br>
+
+                
+            <div class="table-responsive">
                 <VueyeTable 
                 :data="notificaciones" 
                 :columns="columns" 
                 title="Notificaciones"
                 filter-by="estado">
                 </VueyeTable>
-                </div> 
+            </div> 
+
+            
             </div>
         </div>      
     </div>

@@ -1,21 +1,31 @@
 <template>
-    <div>
-        <section class="content">
-            <div class="row">
-                <div class="col-2 col-with-right-border">
-                    <SidebarAdmin></SidebarAdmin>
-                </div>
-                <div class="col-10">
-                    <div>
-                        <InfoGen></InfoGen>
-                    </div>
-                    <div class="panel panel-info">
-                        <div class="panel-heading">Información general</div>
-                        <div class="panel-body">Aqui va la Información General de la Plataforma Telco 2.0. Esta información es de utilidad para el usuarios</div>
-                    </div>
-                </div>
+    <div class="content">        
+        <div class="row">
+                
+            <div class="col-2 col-with-right-border">
+                <SidebarAdmin></SidebarAdmin>
             </div>
-        </section>
+                
+            <div class="col-10">
+                    
+            <div style=" float: right;">
+                <span>/</span>
+                <strong class="final-path">Panel Admin</strong>
+                <span>/</span>
+            </div> <br>
+                    
+                <div>
+                        <InfoGen></InfoGen>
+                </div>
+                    
+                <div class="panel panel-info">
+                    <div class="panel-heading">Información general</div>
+                    <div class="panel-body">Aqui va la Información General de la Plataforma Telco 2.0. Esta información es de utilidad para el usuarios</div>
+                </div>
+                
+            </div>
+        </div>
+        
     </div>
 </template>
 

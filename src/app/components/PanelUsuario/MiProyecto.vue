@@ -1,12 +1,20 @@
 <template>
-    <div>
-        <section>
-          
-            <div class="row">
-                <div class="col-2 col-with-right-border">
-                    <SidebarUsuario></SidebarUsuario> 
-                </div>
-            <div class="col-10"> 
+  <div class="content">
+    <div class="row">
+    
+      <div class="col-2 col-with-right-border">
+          <SidebarUsuario></SidebarUsuario> 
+      </div>
+
+      <div class="col-10">
+
+        <div style=" float: right;">
+                    <router-link to="/PanelUsuario">Panel Usuario</router-link>
+                    <span>/</span>
+                    <strong class="final-path">Mi Proyecto</strong>
+                    <span>/</span>
+        </div><br> 
+        
              <div class="container">
 <!-- En esta sección se verifica si el usuario que ingresa tiene proyecto asignado -->            
              <template v-if="Project == 'false'">
@@ -232,9 +240,8 @@
 
         </div>    
        </div>
-       </div>
-       
-   </section>
+       </div>      
+   
   </div>
 </template>
 
