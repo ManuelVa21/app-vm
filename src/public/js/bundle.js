@@ -2285,7 +2285,7 @@ eval("// shim for using process in browser\nvar process = module.exports = {};\n
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ __webpack_exports__[\"default\"] = (\"gAAAAABfb5UVo4ayVptClHuozsbJ_Wd8yxeJzsI6pmZUhCco0aeYUxb5H_s9lm3BJdsqXS2s0Z0QyTICJXUn3pUdg-2JcRn70ykYK8EodfR4kD4tJePmI_SxMlC4QjEXL53NE26h1wmNGRA8jqcho-YTHsXe0oNeictZPTH72PuWgD1TqIxSjEw\\r\");\n\n//# sourceURL=webpack:///./src/app/components/PanelAdmin/Token.txt?./node_modules/raw-loader/dist/cjs.js");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ __webpack_exports__[\"default\"] = (\"gAAAAABfb7E1otN7408RYd23pMXhtXCL2ZiWD_INuGKBjwbRSQFjcFaAzIZeSQIZN2-y75pAgTTGORRzMXQAKDLKBuOlBoocmvsNC7Dy5jXH_JJerjwJLPj0iHQX7Wq8QNpZE82mQBdK-3uMz1YKKmG4u9Mgw1LnXnf-B71kEOKqVIu0adSzgvs\\r\");\n\n//# sourceURL=webpack:///./src/app/components/PanelAdmin/Token.txt?./node_modules/raw-loader/dist/cjs.js");
 
 /***/ }),
 
