@@ -20,10 +20,8 @@ import Registrar from './components/Registrar.vue'
 import Pruebas from './components/Pruebas.vue'
 //Componentes Panel Usuario
 import PanelUsuario from './components/PanelUsuario/PanelUsuario.vue'
-import PerfilUsuario from './components/PanelUsuario/PerfilUsuario.vue'
 import NotificacionesUsuario from './components/PanelUsuario/Notificaciones.vue'
 import AlertasUsuario from './components/PanelUsuario/AlertasUsuario.vue'
-import MiProyecto from './components/PanelUsuario/MiProyecto.vue'
 import SolicitudesUsuario from './components/PanelUsuario/SolicitudesUsuario.vue'
 //Componentes Panel Admin
 import PanelAdmin from './components/PanelAdmin/PanelAdmin.vue'
@@ -49,12 +47,13 @@ const routes = [
   { name: 'Pruebas', path: '/Pruebas', component: Pruebas },
   { name: 'Inicio', path: '/', component: Inicio },
   { name: 'Login', path: '/Login', component: Login },
+//    RUTAS DEL USUARIO
   { name: 'PanelUsuario', path: '/PanelUsuario', component: PanelUsuario },
   { name: 'Registrar', path: '/Registrar', component: Registrar },
   { name: 'PanelUsuario/NotificacionesUsuario', path: '/PanelUsuario/Notificaciones', component: NotificacionesUsuario },
   { name: 'PanelUsuario/AlertasUsuario', path: '/PanelUsuario/AlertasUsuario', component: AlertasUsuario },
-  { name: 'PanelUsuario/MiProyecto', path: '/PanelUsuario/MiProyecto', component: MiProyecto },
   { name: 'PanelUsuario/SolicitudesUsuario', path: '/PanelUsuario/SolicitudesUsuario', component: SolicitudesUsuario },
+//    RUTAS DEL ADMIN
   { name: 'PanelAdmin/InfoUsuarios', path: '/PanelAdmin/InfoUsuarios', component: InfoUsuarios },
   { name: 'PanelAdmin/Solicitudes', path: '/PanelAdmin/Solicitudes', component: Solicitudes },
     { name: 'PanelAdmin/Solicitudes/PoolRecursos', path: '/PanelAdmin/Solicitudes/PoolRecursos', component: PoolRecursos },

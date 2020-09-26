@@ -5,7 +5,7 @@ const sugerencias = new Schema({
     usuario: {type: String},
     fecha: {type: Date, default: Date.now},
     descripcion: {type:String},
-    estado: {type:String, default:"Sin atender"},
+    estado: {type:String, default:"Sin Atender"},
 },{
     collection: 'sugerencias'
 });

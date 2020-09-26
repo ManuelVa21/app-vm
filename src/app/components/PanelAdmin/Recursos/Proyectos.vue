@@ -1,11 +1,10 @@
 <template>
-    
     <div class="content">
     <div class="row">
         <div class="col-2">
-          <SidebarAdmin></SidebarAdmin>
+          <SidebarAdmin style="position: sticky; top: 70px"></SidebarAdmin>
         </div>
-        <div class="col-10" style="padding-left: 0;">
+    <div class="col-10" style="padding-left: 0;">
           
         <div style=" float: right;">
             <span>/</span>
@@ -17,73 +16,121 @@
             <span>/</span>
         </div><br>
 
-            <p> Aquí va la información de proyectos </p>
-
-            <div>
-                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#ModalAddProject">
-                <span data-toggle="tooltip" data-placement="top" title="Agregar proyecto"><i class="fas fa-plus"></i></span>
-                </button>
-<!-- Modal Crear Proyecto -->
-                <div class="modal fade" id="ModalAddProject" tabindex="-1" role="dialog" aria-labelledby="ModalAddProjectLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="ModalAddProjectLabel">Crear Proyecto</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+        
+        <div class="table-responsive">
                 
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group text-left required">
-                            <label class="control-label required" for="NombreProj">Nombre </label>
-                            <input v-model="project.nombre" type="text" class="form-control" id="NombreProj" required placeholder="Ingresar Nombre">                                                          
-                        </div>
-                        <div class="form-group text-left required">
-                            <label class="control-label" for="DescripcionProj">Descripción
-                            </label>
-                            <textarea v-model="project.descripcion" name="" id="DescripcionProj" rows="4" cols="40" class="form-control" placeholder="Ingresar Descripción"></textarea>   
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                    <button v-on:click="addProject()" type="button" class="btn btn-primary" data-dismiss="modal">Crear</button>
-                </div>
-                </div>
-                </div>
-                </div>
-            </div>
-            <div class="table-responsive">
-                
-                <VueyeTable 
-                :data="projects" 
-                :columns="columns" 
-                title="Proyectos"                           
-                filter-by="name">
+            <VueyeTable 
+            :data="projects" 
+            :columns="columns" 
+            title="Proyectos"                           
+            filter-by="estado">
+<!-- Ver estado del proyecto -->
+                <template v-slot:estado="{item}">
+                    <template v-if="item.estado == 'Activo'">  
+                        <td class="bg-success font-weight-bold text-white">Activo</td>   
+                    </template>
+                    <template v-else-if="item.estado == 'Inactivo'">
+                         <td class="bg-danger font-weight-bold text-white">Inactivo</td>
+                     </template>                                                                
+                 </template> 
+<!-- Ver hypervisor e id -->
 
-
-                <template v-slot:_id="{item}"> 
+                <template v-slot:servidor_ubicacion="{item}"> 
+                    <template v-if="item.servidor_ubicacion == 'VMware'">  
+                        <td>VMware {{item.id_openstack}}</td>   
+                    </template>
+                    <template v-else>
+                         <td>Openstack</td>
+                     </template> 
+                </template>
+<!-- Ver recursos del proyecto -->
+                <template v-slot:ver_mas="{item}"> 
                     <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
-                         <button v-on:click="deleteProject(item)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i></button>                                                        
+                         <button @click="getOnePool(item)" type="button" class="btn-sm btn-primary ml-3" data-toggle="modal" data-target="#ModalVerRecursos"  data-placement="top" title="Recursos del proyecto"><i class="fas fa-eye"></i></button>                                                        
                     </div>
                 </template>
 
-                </VueyeTable>  
-                
-                
-                   
-                   <!-- <div class="btn-group-sm" role="group" aria-label="Basic example">
-                        </div> -->
-                                                
-                   
-            </div>
+<!-- Acciones -->
+                <template v-slot:_id="{item}"> 
+                    <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
+                         <button @click="getOnePool(item)" type="button" class="btn btn-danger ml-3" data-toggle="modal" data-target="#ModalConfirmarEliminar" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i></button>                                                        
+                    </div>
+                </template>
 
+            </VueyeTable>
+            </div>  
+<!--MODAL Confirmar eliminar  -->  
+        
+        <div class="modal fade bg-modal-sm" id="ModalConfirmarEliminar" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-white bg-primary">
+                   <div class="modal-title"><b>De verdad quiere eliminar este proyecto??</b></div>
+                   <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">&times;</span> </button>
+            </div>
+            <div class="modal-body text-center">
+                <button  class="btn font-weight-bold btn-success " data-dismiss="modal">cancelar</button>
+                <button @click="verificarEliminar()" class="btn font-weight-bold btn-danger" data-dismiss="modal">ELIMINAR</button>
             
+            </div>
         </div>
+        </div>
+        </div>
+
+
+<!--  Modal ver información del proyecto  -->        
+            <div class="modal fade" id="ModalVerRecursos" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            
+                <div class="modal-header text-white bg-primary">
+                        <h5 class="modal-title" ><b>información del proyecto</b></h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span> </button>
+                </div>
+
+                <div class="modal-body">
+                <div class="container">
+                    <div class="row"> <div class="col">
+                        <label> El proyecto: <b>{{project.nombre_proyecto}}</b> pertenece al usuario: <b>{{project.propietario}}</b> 
+                                y tiene asignado el siguiente pool de recursos:</label>
+                    </div></div>  
+                    <hr>    
+                    <div class="row">
+                        <div class="col">
+                           <label><b> RAM: </b></label>
+                           <label>{{project.ram}} (Gb)</label><br>
+                           <label><b> Disco duro: </b></label>
+                           <label>{{project.disco_duro}} (Gb)</label><br>
+                           <label><b> CPU: </b></label>
+                           <label>{{project.cpu}}</label>
+                        </div>
+                        
+                        <div class="col"> 
+                            <label><b> Número de VM's: </b></label>
+                            <label>{{project.numero_vm}}</label>
+                            <label><b> Fecha Finalización: </b></label><br>
+                            <label>{{project.fecha_fin}}</label>                                           
+                        </div>
+                    </div> 
+                    <div class="row"> <div class="col">
+                        <label><b> Descripción: </b></label>
+                        <br>
+                        <label>{{project.descripcion}}</label></div>
+                    </div>                                   
+                </div> 
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+            </div>
+            </div>    
+            
     </div>
-  </div>  
+    </div>
+    </div>  
 </template>
 
 
@@ -93,9 +140,11 @@ import axios from 'axios'
 import VueComp from '@vue/composition-api'
 import SidebarAdmin from '../SidebarAdmin.vue'
 import VueyeTable from 'vueye-table'
-
 import Token from '!!raw-loader!../../PanelAdmin/Token.txt'
+//import func from '../../../../../vue-temp/vue-editor-bridge'
 const configG = require('../../../../config') 
+
+
 
 export default {
     
@@ -119,10 +168,18 @@ export default {
                 'X-OpenStack-Nova-API-Version': '2.1' 
                 }
             },
-            configDelete:{
-                'User-Agent': 'openstacksdk/0.36.0 keystoneauth1/3.18.0 python-requests/2.22.0 CPython/2.7.17',
-                'X-Auth-Token':Token
-            },
+            configDeleteNetwork:{
+                headers:{
+                'Accept' : 'application/json',
+                'User-Agent': 'openstacksdk/0.48.0 keystoneauth1/4.2.1 python-requests/2.23.0 CPython/3.8.2',
+                'X-Auth-Token':Token,
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '10.55.6.39',
+                'Access-Control-Allow-Credentials':'true',
+                'Access-Control-Expose-Headers': 'Authorization',
+                'Access-Control-Max-Age':'86400'
+                }
+            },    
             configEdit:{
                 headers:{
                 'User-Agent': 'python-novaclient',
@@ -132,124 +189,183 @@ export default {
                 'X-OpenStack-Nova-API-Version': '2.1' 
                 }
             },
-            projects:[],
-            project:[],
+                projects:[],
+                project:[],
+                servidorVMware:[],
+                network:[],
            
            columns:[              
-                {key: "name", label: "Nombre", display: true, sortable: true},
-                {key: "description", label: "Descripción", display: true}, 
-                {key: "correo", label: "Propietario", display: true},
-                {key: "nombre_proyecto", label: "Almacenamiento", display: true},                
-                {key: "motivo", label: "RAM", display: true},
-                {key: "correo_tutor", label: "CPU", display: true},
-                {key: "numvm", label: "# VM's", display: true},                             
-                {key: "estado", label: "Fecha inicio", display: true, sortable: true},
-                {key: "", label: "Fecha fin", display: true},
-                {key: "_id", label: "Acciones", display: true},                                              
+                {key: "nombre_proyecto", label: "Nombre Proyecto", display: true, sortable: true},
+                {key: "propietario", label: "Usuario", display: true},
+                {key: "disco_duro", label: "Almacenamiento (Gb)", display: true},
+                {key: "ram", label: "RAM (Gb)", display: true},
+                {key: "cpu", label: "CPU", display: true},
+                {key: "servidor_ubicacion", label: "Hypervisor", display: true},
+                {key: "id_openstack", label: "servidor", display: false},
+                {key: "ver_mas", label: "Información", display: true},
+                {key: "estado", label: "Estado", display: true, sortable: true},                
+                {key: "_id", label: "Acciones", display: true}                                              
             ] 
         }
     },
     created(){
-        this.getProjects();
+       // this.getProjects();
+        this.getPools();
 
     },
     methods:{
-        getProjects: async function(){
-            await axios.get('http://'+configG.ipOpenstack+'/identity/v3/projects/', this.config)
+// Obtener información de los proyectos
+        getPools: async function(){
+            await axios.get('/api/pool_recursos')
                 .then(res => {
-                    console.log(res.data.projects);
-                    this.projects = res.data.projects;
+                   this.projects = res.data.content;
                 })
-                .catch(error => { console.log('Error getProjects',error); });                
+                .catch(error => { this.$toastr.e("Error al cargar los pool de recursos " + error) });                
         },
-        addProject: async function(){
-            let data={
-                "project": {
-                    "tags": [], 
-                    "enabled": true, 
-                    "description": this.project.descripcion, 
-                    "name": this.project.nombre
+        getOnePool: async function(item){
+            await axios.get('/api/pool_recursos/unpool?_id='+item._id)
+                .then(res => {
+                    this.project = res.data.content;})
+                .catch(error => { this.$toastr.e("Error al cargar el pool de recursos " + error) });                
+        },
+    //Se verifica si el proyecto está en VMware u OpenStack
+    //para realizar el proceso de eliminación
+        verificarEliminar: async function (){            
+            if (this.project.servidor_ubicacion == "OpenStack")
+                {
+                    this.deleteProjectOpenStack () ;  // Se debe eliminar todo lo relacionado con el proyecto en OpenStack
+                    this.eliminarUsuario (); //Eliminar usuario de la BD local
+                    this.eliminarPool () ;  //finalmente se elimina el pool de recursos de la BD                 
                 }
-            };
-            console.log(data)
-            await axios.post('http://'+configG.ipOpenstack+'/identity/v3/projects',data,this.config)
-                .then(res => {
-                    console.log(res.data)
-                })
-                .catch(error => { console.log('Error addProject',error); });
-                this.getProjects();
+            else
+            {
+                this.getServidorVMware (); // Se actualiza la información del servidor donde se encuentra el poryecto
+                this.eliminarUsuario (); //Eliminar usuario de la BD local
+                this.eliminarPool () ; // finalmente se elimina el pool de recursos de la BD
+            }
         },
-        deleteProject: async function(info){
-            //Delete project openstack
-            await axios.delete('http://'+configG.ipOpenstack+'/identity/v3/projects/'+info.id,this.config)
+        eliminarUsuario: async function (){
+            await axios.delete('/api/usuarios?correo='+this.project.emailPropietario)            
+            .then(res => {})            
+            .catch(error => { this.$toastr.e("Error al eliminar el usuario: " + error )});
+        },
+        eliminarPool: async function(){
+            await axios.delete('/api/pool_recursos?_id='+this.project._id)
+            .then(res => {
+                this.$toastr.s("El proyecto y usuario eliminados correctamente")                                              
+                this.getPools();
+            })
+            .catch(error => { this.$toastr.e("Error al eliminar el pool de recursos " + error) });                
+        },
+//Funciones VMWARE
+        getServidorVMware: async function (){
+            await axios.get('/api/recursos_telco/unservidor?direccion_ip='+this.project.id_openstack)            
+            .then(res => {
+                this.servidorVMware = res.data.content  
+               let actualizarRecursos = {
+                    "_id" : this.servidorVMware._id,
+                    "disco_duro_uso" : this.servidorVMware.disco_duro_uso - this.project.disco_duro,
+                    "ram_blade_uso" : this.servidorVMware.ram_blade_uso - this.project.ram,
+                    "cpu_blade_uso" : this.servidorVMware.cpu_blade_uso - this.project.cpu,
+                    "numero_vm" : this.servidorVMware.numero_vm - this.project.numero_vm,
+                } 
+                this.liberarRecursosVMware(actualizarRecursos) 
+                
+            })            
+            .catch(error => { this.$toastr.e("Error al obtener el servidor donde se encuentra el proyecto: " + error )
+            });
+        },
+        liberarRecursosVMware: async function(actualizarRecursos){
+           console.log(actualizarRecursos)
+            await axios.put('/api/recursos_telco',actualizarRecursos)
+            .then(res => { 
+                this.$toastr.s("recursos disponibles actualizados")
+            })
+            .catch(error => { this.$toastr.e("Error al actualizar el servidor:" + error) });
+        },
+// Eliminar de OPENSTACK
+
+        deleteProjectOpenStack: async function(){            
+    //Primero se eliminan los puertos del router, el router y la red
+            await axios.get('http://'+configG.ipOpenstack+':9696/v2.0/networks?name='+this.project.nombre_proyecto+'-net',this.config)
                 .then(res => {
-                    console.log('Respuesta delete project',res)
+                    console.log('Respuesta get network',res)
+                    this.network.networkId = res.data.networks[0].id                   
                 })
-                .catch(error => { console.log('Error en deleteProject ',error); });
-            //get user openstack
-            await axios.get('http://'+configG.ipOpenstack+'/identity/v3/users?name='+info.name,this.config)
+                .catch(error => { this.$toastr.e("Error al obtener la red del proyecto " + error) });
+            await axios.get('http://'+configG.ipOpenstack+':9696/v2.0/routers?name='+this.project.nombre_proyecto+'-router',this.config)
                 .then(res => {
-                    console.log('Respuesta get user',res.data.users[0].id)
+                    this.network.routerId = res.data.routers[0].id                
+                    this.getInterfaceRouter()                    
+                })
+                .catch(error => { this.$toastr.e("Error al obtener router del proyecto " + error) });
+    //Segundo el usuario  
+            await axios.get('http://'+configG.ipOpenstack+'/identity/v3/users?name='+this.project.nombre_proyecto,this.config)
+                .then(res => {
+                    //console.log('Respuesta get user',res.data.users[0].id)
                     this.deleteUser(res.data.users[0].id)
                 })
-                .catch(error => { console.log('Error en get user ',error); });
-            //get network
-            await axios.get('http://'+configG.ipOpenstack+':9696/v2.0/networks?name='+info.name+'-net',this.config)
-                .then(res => {
-                    console.log('Respuesta get network',res.data.networks[0].id)
-                    this.deleteNetwork(res.data.networks[0].id)
+                .catch(error => { this.$toastr.e("Error al obtener el usuario del proyecto " + error) });
+    //Tercero el proyecto    
+            await axios.delete('http://'+configG.ipOpenstack+'/identity/v3/projects/'+this.project.id_openstack,this.config)
+                .then(res => {                   
+                   this.$toastr.s("Proyecto eliminado")                                     
                 })
-                .catch(error => { console.log('Error en get network ',error); });
-            //get subnetwork 
-            await axios.get('http://'+configG.ipOpenstack+':9696/v2.0/subnets?name='+info.name+'-subnet',this.config)
+                .catch(error => { this.$toastr.e("Error al borrar el proyecto " + error) });
+        },        
+    //Eliminar los puertos y red    
+        getInterfaceRouter: async function(){
+            await axios.get('http://'+configG.ipOpenstack+':9696/v2.0/ports?device_id='+this.network.routerId,this.configDeleteNetwork)
                 .then(res => {
-                    console.log('Respuesta get subnetwork',res.data.subnets[0].id)
-                    this.deleteSubnetwork(res.data.subnets[0].id)
+                   if(res.data.ports[0].network_id == this.network.networkId){
+                        let interfaceId = res.data.ports[0].id                  
+                        this.deleteInterfaceRouter(interfaceId)
+                    }
+                    else{
+                        let interfaceId = res.data.ports[1].id                  
+                        this.deleteInterfaceRouter(interfaceId)
+                    }                  
                 })
-                .catch(error => { console.log('Error en get subnetwork ',error); });
-            //get Router
-            await axios.get('http://'+configG.ipOpenstack+':9696/v2.0/routers?name='+info.name+'-router',this.config)
+                .catch(error => { this.$toastr.e("Error al obtener los puertos del router" + error) });
+        },
+        deleteInterfaceRouter: async function(interfaceId){            
+            let data = {
+                "port_id": interfaceId
+            }
+             console.log("la id de la data es:"+ data)
+            await axios.put('http://'+configG.ipOpenstack+':9696/v2.0/routers/'+this.network.routerId+'/remove_router_interface',data,this.configDeleteNetwork)
                 .then(res => {
-                    console.log('Respuesta get router',res.data.routers[0].id)
-                    this.deleteRouter(res.data.routers[0].id)
+                    console.log('Si se pudo eliminar la interface')
+                    this.deleteRouter()
                 })
-                .catch(error => { console.log('Error en get get ',error); });
-            //Delete pool from database
-            await axios.delete('/api/pool_recursos?id_openstack='+info.id, configG.headersDataBase)
-                .then(res => { 
-                        console.log('Respuesta del delete pool bd ',res)
-                    })
-                .catch(error => { console.log('Error en deletepool',error); });
-                this.getProjects();
+                .catch(error => { 
+                    console.log('ERROR delete Interface',error)
+                    this.$toastr.e("Error al eliminar los puertos del router" + error) });
+        },        
+        deleteRouter: async function(){
+            await axios.delete('http://'+configG.ipOpenstack+':9696/v2.0/routers/'+this.network.routerId,this.configDeleteNetwork)
+                .then(res => {
+                    this.deleteNetwork()                    
+                })
+                .catch(error => { 
+                    console.log('ERROR delete router',error)
+                    this.$toastr.e("Error al eliminar el router del proyecto " + error) });
+        },        
+        deleteNetwork: async function(){
+            await axios.delete('http://'+configG.ipOpenstack+':9696/v2.0/networks/'+this.network.networkId,this.configDeleteNetwork)
+                .then(res => {
+                    this.$toastr.s("Red eliminada ")
+                })
+                .catch(error => {
+                    //console.log('ERROR delete Network',error)
+                    this.$toastr.e("Error al eliminar la red del proyecto, por favor ur al dashboard y eliminarla manualmente") });     
         },
         deleteUser: async function(userId){
             await axios.delete('http://'+configG.ipOpenstack+'/identity/v3/users/'+userId,this.config)
-                .then(res => {
-                    console.log('Respuesta delete user',res)
-                })
-                .catch(error => { console.log('Error en delete user ',error); });
-        },
-        deleteNetwork: async function(netId){
-            await axios.delete('http://'+configG.ipOpenstack+':9696/v2.0/networks/'+netId,this.configDelete)
-                .then(res => {
-                    console.log('Respuesta delete network',res)
-                })
-                .catch(error => { console.log('Error en delete network ',error); });     
-        },
-        deleteSubnetwork: async function(subnetId){
-            await axios.delete('http://'+configG.ipOpenstack+':9696/v2.0/subnets/'+subnetId,this.configDelete)
-                .then(res => {
-                    console.log('Respuesta delete subnetwork',res)
-                })
-                .catch(error => { console.log('Error en delete subnetwork ',error); });       
-        },
-        deleteRouter: async function(routerId){
-            await axios.delete('http://'+configG.ipOpenstack+':9696/v2.0/routers/'+routerId,this.configDelete)
-                .then(res => {
-                    console.log('Respuesta delete router',res)
-                })
-                .catch(error => { console.log('Error en delete router ',error); });
-        },
+                .then(res => { })
+                .catch(error => { this.$toastr.e("Error al eliminar el usuario en OpenStack " + error) });
+        }
+       
 
     }
 }

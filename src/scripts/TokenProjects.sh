@@ -1,7 +1,7 @@
 #!/bin/sh
 
-export OS_USERNAME=prueba
-export OS_PROJECT_NAME=prueba
+export OS_USERNAME=gestion
+export OS_PROJECT_NAME=test
 export OS_PROJECT_DOMAIN_NAME=default
 export OS_USER_DOMAIN_NAME=Default
 export OS_PASSWORD=123

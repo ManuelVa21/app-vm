@@ -9,7 +9,7 @@
             <div class="sidebar-heading text-center text-primary">Telco 2.0 </div>
               <ul class="list-group list-group-flush">
                 <!--<li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelUsuario/PerfilUsuario">Perfil Usuario</router-link></li>-->
-                <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelUsuario/MiProyecto">Mi Proyecto</router-link></li>
+                <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelUsuario">Mi Proyecto</router-link></li>
                 <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelUsuario/SolicitudesUsuario">Solicitudes</router-link></li>
                 <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelUsuario/Notificaciones">Notificaciones <span class="badge badge-danger">{{notificaciones.length}}</span></router-link></li>
                 <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelUsuario/AlertasUsuario">Alertas <span class="badge badge-danger">{{alertas.length}}</span></router-link></li>
@@ -53,13 +53,13 @@ export default {
     },
     getNotificaciones: async function(correo){
       //console.log('Se ingresa a getNotificaciones')
-      await axios.get('/api/alertas_notificaciones?correo_usuario='+correo+'&tipo=Notificación&estado=Sin atender')
+      await axios.get('/api/alertas_notificaciones?correo_usuario='+correo+'&tipo=Notificación&estado=Sin Atender')
       .then(res => {
           //console.log('Se muestra respuesta get del sidebar usuario get notificaciones')
           //console.log(res.data.content);
           this.notificaciones = res.data.content;                    
       })
-      .catch(error => { console.log('Error en get notificaciones',error); });
+      .catch(error => { this.$toastr.e("Error al obtener las notificaciones: " + error ) });
     },
     getAlertas: async function(correo){
       //console.log('Se ingresa a getAlertas')
@@ -69,7 +69,7 @@ export default {
           //console.log(res.data.content);
           this.alertas = res.data.content;                    
       })
-      .catch(error => { console.log('Error en get notificaciones',error); });
+      .catch(error => { this.$toastr.e("Error al obtener las alertas: " + error ) });
     }
 
   }

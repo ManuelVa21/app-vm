@@ -2,7 +2,7 @@
   <div class="content">
     <div class="row">
       <div class="col-2">
-        <SidebarAdmin></SidebarAdmin>
+        <SidebarAdmin style="position: sticky; top: 70px"></SidebarAdmin>
       </div>
         
         <div class="col-10" style="padding-left: 0;">
@@ -44,7 +44,7 @@
                 </template>                                                                        
             </template>  
 
-    <!-- Ver recursos solicitados -->               
+<!-- Ver recursos solicitados -->               
                 <template v-slot:_id="{item}">                                                                                                                                 
                     <button v-on:click="getUnaSolicitud(item._id)" class="btn-sm btn-primary" data-toggle="modal" data-target="#modalRecursos" data-placement="top" title="Ver y aceptar recursos"><i class="far fa-eye"></i></button>                                            
                                                                    
@@ -240,50 +240,46 @@ export default {
     methods:{
         getSolicitudes: async function(){
             let tipo = 'Pool de Recursos'   //  OJOOOOOOOOOO cambiar a aumento de recursos
-            //console.log('Se ingresa a getSolicitudesPool')
             await axios.get('/api/solicitudes?tipo='+tipo)            
             .then(res => {
-                //console.log('Se muestra respuesta get')
-                //console.log(res.data.content);
                 this.solicitudes = res.data.content;                
-                console.log(this.solicitudes);
+                //console.log(this.solicitudes);
             })            
-            .catch(error => { console.log('Error en get solicitudes',error); });
+            .catch(error => { this.$toastr.e("Error al obtener las solicitudes: " + error )});
         },
         getUnaSolicitud: async function(id){
-            //console.log('Se ingresa a get una solicitud' + id)
             await axios.get('/api/solicitudes/unasolicitud?_id='+id)            
             .then(res => {
-                //console.log('Se muestra respuesta get')
-                //console.log(res.data.content);
                 this.solicitud = res.data.content;   
                 this.getPool(this.solicitud.correo); 
                 //console.log(this.solicitud);
             })            
-            .catch(error => { console.log('Error en get solicitudes',error); });
+            .catch(error => { this.$toastr.e("Error al obtener una solicitud: " + error )});
         },
+
+// Obtener el Pool de recursos actual, para comparar con la nueva solicitud
         getPool: async function(correoUsuario){
             console.log('Se muestra el info en getpool ',correoUsuario)
             await axios.get('/api/pool_recursos/unpool?emailPropietario='+correoUsuario)
             .then(res => {
             if (res.data.status == '404' || res.data.status == '400') {
-                console.log('Error al obtener pool de OpenStack')                    
+                this.$toastr.e("Error al obtener el pool de recursos, error: " + res.data.status )                   
             }
             else{
                 this.PoolEditar = res.data.content;              
             }                    
             })
             .catch(error => { 
-                console.log('Error en getPool',error);                    
+                this.$toastr.e("Error al obtener el pool de recursos " + error )                    
             });          
         }, 
-
+//Confirmar aceptar la solicitud
         confirmarSolicitud: async function (idSolicitud){            
             await this.getUnaSolicitud(idSolicitud);
-            //console.log(this.solicitud)
             var respuesta = confirm ('¿Estás seguro de aceptar esta solicitud?');
             if (respuesta == true)
             {
+    //Se fija la Quota en OpenStack y se actualizan los recursos en la BD
                 await this.setQuota(this.PoolEditar.id_openstack)
                 await this.aceptarAumento(this.PoolEditar._id)                
                 this.solicitud.estado = "Aceptada"
@@ -296,9 +292,9 @@ export default {
                 console.log("canceló")
             }
         },
+// Cuando se rechaza la solicitud se abre un modal para enviar el motivo del rechazo de la solicitud
         negarSolicitud: async function(){
             if(!this.solicitud.motivo){
-                //alert("El nombre de usuario es obligatorio")
                 this.$toastr.w("El motivo de cancelación es obligatorio")
                 MotivoCancelacion.focus()                                        
             }
@@ -315,8 +311,7 @@ export default {
             
         },
 //Se recibe el id y la información de la quota se toma de solicitud []       
-        setQuota: async function(id_project){
-    
+        setQuota: async function(id_project){ 
             let data={
                 "quota_set":{
                     "instances": this.solicitud.numvm, 
@@ -328,8 +323,9 @@ export default {
             .then(res => {
                 console.log('Se muestra la respuesta del set quota')
                 console.log(res)
+                this.$toastr.s("Quota fijada correctamente en OpenStack " )
             })
-            .catch(error => { console.log('Error en set quota',error); });
+            .catch(error => { this.$toastr.e("Error al fijar la Quota en OpenStack, error: " + error ) });
         },
 //Actualizar pool nuevos recursos
         aceptarAumento: async function(idPool){
@@ -346,13 +342,13 @@ export default {
                 .then(res => { 
                     console.log('Respuesta del put ',res)
                 })
-                .catch(error => { console.log('Error en aceptarAumento',error); });
+                .catch(error => { this.$toastr.e("Error al actualizar el aumento del pool de recursos " + error ) });
         },
         cambiarEstado: async function(id){
             console.log('Se va a cambiar el estado de la solicitud')
             await axios.put('/api/solicitudes/'+id,{estado: this.solicitud.estado, motivo: this.solicitud.motivo}, this.config)
-                .then(res => { console.log(res)})
-                .catch(error => { console.log('Error en cambiar estado',error); });
+                .then(res => { this.$toastr.s("Se aceptó la solicitud y actualizó el estado correctamente")})
+                .catch(error => { this.$toastr.e("Error al cambiar el estado de la solicitud: " + error ) });
         },
 
    //ENVIAR CORREO

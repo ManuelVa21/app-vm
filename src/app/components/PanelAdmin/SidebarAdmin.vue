@@ -10,9 +10,9 @@
               <ul class="list-group list-group-flush">
                 <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/InfoUsuarios">Información usuarios</router-link></li>
                 <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/Recursos">Recursos</router-link></li>
-                <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/Solicitudes">Solicitudes <span class="badge badge-danger">{{solicitudes.length}}</span></router-link></li>
-                <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/AlertasYNot">Alertas y notificaciones <span class="badge badge-danger">{{alertas.length}}</span></router-link></li>
-                <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/Sugerencias">Sugerencias <span class="badge badge-danger">{{sugerencias.length}}</span></router-link></li>
+                <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/Solicitudes">Solicitudes <span class="ml-1 badge badge-danger">{{solicitudes.length}}</span></router-link></li>
+                <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/AlertasYNot">Alertas y notificaciones <span class="ml-1 badge badge-danger">{{alertas.length}}</span></router-link></li>
+                <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/Sugerencias">Sugerencias <span class="ml-1 badge badge-danger">{{sugerencias.length}}</span></router-link></li>
             </ul>
           </div>
       </div>
@@ -64,7 +64,7 @@ export default {
     },
     getAlertas: async function(correo){
       //console.log('Se ingresa a getAlertas')
-      await axios.get('/api/alertas_notificaciones?correo_usuario='+correo+'&estado=Sin atender')
+      await axios.get('/api/alertas_notificaciones?correo_usuario='+correo+'&estado=Sin Atender')
       .then(res => {
           //console.log('Se muestra respuesta get del sidebar usuario get alertas')
           //console.log(res.data.content);
@@ -74,7 +74,7 @@ export default {
     },
     getSugerencias: async function(){
       //console.log('Se ingresa a getAlertas')
-      await axios.get('/api/sugerencias?estado=Sin atender')
+      await axios.get('/api/sugerencias?estado=Sin Atender')
       .then(res => {
           //console.log('Se muestra respuesta get del sidebar usuario get sugerencias')
           //console.log(res.data.content);

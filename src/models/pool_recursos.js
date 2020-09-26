@@ -3,6 +3,8 @@ const { Schema } = mongoose;
 
 const pool_recursosSchema = new Schema({
     nombre_proyecto: {type: String},
+    servidor_ubicacion: {type: String},
+    estado: {type:String, default:'Activo'},
     id_openstack: {type: String},
     contrasena: {type: String},
     descripcion: {type: String},
@@ -23,7 +25,7 @@ const pool_recursosSchema = new Schema({
         interfaces_vm: {type:Number},
         ip_vm: {type:Number},
         blade: {type:String},
-        estado: {type:Boolean}
+        estado: {type:String}
     }]
 });
 

@@ -3,7 +3,7 @@
     <div class="content">
     <div class="row">
         <div class="col-2">
-          <SidebarAdmin></SidebarAdmin>
+          <SidebarAdmin style="position: sticky; top: 70px"></SidebarAdmin>
         </div>
         <div class="col-10" style="padding-left: 0;">
           

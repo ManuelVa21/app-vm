@@ -7,7 +7,7 @@ const usuariosSchema = new Schema({
     correo: {type:String},
     estado: {type: String},
     categoria_us: {type:String},
-    tutor_proy: {type:String},
+    tutor: {type:String},
     correo_tutor: {type:String},
     pool_asociado: {type:String}
 });

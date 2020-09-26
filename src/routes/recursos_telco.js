@@ -1,58 +1,74 @@
 const express = require('express');
 const router = express.Router();
 
-const recursos_telco = require('../models/recursos_telco');
+const Recursos_telco = require('../models/recursos_telco');
 
 //Para obtener datos
 router.get('/', async (req,res) =>{
-    await recursos_telco.find(function(err,recursos_telco){
-        if (err) { throw err; }
-        else{ res.json(recursos_telco);}
-    })
+    try {
+        const recursos_telco = await Recursos_telco.find();
+        if (!recursos_telco){
+            res.json({ status:404, content:recursos_telco })
+        } else {        
+            res.json({ status:200, content:recursos_telco })
+        }
+    }
+    catch (error){  
+        res.json({ status:400, content:error })
+    }   
+    
+});
+
+router.get('/unservidor', async (req,res) =>{
+    //console.log(req.query)
+    try {        
+        const recursos_telco = await Recursos_telco.findOne(req.query);
+        //console.log(recursos_telco)
+        if (!recursos_telco) {
+            res.json({ status:404, content:recursos_telco })            
+        } else {
+            res.json({ status:200, content:recursos_telco })            
+        }
+    }
+    catch (error) {
+        res.json({ status:400, content:error })
+    }
 });
 
 //Para enviar datos
 router.post('/', async (req,res) =>{
-    //Guardar el dato que envia el navegador
-    const recursos_telco = new recursos_telco(req.body);
-    await recursos_telco.save()
-    .then(recursos_telco => {
-        res.status(200).json({recursos_telco: 'Información registrada correctamente'});
-    })
-    .catch(err =>{
-        res.status(400).send({recursos_telco: 'Error al registrar información'});
-    });
-});
-
-//Para actualizar los datos
-router.put('/:id', async (req, res, next) =>{
-    await recursos_telco.findById(req.params.id), function(err,recursos_telco){
-        if (!recursos_telco) {
-            return next(new Error('No se puede cargar documento'));
-        }
-        else{
-            recursos_telco.número_vm = req.body.recursos_telco.número_vm;
-            recursos_telco.blade = req.body.recursos_telco.blade;
-            recursos_telco.blade_uso = req.body.recursos_telco.blade_uso;
-
-            recursos_telco.save()
-                .then(recursos_telco =>{
-                    res.json('Actualización completa')
-                })
-                .catch(err =>{
-                    res.status(400).send({recursos_telco:'Error al actualizar'});
-                });
-        }
+    try {
+        const recursos_telco = new Recursos_telco(req.body);        
+        await recursos_telco.save()
+        res.json({ status:'200', answer:"Servidor creado" });        
     }
+    catch (error) {
+        res.json({ status:400, content:error })
+    }  
+});
+//Para actualizar los datos    VERIFICAR LA ACTUALIZACIÓN
+router.put('/', async (req, res, next) =>{
+    
+    try {        
+        const recursos_telco = new Recursos_telco(req.body)
+        console.log(recursos_telco)        
+        await Recursos_telco.findByIdAndUpdate(recursos_telco._id ,{$set: recursos_telco }, { new: true} );
+        res.json({ status:'200', answer:"Servidor Actualizado" });
+    } catch (error) {
+        res.json({ status:400, content:error })
+    }  
+
+   
 });
 
-router.delete('/:id', async (req,res)=>{
-    await recursos_telco.findByIdAndRemove(req.params.id, function(err,recursos_telco){
-        if (err) { res.json(err);}
-        else{
-            res.json('Se elimino el pool de recursos satisfactoriamente');
-        }
-    })
+router.delete('/', async (req,res)=>{
+    try {
+        await Recursos_telco.findByIdAndRemove(req.query._id)
+        res.json({ status:'200', answer:"Servidor eliminado" });
+    }
+    catch (error) {
+        res.json({ status:400, content:error })
+    }      
 });
 
 module.exports = router;

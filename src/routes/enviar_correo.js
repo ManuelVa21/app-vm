@@ -27,8 +27,6 @@ router.post('/', async (req, res) => {
         subject: 'Notificación plataforma Telco 2.0',        // 
         text: req.body.mensaje
     };
-
-    //
     
     await transporter.sendMail(mailOptions, (err, data) => {
         if (err) {

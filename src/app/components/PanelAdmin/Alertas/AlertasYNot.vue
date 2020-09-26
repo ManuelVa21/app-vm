@@ -3,7 +3,7 @@
     <div class="row">
 
         <div class="col-2">
-          <SidebarAdmin></SidebarAdmin>
+          <SidebarAdmin style="position: sticky; top: 70px"></SidebarAdmin>
         </div>
 
         <div class="col-10" style="padding-left: 0;">
@@ -19,8 +19,8 @@
 
           <br><br><br><br>
           <div class="btn-group-vertical btn-group-lg" style="display: flex; align-items: center">   
-              <button @click="$router.push('/PanelAdmin/AlertasYNot/Alertas')" class="btn btn-outline-info">Alertas <span class="badge badge-danger">{{alertas.length}}</span></button>
-              <button @click="$router.push('/PanelAdmin/AlertasYNot/Notificaciones')" class="btn btn-outline-info ">Notificaciones <span class="badge badge-danger">{{notificaciones.length}}</span></button>
+              <button @click="$router.push('/PanelAdmin/AlertasYNot/Alertas')" class="btn btn-outline-info">Alertas <span class="ml-3 badge badge-danger">{{alertas.length}}</span></button>
+              <button @click="$router.push('/PanelAdmin/AlertasYNot/Notificaciones')" class="btn btn-outline-info ">Notificaciones <span class="ml-3 badge badge-danger">{{notificaciones.length}}</span></button>
           </div>
 
 
@@ -68,21 +68,21 @@ export default{
     },
     getAlertas: async function(correo){
       //console.log('Se ingresa a getAlertas')
-      await axios.get('/api/alertas_notificaciones?correo_usuario='+correo+'estado=Sin atender&tipo=Alerta')
+      await axios.get('/api/alertas_notificaciones?correo_usuario='+correo+'estado=Sin Atender&tipo=Alerta')
       .then(res => {
           //console.log('La respuesta en getAlertas es ',res.data.content);
           this.alertas = res.data.content;                    
       })
-      .catch(error => { console.log('Error en get alertas',error); });
+      .catch(error => { this.$toastr.e("Error al cargar las alertas: " + error) });
     },
     getNotificaciones: async function(correo){
       //console.log('Se ingresa a getNotificaciones')
-      await axios.get('/api/alertas_notificaciones?correo_usuario='+correo+'estado=Sin atender&tipo=Notificación')
+      await axios.get('/api/alertas_notificaciones?correo_usuario='+correo+'estado=Sin Atender&tipo=Notificación')
       .then(res => {
           //console.log('La respuesta en getNotificacion es ',res.data.content);
           this.notificaciones = res.data.content;                    
       })
-      .catch(error => { console.log('Error en get notificaciones',error); });
+      .catch(error => { this.$toastr.e("Error al cargar las notificaciones: " + error) });
     }
   }
 }

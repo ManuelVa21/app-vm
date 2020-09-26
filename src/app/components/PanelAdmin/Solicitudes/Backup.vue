@@ -3,7 +3,7 @@
     <div class="content">
     <div class="row">
         <div class="col-2">
-          <SidebarAdmin></SidebarAdmin>
+          <SidebarAdmin style="position: sticky; top: 70px"></SidebarAdmin>
         </div>
         <div class="col-10" style="padding-left: 0;">
             
@@ -141,17 +141,11 @@ export default {
 
         getSolicitudes: async function(){
             let tipo = 'Pool de Recursos'   //  OJOOOOOOOOOO cambiar a Backup
-            //console.log('Se ingresa a getSolicitudesPool')
             await axios.get('/api/solicitudes?tipo='+tipo)            
             .then(res => {
-                //console.log('Se muestra respuesta get')
-                //console.log(res.data.content);
                 this.solicitudes = res.data.content;                
-    // Cambiar de true a resuelto y de false a pendiente
-                                 
-                console.log(this.solicitudes);
             })            
-            .catch(error => { console.log('Error en get solicitudes',error); });
+            .catch(error => { this.$toastr.e("Error al cargar las solicitudes: " + error) });
         },
          getUnaSolicitud: async function(id){
             //console.log('Se ingresa a get una solicitud' + id)
@@ -162,7 +156,7 @@ export default {
                 this.solicitud = res.data.content;    
                 //console.log(this.solicitud);
             })            
-            .catch(error => { console.log('Error en get solicitudes',error); });
+            .catch(error => { this.$toastr.e("Error al obtener la solicitud: " + error) });
         },
     }
     

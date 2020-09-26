@@ -9,6 +9,8 @@ const axios = require('axios');
 const app=express();
 const exec = require('child_process').exec;
 var config = require('./config');
+var tokken;
+
 
 //mongoose.Promise =global.Promise;
 mongoose.connect('mongodb://localhost/gestiontelco',{ useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false  })
@@ -26,7 +28,6 @@ app.use(cors({origin: ['http://10.55.6.31:4200','http://10.55.6.39:4000']}));
 app.use(bodyParser.json());
 
 /*Routes*/
-//app.use('/api/tasks',require('./routes/tasks'));
 app.use('/api/alertas_notificaciones', require('./routes/alertas_notificaciones'));
 app.use('/api/pool_recursos', require('./routes/pool_recursos'));
 app.use('/api/recursos_telco', require('./routes/recursos_telco'));
@@ -39,88 +40,63 @@ app.use('/api/test', require('./routes/test'));
 app.use('/api/token', require('./routes/token'));
 
 //Recibir token de usuariio
-app.get('/:token', (req, res) => {
-    console.log('aqui estamos ',req.params)
-    axios.get('http://10.55.6.31:3000/auth/verify', {headers : {'x-access-token': req.params.token,'Content-Type':'application/json'}})
-    .then(res => { 
-        console.log('Se muestra la respuesta del verify del servidor ',res.data.user)
-        user(res.data.user)
-        })
-    .catch(error => { console.log('Error en el verify del servidor ',error); });
-    res.redirect('/?'+req.params.token);
 
+app.get('/:token', (req, res) => {
+    console.log('entra al 1');
+    console.log('aqui estamos ',req.params.token)
+    axios.get('http://10.55.6.31:3000/auth/verify', {headers : {'x-access-token': req.params.token,'Content-Type':'application/json'}})
+        .then(res => {
+            console.log('entra al 3'); 
+            console.log('Se muestra la respuesta del verify del servidor ',res.data.user)
+            user(res.data.user)
+            })
+        .catch(error => { console.log('Error en el verify del servidor '); }); 
+    console.log('entra al 4');;
+    
     function user(data){
-        console.log('se ingresa a funcion user ', data)
+        console.log('entra al 5');
         if (data.role === 'guest') {
-            console.log('Se ingresa a panel usuario ')
+            console.log('entra al 6');
             //Se debe hacer un request para obteer los datos del projecto
-            axios.get('/api/pool_recursos/unpool?emailPropietario='+data.email)
+            axios.get('http://localhost:4000/api/pool_recursos/unpool?emailPropietario='+data.email)
             .then(res => {
-                if (res.data.status == '404' || res.data.status == '400') {
-                    console.log('No hay proyecto aun registrado con este correo, recargue la pagina o ralice la solicitud de uno')                      
+                console.log('entra al 7');
+                if (res.data.status == '404' || res.data.status == '400' || res.data.content.servidor_ubicacion == 'VMware') {
+                    console.log('No hay un pool de recursos creado o se asignó en VMware')                      
                 }
                 else{
+                    console.log('entra al 8');
                     //Generar token para usuario
+                    //console.log('Se muestra la respuesta del get pool', res.data.content)
+                    console.log('Usuario creado')
                     console.log('Se genera el token para el usuario')
-                    const myShellScript = exec('sh src/scripts/CreateToken.sh '+res.data.nombre_proyecto+' '+res.data.nombre_proyecto+' '+res.data.contrasena);
-                    myShellScript.stdout.on('data', (data)=>{
-                        //console.log('Aqui la data')
-                        //console.log(data); 
-                    });
-                    var task = cron.schedule('39 * * * *', () =>  {
-                        exec('sh src/scripts/CreateToken.sh '+config.OS_USERNAME+' '+config.OS_PROJECT_NAME+' '+config.OS_PASSWORD+'> /home/gestion/app-vm/src/app/components/PanelAdmin/TokenProjects.txt');
-                    }, {
-                        scheduled: false
-                    });
-                    task.start();
-
-                }                    
+                    exec('sh src/scripts/CreateToken1.sh '+res.data.content.nombre_proyecto+' '+res.data.content.nombre_proyecto+' '+res.data.content.contrasena,
+                    (error, stdout, stderr) => {
+                        config.tokenOpenStack = stdout.replace('\r', '');
+                        console.log('el token es ',stdout);
+                        tokken = stdout;
+                    }
+                    );
+                }
+                console.log('entra al 9');                    
             })
             .catch(error => { 
-                console.log('Error en axios get proyecto',error);                    
+                console.log('Error en axios get proyecto ',error);                    
             });
-            //Enviar evento para usuario
-            //res.redirect('/?'+req.params.token);
-        } else {
-            console.log('Se ingresa a panel admin')
-            //Generar token para admin
-            const myShellScript = exec('sh src/scripts/CreateToken.sh '+config.OS_USERNAME+' '+config.OS_PROJECT_NAME+' '+config.OS_PASSWORD);
-            myShellScript.stdout.on('data', (data)=>{
-                console.log('Aqui la data ',data)
-            });
-            var task = cron.schedule('45 * * * *', () =>  {
-                exec('sh src/scripts/CreateToken.sh '+config.OS_USERNAME+' '+config.OS_PROJECT_NAME+' '+config.OS_PASSWORD+'> /home/gestion/app-vm/src/app/components/PanelAdmin/Token.txt');
-            }, {
-                scheduled: false
-            });
-            task.start();
-            //res.redirect('/?'+req.params.token);
-
+            console.log('entra al 10');
         }
-    }
-    
+        console.log('entra al 11'); 
+    }  
+    console.log('entra al 12');
+    console.log('El token final es ',tokken)
+    res.redirect('/?'+req.params.token);  
+    console.log('entra al 13');
   });
 
-
 /*Server y listening */
-app.listen(app.get('port'), () => {
+app.listen(app.get('port'), ()=> {
+    console.log('entra al 2');
     console.log('Server on port', app.get('port'));
-    /*
-    //Se crea el token    
-    const myShellScript = exec('sh src/scripts/CreateToken.sh '+config.OS_USERNAME+' '+config.OS_PROJECT_NAME+' '+config.OS_PASSWORD);
-    myShellScript.stdout.on('data', (data)=>{
-        console.log('Aqui la data ',data)
-    });
-    myShellScript.stderr.on('data', (data)=>{
-        console.log('Aqui el error ',data)
-    });
-
-    var task = cron.schedule('51 * * * *', () =>  {
-        exec('sh src/scripts/CreateToken.sh '+config.OS_USERNAME+' '+config.OS_PROJECT_NAME+' '+config.OS_PASSWORD+'> /home/gestion/app-vm/src/app/components/PanelAdmin/Token.txt');
-      }, {
-        scheduled: false
-      });
-      task.start();*/
 });
 
 

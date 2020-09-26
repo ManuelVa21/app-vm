@@ -3,7 +3,7 @@
     <div class="content">
     <div class="row">
         <div class="col-2">
-          <SidebarAdmin></SidebarAdmin>
+          <SidebarAdmin style="position: sticky; top: 70px"></SidebarAdmin>
         </div>
         <div class="col-10" style="padding-left: 0;">
           
@@ -16,14 +16,14 @@
             <strong class="final-path">Máquinas Virtuales</strong>
             <span>/</span>
         </div><br>
-            <br>
+            
              <button v-on:click="addServer()" type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Agregar máquina"><i class="fas fa-plus"></i></button>
                                         
             
           <div class="table-responsive">
             
             <VueyeTable 
-                :data="servers" 
+                :data="listServer" 
                 :columns="columns" 
                 title="Máquinas Virtuales"                           
                 filter-by="status">                            
@@ -155,6 +155,7 @@ export default {
                 }
             },
             servers: [],
+            listServer: [],
             columns:[              
                 {key: "tenant_id", label: "Proyecto", display: true, sortable: true},
                 {key: "", label: "Usuario", display: true},
@@ -183,7 +184,7 @@ export default {
                     this.servers = res.data.servers;
                     //console.log(res.data.servers[4].addresses);
                 })
-                .catch(error => { console.log('Error getServers',error); });
+                .catch(error => { this.$toastr.e("Error al cargar las VM's de OpenStack " + error) });
                 for await ( server of this.servers){
                     server.tenant_id = await this.getOneProject(server.tenant_id);
                     if (server.image.id) {
@@ -194,6 +195,8 @@ export default {
                     }
                     server.flavor.id= await this.getOneFlavor(server.flavor.id);
                 }
+                this.listServer = this.servers;
+                console.log('list server es: ',this.listServer)
         },
         //Se obtiene el proyecto para nombre de proyecto. --Usar tenant_id--
         getOneProject: async function(id){
@@ -205,7 +208,7 @@ export default {
                     answer= res.data.project.name;
                 })
                 .catch(error => { 
-                    console.log('Error getOneProject ',error);
+                    this.$toastr.e("Error al cargar el proyecto OpenStack " + error)
                     answer="error";
                     });
             return answer;
@@ -220,7 +223,7 @@ export default {
                     answer= res.data.name;
                 })
                 .catch(error => { 
-                    console.log('Error getOneImage',error);
+                    this.$toastr.e("Error al cargar la imagen de OpenStack " + error)
                     answer="error";
                     });
             return answer;
@@ -236,14 +239,14 @@ export default {
                     answer[1] = res.data.flavor.ram;
                     answer[2] = res.data.flavor.vcpus;
                 })
-                .catch(error => { console.log('Error getOneFlavor',error); });
+                .catch(error => { this.$toastr.e("Error al cargar el flavor OpenStack " + error) });
                 return answer;
         },
 
 //SERVER//
         addServer: async function(){
             console.log('Se ingresa a addServer')
-            let data={
+            /*let data={
                 "server": {
                     "name": "pruebaconhost",
                     "OS-DCF:diskConfig": "AUTO", 
@@ -258,8 +261,8 @@ export default {
                 .then(res => {
                     console.log(res.data)
                 })
-                .catch(error => { console.log('Error addServer',error); });
-                this.getServers();
+                .catch(error => { this.$toastr.e("Error al crear la VM " + error)});
+                this.getServers();*/
         },
         consola: async function(idServer){
             let data={
@@ -272,15 +275,15 @@ export default {
                     //console.log(res.data)
                     window.open(res.data.console.url)
                 })
-                .catch(error => { console.log('Error consola',error); });
+                .catch(error => { this.$toastr.e("Error al cargar la consola " + error) });
         },
         deleteServer: async function(idServer){
             //console.log('Se ingresa a deleteServer')
             await axios.delete('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer,this.config)
                 .then(res => {
-                    console.log(res)
+                    this.$toastr.i("VM eliminada ")
                 })
-                .catch(error => { console.log('Error deleteServer',error); });
+                .catch(error => { this.$toastr.e("Error al eliminar el servidor " + error) });
                 this.getServers();
         },
         backupServer: async function(idServer){
@@ -291,9 +294,9 @@ export default {
             let data={ "os-stop": null }
             await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
             .then(res => {
-                console.log(res)
+                this.$toastr.i("Apagando VM ")
             })
-            .catch(error => { console.log('Error apagarServer',error); });
+            .catch(error => { this.$toastr.e("Error al apagar la VM" + error) });
             this.getServers();
         },
         encenderServer: async function(idServer) {
@@ -301,9 +304,9 @@ export default {
             let data={ "os-start": null }
             await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
             .then(res => {
-                console.log(res)
+                this.$toastr.i("Encendiendo VM ")
             })
-            .catch(error => { console.log('Error encenderServer',error); });
+            .catch(error => { this.$toastr.e("Error al encender la VM " + error) });
             this.getServers();
         },
         editarServer: async function(idServer) {
@@ -312,9 +315,9 @@ export default {
             // para revertir {"revertResize": null}
             await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
             .then(res => {
-                console.log(res)
+                this.$toastr.i("Editando la VM ")
             })
-            .catch(error => { console.log('Error editarServer',error); });
+            .catch(error => { this.$toastr.e("Error al editar la VM " + error) });
             this.getServers();
         },
         confirmEditarServer: async function(idServer){
@@ -332,9 +335,9 @@ export default {
             let data={"reboot": {"type": "SOFT"}}
             await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
             .then(res => {
-                console.log(res)
+                this.$toastr.i("Reiniciando la VM " )
             })
-            .catch(error => { console.log('Error reiniciarServer',error); });
+            .catch(error => { this.$toastr.e("Error al reiniciar la VM " + error) });
             this.getServers();
         },
         pausarServer: async function(idServer) {
@@ -342,9 +345,9 @@ export default {
             let data={"pause": null}
             await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
             .then(res => {
-                console.log(res)
+                this.$toastr.i("Servidor pausado ")
             })
-            .catch(error => { console.log('Error pausarServer',error); });
+            .catch(error => { this.$toastr.e("Error al pausar la VM " + error) });
             this.getServers();
         },
         desPausarServer: async function(idServer) {
@@ -352,9 +355,9 @@ export default {
             let data={"unpause": null}
             await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
             .then(res => {
-                console.log(res)
+                this.$toastr.i("VM despausada ")
             })
-            .catch(error => { console.log('Error desPausarServer',error); });
+            .catch(error => { this.$toastr.e("Error al despausar la VM " + error) });
             this.getServers();
         },
         bloquearServer: async function(idServer) {
@@ -362,9 +365,9 @@ export default {
             let data={"lock": null}
             await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
             .then(res => {
-                console.log(res)
+                this.$toastr.i("VM bloqueada ")
             })
-            .catch(error => { console.log('Error bloquearServer',error); });
+            .catch(error => { this.$toastr.e("Error al bloquear la VM " + error) });
             this.getServers();
         },
         desBloquearServer: async function(idServer) {
@@ -372,9 +375,9 @@ export default {
             let data={"unlock": null}
             await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
             .then(res => {
-                console.log(res)
+                this.$toastr.i("VM desbloqueada ")
             })
-            .catch(error => { console.log('Error desBloquearServer',error); });
+            .catch(error => { this.$toastr.e("Error al desbloquear la VM " + error) });
             this.getServers();
         },
         suspenderServer: async function(idServer) {
@@ -382,9 +385,9 @@ export default {
             let data={"suspend": null}
             await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
             .then(res => {
-                console.log(res)
+                this.$toastr.i("VM suspendida ")
             })
-            .catch(error => { console.log('Error suspenderServer',error); });
+            .catch(error => { this.$toastr.e("Error al suspender la VM " + error) });
             this.getServers();
         },
         reanudarServer: async function(idServer) {
@@ -392,9 +395,9 @@ export default {
             let data={"resume": null}
             await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
             .then(res => {
-                console.log(res)
+                this.$toastr.i("VM reanudada " + error)
             })
-            .catch(error => { console.log('Error reanudarServer',error); });
+            .catch(error => { this.$toastr.e("Error al reanudar la VM " + error) });
             this.getServers();
         },
         reconstruirServer: async function(idServer) {
@@ -404,7 +407,7 @@ export default {
             .then(res => {
                 console.log(res)
             })
-            .catch(error => { console.log('Error  en reconstruirServer',error); });
+            .catch(error => { this.$toastr.e("Error al reconstruir la VM " + error) });
             this.getServers();
         }
 

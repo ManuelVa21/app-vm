@@ -2,7 +2,7 @@
     <div class="content">
         <div class="row">
             <div class="col-2 col-with-right-border">
-                <SidebarAdmin></SidebarAdmin>
+                <SidebarAdmin style="position: sticky; top: 70px"></SidebarAdmin>
             </div>
             
             <div class="col-10">

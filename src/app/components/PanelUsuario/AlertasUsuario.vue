@@ -3,13 +3,14 @@
         <div class="row">
                 
             <div class="col-2 col-with-right-dorder">
-                <SidebarUsuario></SidebarUsuario> 
+                <SidebarUsuario style="position: sticky; top: 70px"></SidebarUsuario> 
             </div>
                 
             <div class="col-10">
                     
             <div style=" float: right">
-                <router-link to="/PanelUsuario">Panel Usuario</router-link>
+                <span>/</span>
+                <router-link to="/PanelUsuario">Mi Proyecto</router-link>
                 <span>/</span>
                 <strong class="final-path">Alertas</strong>
                 <span>/</span>
@@ -19,7 +20,7 @@
                     <VueyeTable 
                     :data="alertas" 
                     :columns="columns" 
-                    title="Alerts de Usuario"
+                    title="Alertas de Usuario"
                     filter-by="estado">
                         <template v-slot:_id="{item}"> 
                             <template v-if="item.estado == 'Sin atender'">  
@@ -90,23 +91,25 @@ export default {
                 //console.log('Se muestra respuesta get ',res.data.content)
                 this.alertas = res.data.content;                    
             })
-            .catch(error => { console.log('Error en get alertas',error); });
+            .catch(error => { this.$toastr.e("Error al obtener las alertas: " + error ) });
         },
         atenderAlerta: async function(id){
             console.log('Se va a cambiar el estado de la Notificacion de usuario')
             await axios.put('/api/alertas_notificaciones/'+id,{estado: 'Atendido' },configG.headersDataBase)
                 .then(res => { 
+                    this.$toastr.s("Se cambió el estado correctamente")
                     this.getAlertas(this.storage.email)
                     })
-                .catch(error => { console.log('Error en cambiar estado',error); });
+                .catch(error => { this.$toastr.e("Error al cambiar el estado de la alerta: " + error ) });
         },
         eliminarAlerta: async function(info){
             await axios.delete('/api/alertas_notificaciones?_id='+info._id, configG.headersDataBase)
             .then(res => { 
                 //console.log(res)
+                this.$toastr.s("Alerta eliminada correctamente")
                 this.getAlertas(this.storage.email)
                 })
-            .catch(error => { console.log('Error en eliminar solicitud',error); });
+            .catch(error => { this.$toastr.e("Error al eliminar la alerta: " + error ) });
         }        
     }
 }

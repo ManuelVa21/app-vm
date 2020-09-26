@@ -20,7 +20,7 @@ router.get('/', async (req,res) =>{
 //Para obtener los datos de un solo pool
 router.get('/unpool', async (req,res) =>{
     //console.log('Ruta de un proyecto')
-    console.log(req.query)
+    //console.log(req.query)
     try {
         const pool_recursos = await Pool_recursos.findOne(req.query);
         //console.log(pool_recursos)
@@ -38,7 +38,7 @@ router.get('/unpool', async (req,res) =>{
 router.post('/', async (req, res) => {
     try {
         //console.log('Se mira el request')
-        console.log(req.body)
+        //console.log(req.body)
         const pool_recursos = new Pool_recursos(req.body)
         await pool_recursos.save();
         res.json({ status:'200', answer:"Pool de recursos creado" });
@@ -51,8 +51,6 @@ router.post('/', async (req, res) => {
 //Para actualizar los datos
 router.put('/', async (req,res) =>{
     try {
-        console.log('Se ingresa a put pool')
-        console.log('Se mira el req.body', req.body)
         const pool = new Pool_recursos(req.body)
         const idpool = req.body._id
         await Pool_recursos.findByIdAndUpdate(idpool,{$set: pool },{ new: true} );
@@ -63,10 +61,16 @@ router.put('/', async (req,res) =>{
 });
 
 router.delete('/', async (req,res) => {
-    console.log('Se va a eliminar')
-    console.log(req.query)
-    await Pool_recursos.findOneAndRemove(req.query.id_openstack);
-    res.json({ status:'200', answer:"Pool de recursos eliminado" });
+    
+    try {
+        
+        await Pool_recursos.findOneAndDelete(req.query);
+        res.json({ status:'200', answer:"Pool de recursos eliminado" });   
+    }
+    catch (error) {
+        res.json({ status:400, content:error })
+    }
+
 });
 
 module.exports = router;

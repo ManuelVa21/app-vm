@@ -1,10 +1,11 @@
 <template>
- <div class="content">
+    <div class="content">
     <div class="row">
+
         <div class="col-2">
-            <SidebarAdmin></SidebarAdmin>
+            <SidebarAdmin style="position: sticky; top: 70px"></SidebarAdmin>
         </div>
-        <div class="col-10">            
+    <div class="col-10">            
             
         <div style=" float: right;">
             <span>/</span>
@@ -14,7 +15,7 @@
             <span>/</span>
         </div> <br>
             
-            <!--  esto es para agregar un usuario sirve para probar-->                                                                                 
+            <!--  esto es para agregar un usuario sirve para probar                                                                                
             <button @click="limpiarUsuario()" class="btn btn-success btn-sm" data-toggle="modal" data-target="#ModalAddUser">
                 <span data-toggle="tooltip" data-placement="top" title="Agregar usuario"><i class="fas fa-plus"></i></span>
             </button>              
@@ -36,13 +37,13 @@
                         <label>Nombre: * </label> <br>
                         <input v-model="usuario.nombre" type="text" id="nombre" class="form-control" placeholder="Ingresar Nombre"><br>                                                          
                                                         
-                        Correo electrónico: *<br>
+                        <label> Correo electrónico: * </label> <br>
                         <input v-model="usuario.correo" type="text" id="correo" class="form-control" placeholder="Ingresar Correo"><br>  
                             
-                        Pool asociado: *<br>
+                        <label> Pool asociado: * </label> <br>
                         <input v-model="usuario.pool_asociado" type="text" id="pool_asociado" class="form-control" placeholder="Ingrese nombre del pool"> <br> 
                             
-                        Categoría de usuario: *<br>
+                        <label> Categoría de usuario: * </label> <br>
                         <select v-model="usuario.categoria_us" id="categoria_us" class="form-control">
                             <option selected>Seleccione nuevo tipo de usuario</option>
                                 <option>Estudiante</option>
@@ -64,109 +65,110 @@
              </div>
              </div>
              </div>
-
+            --> 
                                         
         <div class="table-responsive">
-            <VueyeTable 
-              :data="usuarios" 
-              :columns="columns" 
-              title="Usuarios registrados"
-              filter-by="nombre">
+
+        <VueyeTable 
+          :data="usuarios" 
+          :columns="columns" 
+          title="Usuarios con pool de recursos"
+          filter-by="nombre">
 
                 <template v-slot:_id="{item}">
                     <div class="btn-group btn-sm" role="group">
            
                       <button @click="getOneUser(item._id)" class="btn-sm btn-success" data-toggle="modal" data-target="#modalRecursos" data-placement="top" title="Editar Usuario"><i class="fas fa-edit"></i></button>                                            
-<!--MODAL EDITAR USUARIO  -->  
-                        <div class="modal fade" id="modalRecursos" tabindex="-1" role="dialog" aria-labelledby="ModalRecursosLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            
-                            <div class="modal-header text-white bg-primary"> 
-                                <h5 class="modal-title modal-dark" id="modalID"><b>Editar información de usuario</b></h5>
-                                <button @click="limpiarUsuario()" type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span></button>                                        
-                            </div>
-
-                            <div class="modal-body">
-                                <form>
-                                           
-                                    <div class="form-group text-left required">                                                                                
-                                    <label class="control-label required" for="NombreUsuario">Nombre </label>
-                                    <input v-model="usuario.nombre" type="text" id="NombreUsuario" class="form-control" required placeholder="Ingresar Nombre">                                                          
-                                    </div>
-                                        
-                                    <div class="form-group text-left required">
-                                    <label class="control-label" for="Correo">Correo electrónico
-                                    </label>
-                                    <input v-model="usuario.correo" type="text" id="Correo" class="form-control" placeholder="Ingresar Correo">   
-                                    </div>
-
-                                    <div class="form-group text-left required">
-                                      <label class="control-label" for="Categoria">Categoría de usuario </label>
-                                      <select v-model="usuario.categoria_us" class="form-control" id="categoria">
-                                            <option selected>Estudiante</option>
-                                            <option>Docente</option>
-                                            <option>Curso</option>
-                                      </select>   
-                                    </div> 
-                                </form>                                         
-                            </div>
-
-                            <div class="modal-footer">
-                                <button @click="updateUser()" type="button" class="btn btn-success" data-dismiss="modal" aria-label="Close">
-                                    Editar Usuario </button>
-                                <button @click="limpiarUsuario()" type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close"> 
-                                    Cancelar</button>                                           
-                                      
-                            </div> 
-
-                        </div>
-                        </div>
-                        </div>
-
                       <button @click="getOneUser(item._id)" class="btn-sm btn-info" data-toggle="modal" data-target="#ModalSendNotificacion" data-placement="top" title="Enviar notificación"><i class="fas fa-envelope"></i></button>
-<!--MODAL ENVIAR NOTIFICACIóN  -->  
-                        <div class="modal fade" id="ModalSendNotificacion" tabindex="-1" role="dialog" aria-labelledby="ModalSendNotificacion" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="ModalSendNotificacion">Enviar Notificación</h5>
-                                <button @click="limpiarUsuario()" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span> </button>
-                        </div>
-                        <div class="modal-body">
-                            <form>
-                                <div class="form-group text-left">
-                                    <label class="control-label" for="UsuarioDes">Usuario Destino: {{usuario.nombre}}</label>
-                                </div>
-                                <div class="form-group text-left">
-                                    <label class="control-label" for="CorreoDes">Correo: {{usuario.correo}}</label>
-                                </div>
-                                <div class="form-group text-left required">
-                                    <label class="control-label" for="DescripcionNoti">Descripción </label>
-                                        <textarea v-model="notificacion.descripcion" name="" id="DescripcionNoti" rows="4" cols="40" class="form-control" placeholder="Ingresar Descripción"></textarea>   
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button v-on:click="sendNotificacion(usuario,notificacion)" type="button" class="btn btn-success" data-dismiss="modal">Enviar</button>
-                            <button @click="limpiarUsuario()" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                        </div>
-                    </div>
-                    </div>
-                    </div>
-                      
-                      
-                      <button v-on:click="confirmarDelete(item._id)" class="btn-sm btn-danger"  title="Eliminar Usuario"><i class="fas fa-trash"></i></button>
+     
                     </div>                                                                                                       
                 </template>                                           
                                                 
-            </VueyeTable>                                        
+        </VueyeTable>  
+        </div>
+
+<!--MODAL EDITAR USUARIO  -->  
+        <div class="modal fade" id="modalRecursos" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            
+            <div class="modal-header text-white bg-primary"> 
+                <h5 class="modal-title modal-dark" ><b>Editar información de usuario</b></h5>
+                <button @click="limpiarUsuario()" type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>                                        
+            </div>
+            
+            <div class="modal-body">
+                <form>                    
+                
+                <div class="form-group text-left required">  
+                    <label class="control-label required" for="NombreUsuario">Nombre </label>
+                    <input v-model="usuario.nombre" type="text" id="NombreUsuario" class="form-control" required placeholder="Ingresar Nombre">                                                          
+                </div>
+                                    
+                <div class="form-group text-left required">
+                    <label class="control-label" for="Correo">Correo electrónico</label>
+                    <input v-model="usuario.correo" type="text" id="Correo" class="form-control" placeholder="Ingresar Correo">   
+                </div>
+
+                <div class="form-group text-left required">
+                    <label class="control-label" for="Categoria">Categoría de usuario </label>
+                    <select v-model="usuario.categoria_us" class="form-control" id="categoria">
+                          <option selected>Estudiante</option>
+                          <option>Docente</option>
+                          <option>Curso</option>
+                    </select>   
+                </div> 
+                </form>                                         
+            </div>
+
+            <div class="modal-footer">
+                <button @click="updateUser()" type="button" class="btn btn-success" data-dismiss="modal" aria-label="Close">
+                    Editar Usuario </button>
+                <button @click="limpiarUsuario()" type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close"> 
+                    Cancelar</button>          
+            </div> 
+
         </div>
         </div>
+        </div>
+
+<!--MODAL ENVIAR NOTIFICACIóN  -->  
+        <div class="modal fade" id="ModalSendNotificacion" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-white bg-primary">
+                <h5 class="modal-title" >Enviar Notificación</h5>
+                <button @click="limpiarUsuario()" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span> </button>
+            </div>
+            
+            <div class="modal-body">
+                <form>
+                    <div class="form-group text-left">
+                        <label class="control-label" for="UsuarioDes">Usuario Destino: {{usuario.nombre}}</label>
+                    </div>
+                    <div class="form-group text-left">
+                        <label class="control-label" for="CorreoDes">Correo: {{usuario.correo}}</label>
+                    </div>
+                    <div class="form-group text-left required">
+                        <label class="control-label" for="DescripcionNoti">Descripción </label>
+                        <textarea v-model="notificacion.descripcion" name="" id="DescripcionNoti" rows="4" cols="40" class="form-control" placeholder="Ingresar Descripción"></textarea>   
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button v-on:click="sendNotificacion(usuario,notificacion)" type="button" class="btn btn-success" data-dismiss="modal">Enviar</button>
+                <button @click="limpiarUsuario()" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+        </div>
+        </div>
+                                                
+        
     </div>
- </div>   
+    </div>
+    </div>   
 </template>
 
 <script>
@@ -195,8 +197,10 @@ export default{
             columns:[
                 {key: "nombre", label: "Usuario", display: true},                
                 {key: "correo", label: "Correo usuario", display: true},
+                {key: "pool_asociado", label: "Proyecto", display: true},
+                {key: "tutor", label: "Director", display: true},
+                {key: "correo_tutor", label: "Correo director", display: true},                               
                 {key: "categoria_us", label: "Categoria", display: true, sortable: true},
-                {key: "pool_asociado", label: "Pool", display: true},                
                 {key: "_id", label: "Acciones", display: true},             
                 
             ]
@@ -227,20 +231,19 @@ export default{
                    
                 //console.log(res)
             })
-            .catch(error => { console.log('Error ',error); });
+            .catch(error => { this.$toastr.e("Error al crear el nuevo usuario: " + error)});
             this.getUsuarios();     
         },
 //Se obtienen los Usuarios       
        getUsuarios: async function(){            
             await axios.get('/api/usuarios')
-                .then(res => {
-                    //console.log(res.data.content);
+                .then(res => {                    
                     this.usuarios = res.data.content; 
-                    this.limpiarUsuario()
-                    //console.log(this.usuarios);                    
+                    console.log(this.usuarios)
+                    this.limpiarUsuario()                   
                 })
                 .catch(error => {
-                    console.log('Error ',error);
+                   this.$toastr.e("Error al obtener usuarios: " + error)
                 });
         },
 //Obtener un usuario para luego editarlo
@@ -248,43 +251,20 @@ export default{
                //console.log(idUser);
                await axios.get('/api/usuarios/unusuario?_id='+idUser)
                 .then(res => {
-                    this.usuario = res.data.content;
-                     
+                    this.usuario = res.data.content;                     
                 })
                 .catch(error => {
-                    console.log('Error ',error);
+                    this.$toastr.e("Error al obtener el usuario " + error);
                 });
         },
  //  Vamos a ACTUALIZAR un usuario
-        updateUser: async function(){
-                     
-           //console.log(info)
-           // console.log(User)
+        updateUser: async function(){                   
            await axios.put('/api/usuarios/'+this.usuario._id , this.usuario, this.config)
                 .then(res => {
                     this.getUsuarios();
-                    this.$toastr.s("Usuario editado correctamente")
-                    //console.log(res)                    
+                    this.$toastr.s("Usuario editado correctamente")                                        
                 })
-                .catch(error => { console.log('Error ',error); });
-        },
- //  Vamos a ELIMINAR un usuario
-        confirmarDelete (idUser){
-            var respuesta = confirm ('¿Estás seguro de eliminar este usuario?');
-            if (respuesta)
-            {this.deleteUser(idUser);}
-            else {this.limpiarUsuario()}            
-        },
-       deleteUser: async function(idUser){         
-            await axios.delete('/api/usuarios?_id='+idUser, this.config)
-                .then(res =>{
-                    this.$toastr.s("El usuario fue eliminado correctamente")                                              
-                    this.getUsuarios();
-                })
-                .catch(error => {
-                    console.log('Error ',error);
-                    this.$toastr.e("El usuario no se pudo eliminar, error:"+ error)
-                });
+                .catch(error => { this.$toastr.e("Error al actualizar el usuario: " + error); });
         },
         limpiarUsuario(){
             usuario :[
@@ -335,11 +315,25 @@ export default{
                 correo_usuario: usuario.correo
                 }, configG.headersDataBase)
                 .then(res => {
+                    this.enviarCorreo ()                                        
+                })
+                .catch(error => { this.$toastr.e("Error al enviar notificación a la aplicación: "+ error) });
+        }, 
+
+        enviarCorreo: async function(){
+            await axios.post('/api/enviar_correo',{
+                mensaje: this.notificacion.descripcion,
+                correo_usuario: this.usuario.correo
+                })
+                .then(res => {
                     this.$toastr.s("Notificación enviada al usuario: "+ this.usuario.nombre)
-                    this.limpiarUsuario()
-                    console.log('Respuesta sendNotificacion')
-                    console.log(res) })
-                .catch(error => { console.log('Error en sendNotificacion ',error); });
+                    this.limpiarUsuario()                   
+                    })
+                .catch(error => { 
+                    //console.log('Error en sendNotificacion ',error);
+                    this.$toastr.e("Error al enviar el correo: "+ error)
+                    //console.log(error) 
+                });                                        
         }, 
    }
 }

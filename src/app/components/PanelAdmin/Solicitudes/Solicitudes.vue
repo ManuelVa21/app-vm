@@ -3,7 +3,7 @@
     <div class="row">
 
         <div class="col-2">
-          <SidebarAdmin></SidebarAdmin>
+          <SidebarAdmin style="position: sticky; top: 70px"></SidebarAdmin>
         </div>
 
         <div class="col-10" style="padding-left: 0;">
@@ -18,9 +18,9 @@
 
            <br><br><p>
             <div class="btn-group-vertical btn-group-lg" style="display: flex; align-items: center">   
-            <button @click="$router.push('/PanelAdmin/Solicitudes/PoolRecursos')" class="btn btn-outline-info">Pool de recursos <span class="badge badge-danger">{{solicitudesPool.length}}</span></button>
-            <button @click="$router.push('/PanelAdmin/Solicitudes/AumentoPool')" class="btn btn-outline-info ">Aumento pool de recursos <span class="badge badge-danger">{{solicitudesAumento.length}}</span></button>
-            <button @click="$router.push('/PanelAdmin/Solicitudes/Backup')" class="btn btn-outline-info ">Backup <span class="badge badge-danger">{{solicitudesBackup.length}}</span></button>
+            <button @click="$router.push('/PanelAdmin/Solicitudes/PoolRecursos')" class="btn btn-outline-info">Pool de recursos <span class="ml-3 badge badge-danger">{{solicitudesPool.length}}</span></button>
+            <button @click="$router.push('/PanelAdmin/Solicitudes/AumentoPool')" class="btn btn-outline-info ">Aumento pool de recursos <span class="ml-3 badge badge-danger">{{solicitudesAumento.length}}</span></button>
+            <button @click="$router.push('/PanelAdmin/Solicitudes/Backup')" class="btn btn-outline-info ">Backup <span class="ml-3 badge badge-danger">{{solicitudesBackup.length}}</span></button>
             </div>
         </div>
 
@@ -61,7 +61,7 @@ export default{
             //console.log(res.data);
             this.solicitudesPool = res.data.content;                    
         })
-        .catch(error => { console.log('Error en get solicitudes',error); });
+        .catch(error => { this.$toastr.e("Error al obtener las solicitudes de pool de recursos: " + error ) });
       },
       getSolicitudesAumento: async function(){
         //console.log('Se ingresa a getNotificaciones')
@@ -71,7 +71,7 @@ export default{
             //console.log(res.data);
             this.solicitudesAumento = res.data.content;                    
         })
-        .catch(error => { console.log('Error en get solicitudes',error); });
+        .catch(error => { this.$toastr.e("Error al obtener las solicitudes de aumento de pool: " + error ) });
       },
       getSolicitudesBackup: async function(){
         //console.log('Se ingresa a getNotificaciones')
@@ -81,7 +81,7 @@ export default{
             //console.log(res.data);
             this.solicitudesBackup = res.data.content;                    
         })
-        .catch(error => { console.log('Error en get solicitudes',error); });
+        .catch(error => { this.$toastr.e("Error al obtener las solicitudes de backup: " + error )});
       }
 
     }  

@@ -10,7 +10,7 @@ const alertas_notificaciones = new Schema({
         ram: {type:Number},
         cpu: {type:Number},
     }],*/
-    estado: {type:String, default:"Sin atender"},
+    estado: {type:String, default:"Sin Atender"},
     usuario_destino: {type: String},
     correo_usuario: {type: String}
 

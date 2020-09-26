@@ -26,7 +26,7 @@ router.get('/unusuario', async (req,res) =>{
     //onsole.log('Ruta de usuarios')
     //console.log(req.query)
     try {
-        const usuarios = await Usuarios.findById(req.query);
+        const usuarios = await Usuarios.findOne(req.query);
         if (!usuarios) {
             res.json({ status:404, content:usuarios })            
         } else {
@@ -38,37 +38,27 @@ router.get('/unusuario', async (req,res) =>{
 });
 
 router.delete('/', async (req,res)=>{
-    //console.log(req.query.correo)
-    //console.log(req.params.correo)
-    //console.log('Se muestra el req para buscar el id')
-    //console.log(req.query)
-    await Usuarios.findByIdAndRemove(req.query._id);
-    res.json({ status:'200', answer:"Usuario eliminado" });
+    try {
+        await Usuarios.findOneAndDelete(req.query);
+        res.json({ status:'200', answer:"Usuario eliminado" });
+        
+    } catch (error) {
+        res.json({ status:400, content:error })
+    }
+
 });
 
 router.post('/', async (req, res) => {
     try {
         //console.log('Se mira el request')
-        //console.log(req)
+        console.log(req.body)
         const usuario = new Usuarios(req.body)
         await usuario.save();
-        res.json({ status:'200', answer:"Usuario Creado" });
-        
+        res.json({ status:'200', answer:"Usuario Creado" });        
     } catch (error) {
         res.json({ status:400, content:error })
     }
-    /*
-    bcrypt.hash(req.body.contrasena, 10, (err, hash) => { 
-        if (hash) {
-            dataUsuario.contrasena = hash
-            usuarios.create(dataUsuario)
-            .then(usuarios => { res.json({ status: usuarios.correo + ' Registrado' }) })
-            .catch(err => { res.send('No se puede crear el usuario') })
-
-        } else {
-            console.log("Error al crear")
-        }
-    })*/
+   
 });
 
 //Para actualizar los datos

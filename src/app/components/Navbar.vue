@@ -1,14 +1,11 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/"><img class="img-fluid" src="../../assets/telcoLogo.png" alt="Telco" style="max-height: 50px;"></a>
+    <a class="navbar-brand" href="/"><img class="img" src="../../assets/telcoLOGO.png" alt="Telco" style="max-height: 50px;"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar1" aria-controls="navbar1" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbar1">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <router-link class="nav-link" to="/">Inicio</router-link>
-        </li>
+      <ul class="navbar-nav mr-auto">        
         <li class="nav-item" routerLinkActive="active">
           <router-link class="nav-link" to="/">Nosotros</router-link>
           <!-- <a class="nav-link" [routerLink]="['about']">Nosotros</a> --> 
@@ -18,7 +15,7 @@
           <!-- <a class="nav-link" [routerLink]="['contact']" tabindex="-1">Contacto</a> --> 
         </li>
         <li v-if="auth==='user'" class="nav-item">
-          <router-link class="nav-link" to="/PanelUsuario">Panel Usuario</router-link>
+          <router-link class="nav-link" to="/PanelUsuario">Mi Proyecto</router-link>
         </li>
         <li v-if="auth==='admin'" class="nav-item">
           <router-link class="nav-link" to="/PanelAdmin">Panel Admin</router-link>

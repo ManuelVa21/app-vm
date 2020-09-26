@@ -3,7 +3,7 @@
         <div class="row">
                 
             <div class="col-2 col-with-right-border">
-                <SidebarAdmin></SidebarAdmin>
+                <SidebarAdmin style="position: sticky; top: 70px"></SidebarAdmin>
             </div>
             
             <div class="col-10">
@@ -24,31 +24,33 @@
                         filter-by="estado">
 <!-- Mostrar estado sugerencias-->
                         <template v-slot:estado="{item}">
-                            <template v-if="item.estado === 'Sin atender'">                                        
-                             <td class="bg-danger text-white"><b>Sin atender</b></td>                                        
+                            <template v-if="item.estado === 'Sin Atender'">                                        
+                             <td class="bg-danger text-white"><b>Sin Atender</b></td>                                        
                             </template>
                             <template v-else-if="item.estado === 'Atendiendo'">
-                             <td class="bg-warning text-white"><b> Atendiendo </b></td>
+                             <td style="background-color: #ff9800 ; color: white"><b> Atendiendo </b></td>
                             </template>     
                             <template v-else>
-                             <td class="bg-success text-white"><b> Atendido </b></td>
+                              <div class="pl-2">
+                              <td class="bg-success text-white"><b> Atendido </b></td>
+                              </div>
                             </template>                                                                    
                         </template> 
 <!-- Mostrar acciones "_id" solicitud -->
                         <template v-slot:_id="{item}">
-                            <template v-if="item.estado === 'Sin atender'">                                        
+                            <template v-if="item.estado === 'Sin Atender'">                                        
                                 <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
-                                    <button v-on:click="cambiarEstado(item._id,'Atendiendo')" type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Atendiendo"><i class="fas fa-spinner"></i></button>
+                                    <button v-on:click="cambiarEstado(item._id,'Atendiendo')" type="button" style="background-color: #ff9800" class="btn" data-toggle="tooltip" data-placement="top" title="Atendiendo"><i class="fas fa-spinner"></i></button>
                                     <button v-on:click="cambiarEstado(item._id,'Atendido')" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Atendido"><i class="fas fa-check"></i></button>                                            
                                 </div>                                        
                             </template>
                             <template v-else-if="item.estado === 'Atendiendo'">
-                                <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
+                                <div class="pl-3 btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
                                     <button v-on:click="cambiarEstado(item._id,'Atendido')" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Terminado"><i class="fas fa-check"></i></button>                                            
                                 </div>
                            </template>     
                            <template v-else>
-                                <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
+                                <div class="pl-3 btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
                                     <button v-on:click="eliminar(item._id)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i></button>                                            
                                 </div>
                            </template>                                                                    
@@ -72,6 +74,7 @@ import axios from 'axios'
 import VueyeTable from 'vueye-table'
 import VueToastr from 'vue-toastr'
 import SidebarAdmin from './SidebarAdmin.vue'
+const configG = require('../../../config')
 
 export default{
     data(){
@@ -103,21 +106,21 @@ export default{
                 //console.log(res.data.content);
                 this.sugerencias = res.data.content;                    
             })
-            .catch(error => { console.log('Error en get sugerencias',error); });
+            .catch(error => { this.$toastr.e("Error al obtener las sugerencias: "+ error) });
         },
         cambiarEstado: async function(id,info){
             console.log('Se va a cambiar el estado de la sugerencia')
-            await axios.put('/api/sugerencias/'+id,{estado: info },configG.headersDataBase)
+            await axios.put('/api/sugerencias/'+id,{estado: info },this.configG)
                 .then(res => { 
                     this.getSugerencias()
                     this.$toastr.s("Sugerencia atendida")
                     console.log(res)
                     })
-                .catch(error => { console.log('Error en cambiar estado',error); });
+                .catch(error => { this.$toastr.e("Error al cambiar estado: "+ error) });
         },
         eliminar: async function(id){
             //console.log('Se ingresa a eliminar sugerencia')
-            await axios.delete('/api/sugerencias?_id='+id, configG.headersDataBase)
+            await axios.delete('/api/sugerencias?_id='+id, this.configG)
             .then(res => { 
                 //console.log(res)
                 this.$toastr.s("Sugerencia eliminada")
