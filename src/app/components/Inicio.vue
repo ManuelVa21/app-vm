@@ -41,13 +41,6 @@ export default{
             .then(res => { 
                 //console.log('Se muestra la respuesta del axios de info usuario ',res.data.user)
                 localStorage.setItem('userInfo', JSON.stringify(res.data.user))
-                exec('sh src/scripts/CreateToken1.sh gestion gestion 123 ',
-                    (error, stdout, stderr) => {
-                        config.tokenOpenStack = stdout.replace('\r', '');
-                        console.log('el token es ',stdout);
-                        tokken = stdout;
-                    }
-                    );
                 window.location.replace('/')
                 })
             .catch(error => { console.log('Error en el axios del inicio ',error); });

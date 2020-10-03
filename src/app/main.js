@@ -17,7 +17,6 @@ Vue.use(VueToastr,{
 import Inicio from './components/Inicio.vue'
 import Login from './components/Login.vue'
 import Registrar from './components/Registrar.vue'
-import Pruebas from './components/Pruebas.vue'
 //Componentes Panel Usuario
 import PanelUsuario from './components/PanelUsuario/PanelUsuario.vue'
 import NotificacionesUsuario from './components/PanelUsuario/Notificaciones.vue'
@@ -43,8 +42,7 @@ import Sugerencias from './components/PanelAdmin/Sugerencias.vue'
 
 Vue.config.productionTip = false
 
-const routes = [
-  { name: 'Pruebas', path: '/Pruebas', component: Pruebas },
+const routes = [  
   { name: 'Inicio', path: '/', component: Inicio },
   { name: 'Login', path: '/Login', component: Login },
 //    RUTAS DEL USUARIO

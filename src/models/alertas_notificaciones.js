@@ -4,15 +4,10 @@ const Schema = mongoose.Schema;
 const alertas_notificaciones = new Schema({
     tipo: {type: String},
     fecha: {type: Date, default: Date.now},
-    descripcion: {type:String},
-    /*detalles: [{
-        disco_duro: {type:Number},
-        ram: {type:Number},
-        cpu: {type:Number},
-    }],*/
+    descripcion: {type:String},    
     estado: {type:String, default:"Sin Atender"},
-    usuario_destino: {type: String},
-    correo_usuario: {type: String}
+    usuario_destino: {type: String, default: "Administrador"},
+    correo_usuario: {type: String, default: "diegofernandov@unicauca.edu.co"}  //Poner el correo de Admin
 
 },{
     collection: 'alertas_notificaciones'

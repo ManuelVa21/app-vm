@@ -46,77 +46,7 @@
 
 <!-- Ver recursos solicitados -->               
                 <template v-slot:_id="{item}">                                                                                                                                 
-                    <button v-on:click="getUnaSolicitud(item._id)" class="btn-sm btn-primary" data-toggle="modal" data-target="#modalRecursos" data-placement="top" title="Ver y aceptar recursos"><i class="far fa-eye"></i></button>                                            
-                                                                   
-                    <div class="modal fade" id="modalRecursos" tabindex="-1" role="dialog" aria-labelledby="ModalRecursosLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header text-white bg-primary"> 
-                            <h5 class="modal-title modal-dark" id="modalID"><b>Información de la solicitud</b></h5>
-                            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                            </button>                                        
-                        </div>
-                        <div class="modal-body">
-                          <div class="container">
-                            <div class="row">
-                                <div class="col"> 
-                                <div style="text-align: center"> <b>Antiguos recursos</b></div>
-                                <hr> 
-                                    <label><b> Fecha Finalización: </b></label>
-                                    <label>{{PoolEditar.fecha_fin}}</label><br>
-                                    <label><b> # VM's: </b></label>
-                                    <label>{{PoolEditar.numero_vm}}</label><br> 
-                                    <label><b> RAM: </b></label>
-                                    <label>{{PoolEditar.ram}} Gb</label><br>
-                                    <label><b># VCPU: </b></label>
-                                    <label>{{PoolEditar.cpu}}</label><br>
-                                    <label><b> Almacenamiento: </b></label>
-                                    <label>{{PoolEditar.disco_duro}} Gb</label><br>                                            
-                                </div>  
-                                           
-                                <div class="col">
-                                <div style="text-align: center"> <b>Nuevos recursos</b></div>
-                                <hr>  
-                                    <label><b> Fecha Finalización: </b></label>
-                                    <label>{{solicitud.fecha_fin}}</label><br>
-                                    <label><b> # VM's: </b></label>
-                                    <label>{{solicitud.numvm}}</label><br> 
-                                    <label><b> RAM: </b></label>
-                                    <label>{{solicitud.ram}} Gb</label><br>
-                                    <label><b># VCPU: </b></label>
-                                    <label>{{solicitud.cpu}}</label><br>
-                                    <label><b> Almacenamiento: </b></label>
-                                    <label>{{solicitud.disco_duro}} Gb</label><br>
-                                </div>
-                            </div>                                             
-                          </div>                                         
-                        </div>
-                        <div class="modal-footer">
-
-                            <template v-if="solicitud.estado == 'Aceptada'">  
-                               <button class="btn btn-success" data-dismiss="modal" aria-label="Close">
-                                <b>Solicitud Aceptada</b>
-                               </button>
-                            </template>
-
-                            <template v-else-if="solicitud.estado == 'Rechazada'">  
-                               <button style="background-color: #ff9800 ; color: white" class="btn" data-dismiss="modal" aria-label="Close">
-                                <b>Solicitud Rechazada</b>
-                               </button>
-                            </template>
-                            
-                            <template v-else>
-                                <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
-                                <button v-on:click="confirmarSolicitud(solicitud._id)" type="button" class="btn btn-success" data-dismiss="modal" aria-label="Close"><b>Aceptar solicitud </b></button>
-                                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalCancelarSolicitud" data-dismiss="modal"> <b>Rechazar solicitud </b></button>                                            
-                                </div>
-                            </template> 
-
-                        </div>                                  
-                    </div>
-                   </div>
-                  </div>                                                                                                       
+                    <button v-on:click="getUnaSolicitud(item._id)" class="btn-sm btn-primary" data-toggle="modal" data-target="#modalRecursos" data-placement="top" title="Ver y aceptar recursos"><i class="far fa-eye"></i></button>                                                                                                                                               
                 </template>                              
 <!-- Acciones -->                                       
                 <template v-slot:acciones="{item}"> 
@@ -143,6 +73,76 @@
                 </template>       
               </VueyeTable>              
             </div>
+
+<!--MODAL VER RECURSOS SOLICITADOS --> 
+            <div class="modal fade" id="modalRecursos" tabindex="-1" role="dialog" aria-labelledby="ModalRecursosLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                
+                <div class="modal-header text-white bg-primary"> 
+                    <h5 class="modal-title modal-dark" id="modalID"><b>Información de la solicitud</b></h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>                                        
+                </div>
+
+                <div class="modal-body">
+                  <div class="container">
+                    <div class="row">
+                        <div class="col"> 
+                        <div style="text-align: center"> <b>Antiguos recursos</b></div>
+                        <hr> 
+                            <label><b> Fecha Finalización: </b></label>
+                            <label>{{poolEditar.fecha_fin}}</label><br>
+                            <label><b> # VM's: </b></label>
+                            <label>{{poolEditar.numero_vm}}</label><br> 
+                            <label><b> RAM: </b></label>
+                            <label>{{poolEditar.ram}} Gb</label><br>
+                            <label><b># VCPU: </b></label>
+                            <label>{{poolEditar.cpu}}</label><br>
+                            <label><b> Almacenamiento: </b></label>
+                            <label>{{poolEditar.disco_duro}} Gb</label><br>                                            
+                        </div>  
+                                   
+                        <div class="col">
+                        <div style="text-align: center"> <b>Nuevos recursos</b></div>
+                        <hr>  
+                            <label><b> Fecha Finalización: </b></label>
+                            <label>{{solicitud.fecha_fin}}</label><br>
+                            <label><b> # VM's: </b></label>
+                            <label>{{solicitud.numvm}}</label><br> 
+                            <label><b> RAM: </b></label>
+                            <label>{{solicitud.ram}} Gb</label><br>
+                            <label><b># VCPU: </b></label>
+                            <label>{{solicitud.cpu}}</label><br>
+                            <label><b> Almacenamiento: </b></label>
+                            <label>{{solicitud.disco_duro}} Gb</label><br>
+                        </div>
+                    </div>                                             
+                  </div>                                         
+                </div>
+
+                <div class="modal-footer">
+                    <template v-if="solicitud.estado == 'Aceptada'">  
+                       <button class="btn btn-success" data-dismiss="modal" aria-label="Close">
+                        <b>Solicitud Aceptada</b>
+                       </button>
+                    </template>
+                    <template v-else-if="solicitud.estado == 'Rechazada'">  
+                       <button style="background-color: #ff9800 ; color: white" class="btn" data-dismiss="modal" aria-label="Close">
+                        <b>Solicitud Rechazada</b>
+                       </button>
+                    </template>                            
+                    <template v-else>
+                        <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
+                        <button v-on:click="confirmarSolicitud(solicitud._id)" type="button" class="btn btn-success" data-dismiss="modal" aria-label="Close"><b>Aceptar solicitud </b></button>
+                         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalCancelarSolicitud" data-dismiss="modal"> <b>Rechazar solicitud </b></button>                                            
+                        </div>
+                    </template> 
+                </div>                                  
+            </div>
+            </div>
+            </div> 
 <!--MODAL cancelar solicitud  -->  
             <div class="modal fade" id="ModalCancelarSolicitud" tabindex="-1" role="dialog" aria-labelledby="ModalCancelarSolicitud" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -217,9 +217,24 @@ export default {
 
     data(){
         return{
+
+        configOS:{
+            headers:{
+            'User-Agent': 'python-keystoneclient',
+            'X-Auth-Token':Token,
+            'Access-Control-Allow-Origin': '10.55.6.39',
+            'Access-Control-Allow-Credentials':'true',
+            'Access-Control-Expose-Headers': 'Authorization',
+            'Access-Control-Max-Age':'86400',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-OpenStack-Nova-API-Version': '2.1' 
+            }
+        },
+
             solicitudes:[],
             solicitud:[],
-            PoolEditar:[],
+            poolEditar:[],
             columns:[              
                 {key: "usuario", label: "Usuario", display: true, sortable: true},
                 {key: "correo", label: "Correo usuario", display: true},
@@ -239,7 +254,7 @@ export default {
     },
     methods:{
         getSolicitudes: async function(){
-            let tipo = 'Pool de Recursos'   //  OJOOOOOOOOOO cambiar a aumento de recursos
+            let tipo = 'Aumento Pool de Recursos'   //  OJOOOOOOOOOO cambiar a aumento de recursos
             await axios.get('/api/solicitudes?tipo='+tipo)            
             .then(res => {
                 this.solicitudes = res.data.content;                
@@ -250,26 +265,25 @@ export default {
         getUnaSolicitud: async function(id){
             await axios.get('/api/solicitudes/unasolicitud?_id='+id)            
             .then(res => {
-                this.solicitud = res.data.content;   
-                this.getPool(this.solicitud.correo); 
+                this.solicitud = res.data.content;                
+                //console.log(this.solicitud)
+                this.getPool(); 
                 //console.log(this.solicitud);
             })            
             .catch(error => { this.$toastr.e("Error al obtener una solicitud: " + error )});
         },
 
 // Obtener el Pool de recursos actual, para comparar con la nueva solicitud
-        getPool: async function(correoUsuario){
-            console.log('Se muestra el info en getpool ',correoUsuario)
-            await axios.get('/api/pool_recursos/unpool?emailPropietario='+correoUsuario)
+        getPool: async function(){
+            console.log('Se muestra el info en getpool ',this.solicitud.correo)
+             //await axios.get('/api/alertas_notificaciones?correo_usuario='+correo+'&estado=Sin Atender')
+            await axios.get('/api/pool_recursos/unpool?emailPropietario='+this.solicitud.correo)
             .then(res => {
-            if (res.data.status == '404' || res.data.status == '400') {
-                this.$toastr.e("Error al obtener el pool de recursos, error: " + res.data.status )                   
-            }
-            else{
-                this.PoolEditar = res.data.content;              
-            }                    
+                this.poolEditar = res.data.content;
+                //console.log(poolEditar);                                
             })
             .catch(error => { 
+                console.log(error),
                 this.$toastr.e("Error al obtener el pool de recursos " + error )                    
             });          
         }, 
@@ -280,8 +294,8 @@ export default {
             if (respuesta == true)
             {
     //Se fija la Quota en OpenStack y se actualizan los recursos en la BD
-                await this.setQuota(this.PoolEditar.id_openstack)
-                await this.aceptarAumento(this.PoolEditar._id)                
+                await this.setQuota(this.poolEditar.id_openstack)
+                await this.aceptarAumento(this.poolEditar._id)                
                 this.solicitud.estado = "Aceptada"
                 await this.cambiarEstado(this.solicitud._id)
                 this.solicitud.motivo = "Solicitud de AUMENTO de pool recursos asignado a su proyecto: "+ this.solicitud.nombre_proyecto

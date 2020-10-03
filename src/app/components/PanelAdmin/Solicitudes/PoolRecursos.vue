@@ -19,9 +19,9 @@
         <!--<div class="btn-group btn-group-lg" style="display: flex; align-items: center;">   
             <button @click="$router.push('/PanelAdmin/Solicitudes/AumentoPool')" class="btn btn-outline-info">Aumento de recursos</button>
             <button @click="$router.push('/PanelAdmin/Solicitudes/Backup')" class="btn btn-outline-info ">Backup</button>
-        </div> -->
+        </div> 
 
-        <button @click="prueba()"  type="button" class="btn btn-success"> </button>
+        <button @click="prueba()"  type="button" class="btn btn-success"> </button>-->
 
  <!-- TABLA SOLICITUDES -->        
         <div class="table-responsive">
@@ -55,13 +55,14 @@
                
                 <template v-if="item.estado == 'Aceptada'">  
                  <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
-                    <button @click="eliminarSolicitud(item._id)" type="button" class="btn btn-danger ml-3" data-toggle="tooltip" data-placement="top" title="eliminar solicitud"><i class="fas fa-trash"></i></button>                                            
+                    <button v-on:click="getUnaSolicitud(item._id)" type="button" class="btn btn-danger ml-3" data-toggle="modal"  data-target="#ModalDeleteSolicitud" data-placement="top" title="Eliminar solicitud"><i class="fas fa-trash"></i></button>                                            
                  </div>
                 </template>
 
                 <template v-else-if="item.estado == 'Rechazada'" style="text-align: center">  
-                 <div class="pl-3">                                                                                                                                     
+                 <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                                                     
                     <button v-on:click="getUnaSolicitud(item._id)" type="button" class="btn-sm btn-info" data-toggle="modal" data-target="#ModalMotivoRechazo" data-placement="top" title="Motivo rechazo"><i class="fas fa-question-circle"></i></button>                                            
+                    <button v-on:click="getUnaSolicitud(item._id)" type="button" class="btn-sm btn-danger" data-toggle="modal"  data-target="#ModalDeleteSolicitud" title="Eliminar solicitud"><i class="fas fa-trash"></i></button>                                            
                  </div>
                 </template>
 
@@ -98,18 +99,18 @@
                      <div class="col">
                        <label><b> RAM:</b> </label>
                             <span class="font-weight-bold text-primary">{{solicitud.ram}} (Gb)</span>
-                            <input v-model="solicitud.ram" type="range"  min="1" max="20">  <br>                                          
+                            <input v-model="solicitud.ram" type="range"  min="1" max="100">  <br>                                          
                        <label><b> Disco duro: </b></label>
                             <span class="font-weight-bold text-primary">{{solicitud.disco_duro}} (Gb)</span>
-                            <input v-model="solicitud.disco_duro" type="range"  min="1" max="200">  <br>                                          
+                            <input v-model="solicitud.disco_duro" type="range"  min="1" max="1000">  <br>                                          
                         <label><b> CPU: </b></label>
                             <span class="font-weight-bold text-primary">{{solicitud.cpu}} (Vcpu)</span>
-                            <input v-model="solicitud.cpu" type="range"  min="1" max="20">  <br>                                          
+                            <input v-model="solicitud.cpu" type="range"  min="1" max="100">  <br>                                          
                     </div>
                     <div class="col"> 
                         <label><b> Número de VM's: </b></label>
                             <span class="font-weight-bold text-primary">{{solicitud.numvm}}</span>
-                            <input v-model="solicitud.numvm" type="range"  min="1" max="10">  <br> 
+                            <input v-model="solicitud.numvm" type="range"  min="1" max="20">  <br> 
                         <label><b> Cat Usuario: </b></label><br>
                         <label>{{solicitud.catUsuario}}</label><br>                        
                         <label><b> Fecha Finalización: </b></label><br>
@@ -124,7 +125,7 @@
                 </div>                                   
                 </div>                                         
             </div>                        
-<!-- Mostrar el footer del Modal segun el estado de la solicitud -->
+        <!-- Mostrar el footer del Modal segun el estado de la solicitud -->
             <div class="modal-footer">
                 <template v-if="solicitud.estado == 'Aceptada'">  
                    <button class="btn btn-success" data-dismiss="modal" aria-label="Close">
@@ -297,6 +298,31 @@
         </div>
         </div>
         </div>
+<!--MODAL confirmar eliminas solicitud  Sólo se muestra cuando la solicitud está rechazada o aceptada-->
+        <div class="modal fade bg-modal" id="ModalDeleteSolicitud" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            
+            <div class="modal-header text-white bg-primary">
+                   <div class="modal-title"><b>Eliminar solicitud:</b></div>
+                   <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">&times;</span> </button>
+            </div>
+            
+            <div class="modal-body">                                  
+                
+                  
+                <div class="text-center">
+                    <p>Al eliminar la solicitud se perderá el registro de la misma.</p>
+                    <p>    ¿Está seguro de eliminar la solicitud?</p> 
+                    <button class="btn font-weight-bold btn-success" data-dismiss="modal">Cancelar</button>
+                    <button @click="eliminarSolicitud(solicitud._id)" class="btn font-weight-bold btn-danger" data-dismiss="modal">Eliminar</button>
+                </div>
+
+            </div>
+        </div>
+        </div>
+        </div>
             
     </div> 
     </div>
@@ -387,7 +413,7 @@ export default {
         'SidebarAdmin': SidebarAdmin,
     },
     methods:{
-//Funciones para obtener solicitudes
+//OBTENER solicitudes
         getSolicitudes: async function(){
             let tipo = 'Pool de Recursos'
             await axios.get('/api/solicitudes?tipo='+tipo)            
@@ -399,58 +425,11 @@ export default {
         getUnaSolicitud: async function(id){
             await axios.get('/api/solicitudes/unasolicitud?_id='+id)            
             .then(res => {
-                this.solicitud = res.data.content;    
+                this.solicitud = res.data.content;                                    
             })            
             .catch(error => { this.$toastr.e("Error al obtener el usuario " + error) });
         },
-//Funciones para añadir un proyecto a VMWARE
-        getServidoresVMware: async function (){
-            await axios.get('/api/recursos_telco')
-            .then(res => {                
-               this.servidoresVMware = res.data.content; 
-            })
-            .catch(error => { this.$toastr.e("Error al obtener los recursos de VMware: " + error ) });        
-            if (this.servidoresVMware.length == 0 )
-            {this.$toastr.i("No tiene servidores en VMware")}
-        },
-    //Verificar si hay recursos disponibles en el servidor VMWARE
-        verificarRecursos: async function(servidorVMware){    
-            if( (servidorVMware.disco_duro_blade - servidorVMware.disco_duro_uso) > this.solicitud.disco_duro &&
-                (servidorVMware.ram_blade - servidorVMware.ram_blade_uso) > this.solicitud.ram &&
-                (servidorVMware.cpu_blade + (servidorVMware.cpu_blade*(servidorVMware.sobreasignacion_cpu/100)) - servidorVMware.cpu_blade_uso) > this.solicitud.cpu )
-            {
-                console.log("Recursosdisponibles")
-                this.solicitud.servidor_ubicacion = "VMware"
-                let id_pro = servidorVMware.direccion_ip
-                this.createPool(id_pro,this.solicitud) //Crear el pool en la BD
-                this.createUsuario(this.solicitud) //Crear el usuario en el BD
-
-                let addRecursosUso = {
-                    "_id" : servidorVMware._id,
-                    "disco_duro_uso" : servidorVMware.disco_duro_uso + this.solicitud.disco_duro,
-                    "ram_blade_uso" : servidorVMware.ram_blade_uso + this.solicitud.ram,
-                    "cpu_blade_uso" : servidorVMware.cpu_blade_uso + this.solicitud.cpu,
-                    "numero_vm" : servidorVMware.numero_vm + this.solicitud.numvm,
-                }
-                this.solicitud.estado = "Aceptada"
-                this.cambiarEstado(this.solicitud._id)
-                this.editarServidor(addRecursosUso)
-                
-            }
-            else{
-                this.$toastr.w("El servidor seleccionado no tiene recursos disponibles")
-            }
-        },
-    //Al aceptar el proyecto en VMware se actualizan los recursos
-        editarServidor: async function(addRecursosUso){ 
-            await axios.put('/api/recursos_telco',addRecursosUso)
-            .then(res => { 
-                this.$toastr.s("Pool Creado y recursos disponibles actualizados")
-                $('#ModalServidoresVMware').modal('hide') 
-            })
-            .catch(error => { this.$toastr.e("Error al actualizar el servidor:" + error) });
-        },
-//Acciones
+//RECHAZAR y ELIMINAR LA SOLICITUD
         eliminarSolicitud: async function(_id){
             await axios.delete('/api/solicitudes?_id='+_id)
             .then(res => { 
@@ -474,10 +453,56 @@ export default {
             }           
             
         },
-    //Aceptar POOL en OpenStack
+//AÑADIR un proyecto a VMWARE
+        getServidoresVMware: async function (){
+            await axios.get('/api/recursos_telco')
+            .then(res => {                
+               this.servidoresVMware = res.data.content; 
+            })
+            .catch(error => { this.$toastr.e("Error al obtener los recursos de VMware: " + error ) });        
+            if (this.servidoresVMware.length == 0 )
+            {this.$toastr.i("No tiene servidores en VMware")}
+        },
+    //Verificar si hay recursos disponibles en el servidor VMWARE
+        verificarRecursos: async function(servidorVMware){    
+            if( (servidorVMware.disco_duro_blade - servidorVMware.disco_duro_uso) > parseInt(this.solicitud.disco_duro) &&
+                (servidorVMware.ram_blade - servidorVMware.ram_blade_uso) > parseInt(this.solicitud.ram) &&
+                (servidorVMware.cpu_blade + (servidorVMware.cpu_blade*(servidorVMware.sobreasignacion_cpu/100)) - servidorVMware.cpu_blade_uso) > parseInt(this.solicitud.cpu) )
+            {
+                //console.log("Recursosdisponibles")
+                this.solicitud.servidor_ubicacion = "VMware"
+                let id_openstack = servidorVMware.direccion_ip               
+                this.createPool(id_openstack,this.solicitud) //Crear el pool en la BD
+                this.createUsuario(this.solicitud) //Crear el usuario en el BD
+
+                let addRecursosUso = {
+                    "_id" : servidorVMware._id,
+                    "disco_duro_uso" : servidorVMware.disco_duro_uso + parseInt(this.solicitud.disco_duro),
+                    "ram_blade_uso" : servidorVMware.ram_blade_uso + parseInt(this.solicitud.ram),
+                    "cpu_blade_uso" : servidorVMware.cpu_blade_uso + parseInt(this.solicitud.cpu),
+                    "numero_vm" : servidorVMware.numero_vm + parseInt(this.solicitud.numvm),
+                }
+                this.solicitud.estado = "Aceptada"
+                this.cambiarEstado(this.solicitud._id)
+                this.editarServidorVMware(addRecursosUso)
+                
+            }
+            else{
+                this.$toastr.w("El servidor seleccionado no tiene recursos disponibles")
+            }
+        },
+    //Al aceptar el proyecto en VMware se actualizan los recursos
+        editarServidorVMware: async function(addRecursosUso){ 
+            await axios.put('/api/recursos_telco',addRecursosUso)
+            .then(res => { 
+                this.$toastr.s("Pool Creado y recursos disponibles actualizados")
+                $('#ModalServidoresVMware').modal('hide') 
+            })
+            .catch(error => { this.$toastr.e("Error al actualizar el servidor:" + error) });
+        },
+//Aceptar POOL en OpenStack
         aceptarPoolOpenStack: async function(info){
-            info.servidor_ubicacion = "OpenStack"
-            
+            info.servidor_ubicacion = "OpenStack"            
             this.$toastr.i("Se está creando el proyecto y asignando el pool de recursos, por favor espere!!")     
             await this.createProyecto(info) //crea el proyecto en openstack
             await this.createUsuario(info)
@@ -497,8 +522,7 @@ export default {
                 correo_tutor: this.solicitud.correo_tutor,
                 pool_asociado: this.solicitud.nombre_proyecto })
             .then(res => { this.$toastr.s("Usuario y Pool de recursos asignado")})
-            .catch(error => { this.$toastr.e("Error al crear el usuario' " + error);  });
-            
+            .catch(error => { this.$toastr.e("Error al crear el usuario' " + error);  });            
         },
 // AÑADIR EL PROYECTO A OpenStack
         createProyecto: async function(info){           
@@ -509,16 +533,16 @@ export default {
                     "description": info.descripcion, 
                     "name": info.nombre_proyecto
                 }
-            };
+            };            
             await axios.post('http://'+configG.ipOpenstack+'/identity/v3/projects',data,this.configOS)
                 .then(res => {
                     //console.log('Se muestra la respuesta despues de crear el proyecto') 
                     //console.log(res)
                     if (res.status == '201') {
+                        this.createPool(res.data.project.id,info)
                         this.setQuota(res.data.project.id,info);
                         this.createUser(res.data.project.id,info)
-                        this.createNetwork(res.data.project.id,info)
-                        this.createPool(res.data.project.id,info)
+                        this.createNetwork(res.data.project.id,info)                        
                         this.$toastr.i("El proyecto y el pool de recursos se ha creado correctamente")
                     } else { this.$toastr.e("Error al crear el proyecto: "+ res.status)}
                     })
@@ -528,9 +552,9 @@ export default {
             //Se recibe el id y la información de la quota
             let data={
                 "quota_set":{
-                    "instances": info.numvm, 
-                    "ram": (info.ram*1024), 
-                    "cores": info.cpu
+                    "instances": parseInt(info.numvm), 
+                    "ram": parseInt((info.ram*1024)), 
+                    "cores": parseInt(info.cpu)
                 }
             };
             await axios.put('http://'+configG.ipOpenstack+'/compute/v2.1/os-quota-sets/'+id_project,data,this.configOS)
@@ -542,8 +566,8 @@ export default {
             let data={
                 "user":{
                     //"default_project_id" : id_project,
-                    //"description" : 'Usuario del proyecto: '+id_project,
-                    //"email" : info.correo,
+                    "description" : 'Usuario del proyecto: '+ info.nombre_proyecto,
+                    "email" : info.correo,
                     "enable" : true,
                     "name" : info.nombre_proyecto,
                     "password" : info.contrasenap,
@@ -559,12 +583,6 @@ export default {
             .catch(error => { this.$toastr.e("Error al crear el usuario en OpenStack' " + error )});
         },
         roleAdd: async function(id_project,id_user){
-            
-            console.log('se ingresa a roleAdd, se muestra id_project e id_user')
-            console.log(id_project)
-            console.log(id_user)
-            //console.log(id_project)
-            //console.log(id_user)
             //http://10.55.2.24/identity/v3/projects/{id proyecto}/users/{id usuario creado}/roles/{id role member}
             //http://10.55.2.24/identity/v3/projects/d4e480ee2284481b9bb7db926ba7cfb1/users/9ba3f2cf490b44a6aafe6d09deaac518/roles/e6dfb94eb95542a0b415279abe461aab
             await axios.put('http://'+configG.ipOpenstack+'/identity/v3/projects/'+id_project+'/users/'+id_user+'/roles/'+configG.roleMember,this.configUserAddRole)
@@ -572,7 +590,7 @@ export default {
             })
             .catch(error => { 
                 console.log('error al añadir el Rol')
-                console.log(error)
+                //console.log(error)
                 $('#ModalAddRol').modal('show')
                 
             });
@@ -666,26 +684,28 @@ export default {
             .catch(error => { this.$toastr.e("Error en routerSet' " + error);  });
         },
 // AÑADIR POOL a la base de datos
-        createPool: async function(id_pro,info){
+        createPool: async function(id_openstack,info){
             //console.log("se ingresa a crear el pool")
-            //console.log(info)
+            //console.log(parseInt(info.cpu))
             await axios.post('/api/pool_recursos',{
-                id_openstack: id_pro,
+                id_openstack: id_openstack,
                 nombre_proyecto: info.nombre_proyecto,
                 servidor_ubicacion: info.servidor_ubicacion,
                 contrasena: info.contrasenap,
                 descripcion: info.descripcion,
                 propietario: info.usuario,
                 emailPropietario: info.correo,
-                numero_vm: info.numvm,
-                disco_duro: info.disco_duro,
-                ram: info.ram,
-                cpu: info.cpu,
+                numero_vm: parseInt(info.numvm),
+                disco_duro: parseInt(info.disco_duro),
+                ram: parseInt(info.ram),
+                cpu: parseInt(info.cpu),
                 fecha_fin: info.fecha_fin
             },this.config)
-                .then(res => { //console.log(res)
+                .then(res => { console.log(res)
                  })
-                .catch(error => { this.$toastr.e("Error al añadir el Pool a la base de datos' " + error);  });
+                .catch(error => { 
+                    console.log(error)
+                    this.$toastr.e("Error al añadir el Pool a la base de datos' " + error);  });
         },
         cambiarEstado: async function(id){
             console.log('Se va a cambiar el estado de la solicitud')

@@ -76,11 +76,11 @@
           filter-by="nombre">
 
                 <template v-slot:_id="{item}">
-                    <div class="btn-group btn-sm" role="group">
+                    <div class="btn-group-sm" role="group">
            
                       <button @click="getOneUser(item._id)" class="btn-sm btn-success" data-toggle="modal" data-target="#modalRecursos" data-placement="top" title="Editar Usuario"><i class="fas fa-edit"></i></button>                                            
                       <button @click="getOneUser(item._id)" class="btn-sm btn-info" data-toggle="modal" data-target="#ModalSendNotificacion" data-placement="top" title="Enviar notificación"><i class="fas fa-envelope"></i></button>
-     
+                   <!--  <button @click="eliminarUsuario(item._id)" class="btn-sm btn-danger" data-placement="top" title="Eliminar usuario"><i class="fas fa-trash"></i></button>  -->
                     </div>                                                                                                       
                 </template>                                           
                                                 
@@ -214,26 +214,6 @@ export default{
         VueyeTable
     },
    methods:{
-       //CREAR nuevo usuario   
-        
-        addUser: async function(){ 
-            let info={
-                    "nombre": this.usuario.nombre, 
-                    "correo": this.usuario.correo,
-                    "categoria_us": this.usuario.categoria_us,
-                    "pool_asociado": this.usuario.pool_asociado
-            };
-            //console.log('Se ingresa crear usuario')
-            //console.log(info)
-            await axios.post('/api/usuarios',info,this.config)
-            .then(res => { 
-                this.$toastr.s("El usuario: "+ this.usuario.nombre +" fue creado correctamente")
-                   
-                //console.log(res)
-            })
-            .catch(error => { this.$toastr.e("Error al crear el nuevo usuario: " + error)});
-            this.getUsuarios();     
-        },
 //Se obtienen los Usuarios       
        getUsuarios: async function(){            
             await axios.get('/api/usuarios')
@@ -273,6 +253,65 @@ export default{
                         this.usuario.categoria_us = '',
                         this.usuario.pool_asociado = '',
                     ];
+        }, 
+//   ENVIAR UNA NOTIFICACION
+        sendNotificacion: async function(usuario,notificacion){
+            //console.log('Se ingresa a send notificación')
+            await axios.post('/api/alertas_notificaciones',{
+                tipo: "Notificación",
+                descripcion: notificacion.descripcion,
+                usuario_destino: usuario.nombre,
+                correo_usuario: usuario.correo
+                }, configG.headersDataBase)
+                .then(res => {
+                    this.enviarCorreo ()                                        
+                })
+                .catch(error => { this.$toastr.e("Error al enviar notificación a la aplicación: "+ error) });
+        }, 
+
+        enviarCorreo: async function(){
+            await axios.post('/api/enviar_correo',{
+                mensaje: this.notificacion.descripcion,
+                correo_usuario: this.usuario.correo
+                })
+                .then(res => {
+                    this.$toastr.s("Notificación enviada al usuario: "+ this.usuario.nombre)
+                    this.limpiarUsuario()                   
+                    })
+                .catch(error => { 
+                    //console.log('Error en sendNotificacion ',error);
+                    this.$toastr.e("Error al enviar el correo: "+ error)
+                    //console.log(error) 
+                });                                        
+        }, 
+//FUNCIONES DE PRUEBA
+//CREAR nuevo usuario   
+        
+        addUser: async function(){ 
+            let info={
+                    "nombre": this.usuario.nombre, 
+                    "correo": this.usuario.correo,
+                    "categoria_us": this.usuario.categoria_us,
+                    "pool_asociado": this.usuario.pool_asociado
+            };
+            //console.log('Se ingresa crear usuario')
+            //console.log(info)
+            await axios.post('/api/usuarios',info,this.config)
+            .then(res => { 
+                this.$toastr.s("El usuario: "+ this.usuario.nombre +" fue creado correctamente")
+                   
+                //console.log(res)
+            })
+            .catch(error => { this.$toastr.e("Error al crear el nuevo usuario: " + error)});
+            this.getUsuarios();     
+        },
+//Delete usuario
+        eliminarUsuario: async function (id){
+            await axios.delete('/api/usuarios?_id='+id)            
+            .then(res => {this.$toastr.s("Usuario eliminado")
+            this.getUsuarios();
+            })            
+            .catch(error => { this.$toastr.e("Error al eliminar el usuario: " + error )});
         },
         validarForm: async function(){
             if(this.usuario.nombre && this.usuario.correo && 
@@ -304,37 +343,9 @@ export default{
                 
             }
           
-        },
-//   ENVIAR UNA NOTIFICACION
-        sendNotificacion: async function(usuario,notificacion){
-            //console.log('Se ingresa a send notificación')
-            await axios.post('/api/alertas_notificaciones',{
-                tipo: "Notificación",
-                descripcion: notificacion.descripcion,
-                usuario_destino: usuario.nombre,
-                correo_usuario: usuario.correo
-                }, configG.headersDataBase)
-                .then(res => {
-                    this.enviarCorreo ()                                        
-                })
-                .catch(error => { this.$toastr.e("Error al enviar notificación a la aplicación: "+ error) });
-        }, 
+        }
 
-        enviarCorreo: async function(){
-            await axios.post('/api/enviar_correo',{
-                mensaje: this.notificacion.descripcion,
-                correo_usuario: this.usuario.correo
-                })
-                .then(res => {
-                    this.$toastr.s("Notificación enviada al usuario: "+ this.usuario.nombre)
-                    this.limpiarUsuario()                   
-                    })
-                .catch(error => { 
-                    //console.log('Error en sendNotificacion ',error);
-                    this.$toastr.e("Error al enviar el correo: "+ error)
-                    //console.log(error) 
-                });                                        
-        }, 
+
    }
 }
 </script>

@@ -29,10 +29,13 @@
                     <template v-if="item.estado == 'Activo'">  
                         <td class="bg-success font-weight-bold text-white">Activo</td>   
                     </template>
+                    <template v-else-if="item.estado == 'Revisar'">
+                         <td class="bg-danger font-weight-bold text-white">Revisar</td>
+                    </template>
                     <template v-else-if="item.estado == 'Inactivo'">
-                         <td class="bg-danger font-weight-bold text-white">Inactivo</td>
-                     </template>                                                                
-                 </template> 
+                        <td style="background-color: #ff9800 ; color: white"><b>Inactivo</b></td>
+                    </template>                                                                
+                 </template>
 <!-- Ver hypervisor e id -->
 
                 <template v-slot:servidor_ubicacion="{item}"> 
@@ -51,14 +54,51 @@
                 </template>
 
 <!-- Acciones -->
-                <template v-slot:_id="{item}"> 
-                    <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
-                         <button @click="getOnePool(item)" type="button" class="btn btn-danger ml-3" data-toggle="modal" data-target="#ModalConfirmarEliminar" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i></button>                                                        
-                    </div>
+                <template v-slot:_id="{item}">
+
+                    <template v-if="item.estado == 'Inactivo'">
+                        <div class="btn-group-sm" role="group" aria-label="Basic example">
+                            <button @click="getOnePool(item)" type="button" class="btn-sm btn-danger" data-toggle="modal" data-target="#ModalConfirmarEliminar" data-placement="top" title="Eliminar proyecto"><i class="fas fa-trash"></i></button>                                                      
+                            <button @click="getOnePool(item)" type="button" class="btn-sm btn-info" data-toggle="modal" data-target="#ModalCambiarEstado" data-placement="top" title="Cambiar estado"><i class="fas fa-edit"></i></button> 
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
+                            <button @click="getOnePool(item)" type="button" class="btn-sm btn-info ml-3" data-toggle="modal" data-target="#ModalCambiarEstado" data-placement="top" title="Cambiar estado"><i class="fas fa-edit"></i></button> 
+                          <!--  <button @click="getOnePool(item)" type="button" class="btn-sm btn-danger " data-toggle="modal" data-target="#ModalConfirmarEliminar" data-placement="top" title="Eliminar proyecto"><i class="fas fa-trash"></i></button>  -->
+                        
+                        </div>
+                    </template>  
+                    
                 </template>
 
             </VueyeTable>
             </div>  
+
+
+<!--MODAL Cambiar Estado del proyecto -->  
+        
+        <div class="modal fade bg-modal" id="ModalCambiarEstado" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-white bg-primary">
+                   <div class="modal-title"><b>¿Está seguro de cambiar el estado de este proyecto?</b></div>
+                   <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">&times;</span> </button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="text-justify">
+                    <p>* Recuerde que al desactivar los proyectos, se libera la CPU y RAM pero no el almacenamiento. Para liberar los recursos debe eliminar el proyecto.</p>
+                    <p>* Si el proyecto está en VMware, al desactivar el proyecto, diríjase al servidor correspondiente utilizando el vSphere client y apague las VM's. </p> 
+                    <p>* Por su parte si el proyecto está en OpenStack, se desactiva el proyecto y el usuario no podrá acceder a el.</p>
+                </div>
+                <button  class="btn font-weight-bold btn-success " data-dismiss="modal">cancelar</button>
+                <button  @click="desactivarProyecto()" class="btn font-weight-bold btn-danger" data-dismiss="modal">DESACTIVAR</button>
+            
+            </div>
+        </div>
+        </div>
+        </div>
 <!--MODAL Confirmar eliminar  -->  
         
         <div class="modal fade bg-modal-sm" id="ModalConfirmarEliminar" tabindex="-1" role="dialog" aria-hidden="true">
@@ -225,8 +265,80 @@ export default {
         getOnePool: async function(item){
             await axios.get('/api/pool_recursos/unpool?_id='+item._id)
                 .then(res => {
-                    this.project = res.data.content;})
+                    this.project = res.data.content;
+                    this.project.fecha_fin = new Date (this.project.fecha_fin)
+                    this.project.fecha_fin = this.project.fecha_fin.toLocaleDateString()
+                    console.log(this.project)
+                    })
                 .catch(error => { this.$toastr.e("Error al cargar el pool de recursos " + error) });                
+        },
+//Cambiar ESTADO
+        desactivarProyecto: async function(){
+            if (this.project.servidor_ubicacion == "OpenStack"){
+            //Se desactiva el proyecto en openstack
+                console.log("desactivar Openstack");                
+                if(this.project.estado == "Activo"){
+                    let data={
+                        "project": {                       
+                            "enabled": false }};
+                    let cambioEstado = "Inactivo"
+                     await axios.patch('http://'+configG.ipOpenstack+'/identity/v3/projects/'+this.project.id_openstack,data,this.config)
+                    .then(res => {                   
+                       console.log(res)
+                       this.$toastr.s("Se cambió el estado en OpenStack")                       
+                       this.cambiarEstado(cambioEstado);                                     
+                    })
+                    .catch(error => { this.$toastr.e("Error al Desactivar el proyecto " + error)});
+                }
+                else{                    
+                    let data={
+                        "project": {                       
+                            "enabled": true }};
+                    let cambioEstado = "Activo"
+                     await axios.patch('http://'+configG.ipOpenstack+'/identity/v3/projects/'+this.project.id_openstack,data,this.config)
+                    .then(res => {                   
+                       console.log(res)
+                       this.$toastr.s("Se cambió el estado en OpenStack")                       
+                       this.cambiarEstado(cambioEstado);                                     
+                    })
+                    .catch(error => { this.$toastr.e("Error al Desactivar el proyecto " + error)});
+                }
+               
+            }
+            else {
+                await this.getServidorVMware ();
+                
+                if(this.project.estado == "Activo"){
+                    let actualizarRecursos = {
+                        "_id" : this.servidorVMware._id,
+                        "ram_blade_uso" : this.servidorVMware.ram_blade_uso - this.project.ram,
+                        "cpu_blade_uso" : this.servidorVMware.cpu_blade_uso - this.project.cpu,
+                    }
+                    let cambioEstado = "Inactivo"
+                    this.liberarRecursosVMware(actualizarRecursos); 
+                    this.cambiarEstado(cambioEstado);
+                }
+                else{                    
+                    let actualizarRecursos = {
+                        "_id" : this.servidorVMware._id,
+                        "ram_blade_uso" : this.servidorVMware.ram_blade_uso + this.project.ram,
+                        "cpu_blade_uso" : this.servidorVMware.cpu_blade_uso + this.project.cpu,
+                    }
+                    let cambioEstado = "Activo"
+                    this.liberarRecursosVMware(actualizarRecursos); 
+                    this.cambiarEstado(cambioEstado);
+                }               
+                
+                
+                //actualizar recursos VMware
+            }
+            
+        },
+        cambiarEstado: async function(cambioEstado){
+            await axios.put('/api/pool_recursos/',{_id: this.project._id ,estado: cambioEstado})
+            .then(res => {this.getPools()})
+            .catch(error => { console.log('Error en cambiar estado',error); 
+            });
         },
     //Se verifica si el proyecto está en VMware u OpenStack
     //para realizar el proceso de eliminación
@@ -239,7 +351,15 @@ export default {
                 }
             else
             {
-                this.getServidorVMware (); // Se actualiza la información del servidor donde se encuentra el poryecto
+                await this.getServidorVMware (); // Se actualiza la información del servidor donde se encuentra el poryecto
+                let actualizarRecursos = {
+                    "_id" : this.servidorVMware._id,
+                    "disco_duro_uso" : this.servidorVMware.disco_duro_uso - this.project.disco_duro,
+                    "ram_blade_uso" : this.servidorVMware.ram_blade_uso - this.project.ram,
+                    "cpu_blade_uso" : this.servidorVMware.cpu_blade_uso - this.project.cpu,
+                    "numero_vm" : this.servidorVMware.numero_vm - this.project.numero_vm,
+                } 
+                this.liberarRecursosVMware(actualizarRecursos);
                 this.eliminarUsuario (); //Eliminar usuario de la BD local
                 this.eliminarPool () ; // finalmente se elimina el pool de recursos de la BD
             }
@@ -257,25 +377,17 @@ export default {
             })
             .catch(error => { this.$toastr.e("Error al eliminar el pool de recursos " + error) });                
         },
-//Funciones VMWARE
+//ELIMINAR VMWARE
         getServidorVMware: async function (){
             await axios.get('/api/recursos_telco/unservidor?direccion_ip='+this.project.id_openstack)            
             .then(res => {
-                this.servidorVMware = res.data.content  
-               let actualizarRecursos = {
-                    "_id" : this.servidorVMware._id,
-                    "disco_duro_uso" : this.servidorVMware.disco_duro_uso - this.project.disco_duro,
-                    "ram_blade_uso" : this.servidorVMware.ram_blade_uso - this.project.ram,
-                    "cpu_blade_uso" : this.servidorVMware.cpu_blade_uso - this.project.cpu,
-                    "numero_vm" : this.servidorVMware.numero_vm - this.project.numero_vm,
-                } 
-                this.liberarRecursosVMware(actualizarRecursos) 
-                
+                this.servidorVMware = res.data.content                 
             })            
             .catch(error => { this.$toastr.e("Error al obtener el servidor donde se encuentra el proyecto: " + error )
             });
         },
         liberarRecursosVMware: async function(actualizarRecursos){
+           
            console.log(actualizarRecursos)
             await axios.put('/api/recursos_telco',actualizarRecursos)
             .then(res => { 

@@ -17,7 +17,7 @@
             <span>/</span>
         </div><br>
             
-             <button v-on:click="addServer()" type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Agregar máquina"><i class="fas fa-plus"></i></button>
+            
                                         
             
           <div class="table-responsive">
@@ -142,7 +142,7 @@ export default {
                 }
             },
             configDelete:{
-                'User-Agent': 'openstacksdk/0.36.0 keystoneauth1/3.18.0 python-requests/2.22.0 CPython/2.7.17',
+                'User-Agent': 'openstacksdk/0.48.0 keystoneauth1/4.2.1 python-requests/2.23.0 CPython/3.8.2',
                 'X-Auth-Token':Token
             },
             configEdit:{

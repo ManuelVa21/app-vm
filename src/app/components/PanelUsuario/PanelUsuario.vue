@@ -15,7 +15,7 @@
         </div><br> 
              
 <!-- En esta sección se verifica si el usuario que ingresa tiene proyecto asignado -->            
-      <template v-if="Project == 'false'">
+      <template v-if="project == 'false'">
           <br>
           <div style="text-align: center;">
               <button @click="$router.push('/PanelUsuario/SolicitudesUsuario')" class="btn btn-primary btn-lg"
@@ -35,15 +35,15 @@
 <!-- En esta sección se presenta la información del proyecto y las VM --> 
             <template v-else>         
               <br>                      
-              <h2 class= "text-center">Hola usuario {{this.user.name}}, tu proyecto es: {{Project.nombre_proyecto}} </h2>
+              <h2 class= "text-center">Hola usuario {{this.user.name}}, tu proyecto es: {{project.nombre_proyecto}} </h2>
               <p>En esta sección se presentan los recursos asignados a tu proyecto.
                  Además, puedes ver tus máquinas virtuales, crearlas, modificarlas y acceder a ellas. </p>
-              <div class="row">
-                <div class="col">
+              
+                <div class="text-center">
                   <h4>Tienes los siguientes recursos asignados: </h4>
-
-                  <table class="table-sm table-bordered table-hover text-center ">
-                    <thead class="thead-dark">
+                  
+                  <table class="table-sm table-bordered table-hover text-center">
+                    <thead class="thead-dark text-center">
                       <tr class="table-active">                                                           
                         <th scope="col">Almacenamiento</th>
                         <th scope="col">RAM</th>
@@ -51,38 +51,19 @@
                       </tr>
                     </thead>
                     <tbody >
-                       <tr >
-                         <td>{{Project.disco_duro}} Gb</td>
-                         <td>{{Project.ram}} Gb</td>
-                         <td>{{Project.cpu}}</td>                       
-                       </tr>
-                    </tbody>                               
-                  </table>  
-                </div>  
-                <div class="col">
-                   <h4>Tienes los siguientes recursos disponibles: </h4>
-
-                  <table class="table-sm table-bordered table-hover text-center ">
-                    <thead class="thead-dark">
-                      <tr class="table-active">                                                           
-                        <th scope="col">Almacenamiento</th>
-                        <th scope="col">RAM</th>
-                        <th scope="col">CPU</th>                   
-                      </tr>
-                    </thead>
-                    <tbody >
-                       <tr >
-                         <td>{{Project.disco_duro}} Gb</td>
-                         <td>{{Project.ram}} Gb</td>
-                         <td>{{Project.cpu}}</td>                       
+                       <tr class="text-center" >
+                         <td>{{project.disco_duro}} Gb</td>
+                         <td>{{project.ram}} Gb</td>
+                         <td>{{project.cpu}}</td>                       
                        </tr>
                     </tbody>                               
                   </table> 
-                </div>                 
-              </div>
-               <br>
-              <h5> Puedes crear {{Project.numero_vm}} máquinas Virtuales, </h5>
-                <h5> Fecha finalización: {{Project.fecha_inicio}} </h5>
+                  </div> 
+                  
+                    
+              <br>
+              <h5> Puedes crear {{project.numero_vm}} máquinas Virtuales, </h5>
+                <h5> Fecha finalización: {{project.fecha_inicio}} </h5>
                
                                            
                 
@@ -288,10 +269,7 @@ import VueRouter from 'vue-router'
 import axios from 'axios'
 import SidebarUsuario from './SidebarUsuario.vue'
 import Token from '!!raw-loader!../PanelAdmin/Token.txt'
-import TokenProject from '!!raw-loader!../PanelAdmin/TokenProjects.txt'
 const configG = require('../../../config')
-//importar token de usuario para tener el dato del nombre del proyecto
-// si tiene nombre de proyecto mostrar información, sino diga que debe solicitar recursos
 
 export default {
     data(){
@@ -313,7 +291,7 @@ export default {
             configG:{
                 headers:{
                   'User-Agent': 'python-keystoneclient',
-                  'X-Auth-Token': TokenProject, 
+                  'X-Auth-Token': this.tokenProject, 
                   'Access-Control-Allow-Origin': '10.55.6.39', 
                   'Access-Control-Allow-Credentials': 'true',
                   'Access-Control-Expose-Headers': 'Authorization',
@@ -323,20 +301,25 @@ export default {
                   'X-OpenStack-Nova-API-Version': '2.1'
                 }
             },
-           Project: [],
+           project: [],
+           tokenProject:[],
            servers: [],
            flavors: [],
            images: [],
+           network:[],
            vm:{},
-           keypair:"",
+           keypair:[],
         }
     },
-    created(){
-      this.getStorage()
-      //this.getImage()
-      //this.generateKeypair()
-      this.showtoken()
-      
+    async created(){
+      await this.getStorage()
+      if(this.project.servidor_ubicacion == "OpenStack"){        
+        this.getImages()
+        this.getNetwork()
+        //this.getFlavors
+        //this.generateKeypair() 
+      }
+             
     },
     components:{
         'SidebarUsuario': SidebarUsuario  
@@ -351,28 +334,42 @@ export default {
               storage = JSON.parse(localStorage.getItem('userInfo'))
               //console.log('se muestra el storage ',storage)
               this.user = storage
-              this.getPool(this.user.email)
+              await this.getPool(this.user.email)
+              //this.getToken()
           }}
           catch(e) {
             storage = {}; }
       },
-      showtoken: async function(){
-        console.log('El token es: ',configG.tokenOpenStack)
-      },
+      
 //Se trae el pool de recursos con el correo del localStorage         
       getPool: async function(){
         await axios.get('/api/pool_recursos/unpool?emailPropietario='+this.user.email)
         .then(res => {
           if (res.data.status == '404' || res.data.status == '400') {
-            this.Project = "false";                      
+            this.project = "false";                      
           }
-          else{            
-            this.Project = res.data.content;
-            //this.getNetwork()
+          else{             
+            this.project = res.data.content;
+            this.tokenProject = this.project.token_openstack;
+            //console.log(this.project)
+            this.configG = {
+                  headers:{
+                    'User-Agent': 'python-keystoneclient',
+                    'X-Auth-Token': this.tokenProject, 
+                    'Access-Control-Allow-Origin': '10.55.6.39', 
+                    'Access-Control-Allow-Credentials': 'true',
+                    'Access-Control-Expose-Headers': 'Authorization',
+                    'Access-Control-Max-Age':'86400',
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',                  
+                    'X-OpenStack-Nova-API-Version': '2.1'
+                  }
+              } 
           }                    
         })
         .catch(error => { 
-            this.$toastr.e("Error al obtener el pool del usuario: " + error )                    
+            this.$toastr.e("Error al obtener el pool del usuario: " + error )
+            //console.log(error)                    
         });            
       }, 
 // Funciones en OPENSTACK
@@ -382,10 +379,8 @@ generateKeypair: async function (){
          .then(res => {
           console.log(res.data.keypairs)
         })
-        .catch(error => { this.$toastr.e("Error al cargar la clave SSH " + error ) });
-       
-      },
-        
+        .catch(error => { this.$toastr.e("Error al cargar la clave SSH " + error ) });       
+      },        
         /*if (res.data.keypairs.public_key) {
           this.keypair = res.data.keypairs.public_key
                     
@@ -395,30 +390,27 @@ generateKeypair: async function (){
         }*/      
       getServers: async function(){
         let server
-        await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/servers/detail?all_tenants=false&project_id='+this.Project.id_openstack, this.configG)
+        await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/servers/detail?all_tenants=false&project_id='+this.project.id_openstack, this.configG)
         .then(res => {
           //console.log(res.data.servers);
           this.servers = res.data.servers;
           //console.log(res.data.servers[4].addresses);          
         })
-        .catch(error => { this.$toastr.e("Error al obtener las VM's " + error ) 
-        
+        .catch(error => { this.$toastr.e("Error al obtener las VM's " + error )
         })
-
         if (this.servers.length == 0 )
             { this.$toastr.i("No tiene servidores ")}
           else{
             //console.log("Si hay servidores ")
             for await ( server of this.servers){
               server.image.id = await this.getOneImage(server.image.id);
-              server.flavor.id= await this.getOneFlavor(server.flavor.id);
+              server.flavor.id = await this.getOneFlavor(server.flavor.id);
           }
-        } 
-                        
+        }                         
       },       
       getOneImage: async function(idImage){
         let answer
-        await axios.get('http://'+configG.ipOpenstack+'/image/v2/images/'+idImage,this.config)
+        await axios.get('http://'+configG.ipOpenstack+'/image/v2/images/'+idImage,this.configG)
         .then(res => { answer= res.data.name; })
         .catch(error => { 
           this.$toastr.e("Error al obtener las imagenes de las VM's: " + error )
@@ -429,7 +421,7 @@ generateKeypair: async function (){
       getOneFlavor: async function(idFlavor){
         let answer=[] 
         //console.log('Se ingresa  getOneFlavor')
-        await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/flavors/'+idFlavor, this.config)
+        await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/flavors/'+idFlavor, this.configG)
         .then(res => {
           //console.log(res.data);
           answer[0] = res.data.flavor.disk;
@@ -446,7 +438,7 @@ generateKeypair: async function (){
             "type": "novnc"
           }
         };
-        await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
+        await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.configG)
         .then(res => {
           //console.log(res.data)
           window.open(res.data.console.url)
@@ -455,7 +447,7 @@ generateKeypair: async function (){
       },
       deleteServer: async function(idServer){
         //console.log('Se ingresa a deleteServer')
-        await axios.delete('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer,this.config)
+        await axios.delete('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer,this.configG)
         .then(res => {
           this.$toastr.s("VM eliminada")
         })
@@ -465,71 +457,49 @@ generateKeypair: async function (){
       editServer: async function (idServer){
         console.log (idServer)
       },
-//Crear VM
-      
-      addServer: async function(vm,id_flavor){
-        console.log('Se ingresa a addServer ',vm)
-        let data={
-          "server": {
-            "name": vm.nombre, 
-            "imageRef": vm.SO, 
-            "flavorRef": id_flavor,
-            //"key_name": "req.body.nameKey",
-            //"availability_zone": "nova", 
-            "max_count": 1, 
-            "min_count": 1,  
-            "networks": [{"uuid": this.network}]
-          }
-        }
-        await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers',data,this.config)
-        .then(res => {
-          this.$toastr.s("VM agregada correctamente ")
-          console.log('Respuesta del post')
-          console.log(res.data)
-        })
-        .catch(error => { this.$toastr.e("Error al crear la VM: " + error ) });
-      },
-      getImage: async function(){
+//Crear VM     
+      getImages: async function(){
         console.log('Se ingresa a getImage')
-        await axios.get('http://'+configG.ipOpenstack+'/image/v2/images',this.config)
+        await axios.get('http://'+configG.ipOpenstack+'/image/v2/images',this.configG)
         .then(res => {
-          //console.log('Respuesta del post')
-          //console.log(res.data.images)
-          this.images = res.data.images
+          //console.log('Respuesta del post')          
+          this.images = res.data.images          
         })
-        .catch(error => { this.$toastr.e("Error al obtener las imagenes: " + error ) });        
+        .catch(error => {           
+          this.$toastr.e("Error al obtener las imagenes: " + error ) });        
       },
       getNetwork: async function(){
-        console.log('Se ingresa a getNetwrk ')
-        await axios.get('http://'+configG.ipOpenstack+':9696/v2.0/networks?project_id='+this.Project.id_openstack,this.config)
+        console.log('Se ingresa a getNetwork ')
+        await axios.get('http://'+configG.ipOpenstack+':9696/v2.0/networks?project_id='+this.project.id_openstack,this.configG)
         .then(res => {
-          console.log('Respuesta del get network')
-          console.log(res)
+          //console.log('Respuesta del get network')
+          //console.log(res)
           this.network = res.data.networks[0].id
+          console.log(this.network)
         })
         .catch(error => { this.$toastr.e("Error al obtener la red del proyecto: " + error ) }); 
       },
       createFlavor: async function(vm){
         //console.log('Se muestra el vm inicial ',vm)
         console.log('Se muestra el images ',this.images)
-        /*for (let index = 0; index < this.images.length; index++) {
+        for (let index = 0; index < this.images.length; index++) {
           if (this.images[index].name==vm.SO) {
             //console.log('El id buscado es ',this.images[index].id)
             vm.SO = this.images[index].id
           }
-        }*/
+        }
         //console.log('El vm ahora es ',vm)
         //console.log('Se ingresa a createFlavor')
         let data={
           "flavor": {
-            "vcpus": vm.cpu, 
-            "disk": vm.disco_duro, 
+            "vcpus": parseInt(vm.cpu), 
+            "disk": parseInt(vm.disco_duro), 
             "name": "flavor-"+vm.nombre, 
             //"os-flavor-access:is_public": true, 
             //"description": "Flavor creado para máquina "+vm.nombre,
             //"rxtx_factor": 1.0, 
             //"OS-FLV-EXT-DATA:ephemeral": 0, 
-            "ram": (vm.ram*1024), 
+            "ram": (parseInt(vm.ram)*1024), 
             "id": "id-"+vm.nombre
             //"swap": 0
           }
@@ -543,7 +513,29 @@ generateKeypair: async function (){
         .catch(error => {
           console.log(error)
           this.$toastr.e("Error al crear el flavor: " + error )}); 
-      }  
+      },  
+       addServer: async function(vm,id_flavor){
+        console.log('Se ingresa a addServer ',vm)
+        let data={
+          "server": {
+            "name": vm.nombre, 
+            "imageRef": vm.SO, 
+            "flavorRef": id_flavor,
+            //"key_name": "req.body.nameKey",
+            //"availability_zone": "nova", 
+            "max_count": 1, 
+            "min_count": 1,  
+            "networks": [{"uuid": this.network}]
+          }
+        }
+        await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers',data,this.configG)
+        .then(res => {
+          this.$toastr.s("VM agregada correctamente ")
+          console.log('Respuesta del post')
+          console.log(res.data)
+        })
+        .catch(error => { this.$toastr.e("Error al crear la VM: " + error ) });
+      }
       
       
     }  

@@ -25,15 +25,16 @@
                        
                 </div>
                 <div class="row d-flex align-items-center">
-                        <div class="col-4"><i class="fa fa-phone fa-2x"></i></div>
-                        <div class="col-8"><span>xxx xxx xxxx</span></div>
-                       
-                </div>
-                <div class="row d-flex align-items-center">
                         <div class="col-4"><i class="fa fa-map-marker fa-2x"></i></div>
-                        <div class="col-8"><a href="maps.google.com">Ubicación</a></div>
+                        <div class="col-8"><span>Sala 324 FIET</span></div>
                              
                 </div>
+                <div class="row d-flex align-items-center">
+                        <div class="col-4"><i class="fa fa-user fa-2x"></i></div>
+                        <div class="col-8"><span>Director: PhD. Oscar Maurico Caicedo</span></div>
+                       
+                </div>
+                
             </div>
         </div>
     </div>

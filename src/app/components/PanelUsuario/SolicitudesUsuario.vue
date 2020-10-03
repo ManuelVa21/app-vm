@@ -45,7 +45,7 @@
         <div class="modal-content">                
         
         <div class="modal-header text-white bg-primary">
-            <h5 class="modal-title modal-dark" id="SolicitudPool"><b>Recursos a solicitar</b></h5>
+            <h5 class="modal-title modal-dark" id="solicitudPool"><b>Recursos a solicitar</b></h5>
             <button  type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -62,7 +62,7 @@
                     <div class="form-group col-md-6">
                         <div class="form-group">
                             <label for="categoria">Categoría de usuario: </label>
-                            <select v-model="solicitudpool.catUsuario" class="form-control" id="categoria" required>
+                            <select v-model="solicitudPool.catUsuario" class="form-control" id="categoria" required>
                                 <option selected>Seleccione categoría de usuario</option>
                                 <option>Estudiante</option>
                                 <option>Docente</option>
@@ -74,7 +74,7 @@
                 </div>
             </div>
         <!-- Formulario para estudiantes -->
-            <template v-if="solicitudpool.catUsuario === 'Estudiante'">
+            <template v-if="solicitudPool.catUsuario === 'Estudiante'">
                 <div class="panel panel-default">
                 <div class="panel-heading font-weight-bold">Información básica del proyecto</div>
                 <span class="text-danger">La información debe ser verídica y lo más específica posible.</span>
@@ -85,26 +85,26 @@
                 <div class="form-group col-md-6">
                     <div class="form-group">
                         <label for="nombre">Nombre del proyecto: *</label>  
-                        <input v-model="solicitudpool.nombrep" type="text" class="form-control" id="nombre" placeholder="Ingrese nombre del proyecto" required>
+                        <input v-model="solicitudPool.nombrep" type="text" class="form-control" id="nombre" placeholder="Ingrese nombre del proyecto" required>
                     </div>
                     <div class="form-group">
                         <label for="nombretu">Nombre del tutor: *</label>
-                        <input v-model="solicitudpool.tutor" type="text" class="form-control" id="nombretu" placeholder="Ingrese nombre del tutor" required>
+                        <input v-model="solicitudPool.tutor" type="text" class="form-control" id="nombretu" placeholder="Ingrese nombre del tutor" required>
                     </div>
                     <div class="form-group">
                         <label for="des">Descripción: *</label>
-                        <textarea v-model="solicitudpool.descripcionp" type="text" id="des" cols="80" rows="4" placeholder="Ingrese una breve descripción del proyecto" required></textarea>
+                        <textarea v-model="solicitudPool.descripcionp" type="text" id="des" cols="80" rows="4" placeholder="Ingrese una breve descripción del proyecto" required></textarea>
                     </div>
                 </div>
                     <div class="form-group col-md-6">
                         <div class="form-group">
                             <label for="pass">Contraseña: *</label>
                             <span class=" text-small text-danger"> (Por favor utilice la misma contraseña de registro)</span>
-                            <input v-model="solicitudpool.contrasenap" type="password" class="form-control" id="pass" placeholder="Ingrese contraseña" required>
+                            <input v-model="solicitudPool.contrasenap" type="password" class="form-control" id="pass" placeholder="Ingrese contraseña" required>
                         </div>
                         <div class="form-group">
                             <label for="emailtu">Correo tutor: *</label>
-                            <input v-model="solicitudpool.correo_tutor" type="email" class="form-control" id="emailtu" placeholder="Ingrese correo del tutor" required>
+                            <input v-model="solicitudPool.correo_tutor" type="email" class="form-control" id="emailtu" placeholder="Ingrese correo del tutor" required>
                         </div>
                     </div>
                 </div>                                                        
@@ -126,8 +126,8 @@
                         <label for="disco">Disco duro (Gb): </label>
                             <div class="form-group d-flex justify-content-center w-75">                                         
                               <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
-                                <input v-model="solicitudpool.disco_duro" type="range" class="form-control" id="disco"  min="1" max="40" required>                                            
-                              <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudpool.disco_duro}}</span>
+                                <input v-model="solicitudPool.disco_duro" type="range" class="form-control" id="disco"  min="1" max="40" required>                                            
+                              <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudPool.disco_duro}}</span>
                             </div>              
                         </div>
 
@@ -135,8 +135,8 @@
                             <label for="cpu">CPU: </label> <span class="text-secondary">(número de nucleos)</span>
                             <div class="form-group d-flex justify-content-center w-75">                                         
                               <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
-                                <input v-model="solicitudpool.cpu" type="range" class="form-control" id="cpu" min="1" max="8" required>                                             
-                              <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudpool.cpu}}</span>
+                                <input v-model="solicitudPool.cpu" type="range" class="form-control" id="cpu" min="1" max="8" required>                                             
+                              <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudPool.cpu}}</span>
                             </div>
                         </div>                                                                
                     </div>
@@ -146,14 +146,14 @@
                             <label for="ram">Ram (Gb): </label>
                             <div class="form-group d-flex justify-content-center w-75">                                         
                               <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
-                                <input v-model="solicitudpool.ram" type="range" class="form-control" id="ram" min="1" max="8" required>
-                                <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudpool.ram}}</span>
+                                <input v-model="solicitudPool.ram" type="range" class="form-control" id="ram" min="1" max="8" required>
+                                <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudPool.ram}}</span>
                             </div>
                         </div> 
 
                         <div class="form-group">
                             <label for="fechafin">Fecha finalización del servicio: *</label>
-                            <input v-model="solicitudpool.fechafin" class="form-control" type="date" id="fechafin" value="2020-01-01" min="2020-01-01" max="2025-12-31" required>
+                            <input v-model="solicitudPool.fechafin" class="form-control" type="date" id="fechafin" value="2020-01-01" min="2020-01-01" max="2025-12-31" required>
                         </div>                                                            
                     </div>
                     
@@ -162,8 +162,8 @@
                             <label for="numvm">Número de máquinas virtuales:</label>
                             <div class="form-group d-flex justify-content-center w-75">                                         
                               <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
-                                <input v-model="solicitudpool.numvm" type="range" class="form-control" id="numvm" min="1" max="2" required>
-                            <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudpool.numvm}}</span>
+                                <input v-model="solicitudPool.numvm" type="range" class="form-control" id="numvm" min="1" max="2" required>
+                            <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudPool.numvm}}</span>
                             </div>
                         </div>                                                            
                     </div>
@@ -178,7 +178,7 @@
             </template>
     <!-- Formulario para docentes -->
                 
-            <template v-else-if="solicitudpool.catUsuario === 'Docente'">
+            <template v-else-if="solicitudPool.catUsuario === 'Docente'">
                 <div class="panel panel-default">
                 <div class="panel-heading font-weight-bold">Información básica del proyecto</div>
                 <span class="text-danger">La información debe ser verídica y lo más específica posible.</span>                          
@@ -190,18 +190,18 @@
                     <div class="form-group col-md-6">
                         <div class="form-group">
                             <label for="nombre">Nombre del proyecto: *</label>
-                            <input v-model="solicitudpool.nombrep" type="text" class="form-control" id="nombre" placeholder="Ingrese nombre del proyecto">
+                            <input v-model="solicitudPool.nombrep" type="text" class="form-control" id="nombre" placeholder="Ingrese nombre del proyecto">
                         </div>
                         <div class="form-group">
                             <label for="des">Descripción: *</label>
-                            <textarea v-model="solicitudpool.descripcionp" name="" id="des" cols="80" rows="4" placeholder="Ingrese descripción del proyecto"></textarea>
+                            <textarea v-model="solicitudPool.descripcionp" name="" id="des" cols="80" rows="4" placeholder="Ingrese descripción del proyecto"></textarea>
                         </div>
                     </div>
                     <div class="form-group col-md-6">
                         <div class="form-group">
                             <label for="pass">Contraseña: *</label>
                             <span class=" text-small text-danger"> (Por favor utilice la misma contraseña de registro)</span>
-                            <input v-model="solicitudpool.contrasenap" type="password" class="form-control" id="pass" placeholder="Ingrese contraseña" required>
+                            <input v-model="solicitudPool.contrasenap" type="password" class="form-control" id="pass" placeholder="Ingrese contraseña" required>
                         </div>
                     </div>
                 </div>                                                        
@@ -220,8 +220,8 @@
                             <label for="disco">Disco duro (Gb):</label>
                             <div class="form-group d-flex justify-content-center w-75">                                         
                               <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
-                                <input v-model="solicitudpool.disco_duro" type="range" class="form-control" id="disco"  min="1" max="80" required>                                            
-                              <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudpool.disco_duro}}</span>
+                                <input v-model="solicitudPool.disco_duro" type="range" class="form-control" id="disco"  min="1" max="80" required>                                            
+                              <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudPool.disco_duro}}</span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -229,8 +229,8 @@
                             <span class="text-secondary">(número de nucleos)</span>
                             <div class="form-group d-flex justify-content-center w-75">                                         
                               <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
-                                <input v-model="solicitudpool.cpu" type="range" class="form-control" id="cpu"  min="1" max="16" required>                                            
-                              <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudpool.cpu}}</span>
+                                <input v-model="solicitudPool.cpu" type="range" class="form-control" id="cpu"  min="1" max="16" required>                                            
+                              <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudPool.cpu}}</span>
                             </div>
                         </div>
                     </div>
@@ -239,13 +239,13 @@
                                 <label for="ram">Ram (Gb):</label>
                                 <div class="form-group d-flex justify-content-center w-75">                                         
                                   <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
-                                    <input v-model="solicitudpool.ram" type="range" class="form-control" id="ram"  min="1" max="16" required>                                            
-                                  <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudpool.ram}}</span>
+                                    <input v-model="solicitudPool.ram" type="range" class="form-control" id="ram"  min="1" max="16" required>                                            
+                                  <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudPool.ram}}</span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="fechafin">Fecha finalización del servicio: *</label>
-                                <input v-model="solicitudpool.fechafin" type="date" class="form-control" id="fechafin" value="2020-01-01" min="2020-01-01" max="2025-12-31" required>
+                                <input v-model="solicitudPool.fechafin" type="date" class="form-control" id="fechafin" value="2020-01-01" min="2020-01-01" max="2025-12-31" required>
                             </div>                                                            
                         </div>
                         <div class="form-group col-md-6">
@@ -253,8 +253,8 @@
                                 <label for="numvm">Número de máquinas virtuales:</label>
                                 <div class="form-group d-flex justify-content-center w-75">                                         
                                   <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
-                                    <input v-model="solicitudpool.numvm" type="range" class="form-control" id="numvm"  min="1" max="4" required>                                            
-                                  <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudpool.numvm}}</span>
+                                    <input v-model="solicitudPool.numvm" type="range" class="form-control" id="numvm"  min="1" max="4" required>                                            
+                                  <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudPool.numvm}}</span>
                                 </div>
                             </div>                                                            
                             </div>
@@ -267,7 +267,7 @@
                 </div>
             </template> 
     <!-- Formulario para cursos -->
-            <template v-else-if="solicitudpool.catUsuario === 'Curso'">
+            <template v-else-if="solicitudPool.catUsuario === 'Curso'">
             <div class="panel panel-default">
             <div class="panel-heading font-weight-bold">Información básica del proyecto</div>
                 <span class="text-danger">La información debe ser verídica y lo más específica posible.</span>                          
@@ -277,18 +277,18 @@
                         <div class="form-group col-md-6">
                             <div class="form-group">
                                 <label for="nombre">Nombre del curso: *</label>
-                                <input v-model="solicitudpool.nombrep" type="text" class="form-control" id="nombre" placeholder="Ingrese nombre del curso" required>
+                                <input v-model="solicitudPool.nombrep" type="text" class="form-control" id="nombre" placeholder="Ingrese nombre del curso" required>
                             </div>
                             <div class="form-group">
                                 <label for="des">Descripción: *</label>
-                                <textarea v-model="solicitudpool.descripcionp" name="" id="des" cols="80" rows="4" placeholder="Ingrese descripción del proyecto"></textarea>
+                                <textarea v-model="solicitudPool.descripcionp" name="" id="des" cols="80" rows="4" placeholder="Ingrese descripción del proyecto"></textarea>
                             </div>
                         </div>
                         <div class="form-group col-md-6">
                             <div class="form-group">
                                 <label for="pass">Contraseña: *</label>
                                 <span class=" text-small text-danger"> (Por favor utilice la misma contraseña de registro)</span>
-                                <input v-model="solicitudpool.contrasenap" type="password" class="form-control" id="pass" placeholder="Ingrese contraseña" required>
+                                <input v-model="solicitudPool.contrasenap" type="password" class="form-control" id="pass" placeholder="Ingrese contraseña" required>
                             </div>
                         </div>
                         </div>                                                        
@@ -307,8 +307,8 @@
                                 <label for="disco">Disco duro (Gb):</label>   
                                 <div class="form-group d-flex justify-content-center w-75">                                         
                                   <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
-                                    <input v-model="solicitudpool.disco_duro" type="range" class="form-control" id="disco"  min="1" max="225" required>                                            
-                                  <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudpool.disco_duro}}</span>
+                                    <input v-model="solicitudPool.disco_duro" type="range" class="form-control" id="disco"  min="1" max="225" required>                                            
+                                  <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudPool.disco_duro}}</span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -316,8 +316,8 @@
                                 <span class="text-secondary"> (número de nucleos)</span>
                                 <div class="form-group d-flex justify-content-center w-75">                                         
                                   <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
-                                    <input v-model="solicitudpool.cpu" type="range" class="form-control" id="cpu"  min="1" max="30" required>                                            
-                                  <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudpool.cpu}}</span>
+                                    <input v-model="solicitudPool.cpu" type="range" class="form-control" id="cpu"  min="1" max="30" required>                                            
+                                  <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudPool.cpu}}</span>
                                 </div>
                             </div>                                                                                                                          
                         </div>
@@ -326,13 +326,13 @@
                                 <label for="ram">Ram (Gb): </label>
                                 <div class="form-group d-flex justify-content-center w-75">                                         
                                   <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
-                                    <input v-model="solicitudpool.ram" type="range" class="form-control" id="ram"  min="1" max="30" required>                                            
-                                  <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudpool.ram}}</span>
+                                    <input v-model="solicitudPool.ram" type="range" class="form-control" id="ram"  min="1" max="30" required>                                            
+                                  <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudPool.ram}}</span>
                                 </div>
                             </div>  
                             <div class="form-group">
                                 <label for="fechafin">Fecha finalización del servicio: *</label>
-                                <input v-model="solicitudpool.fechafin" type="date" class="form-control" id="fechafin" value="2020-01-01" min="2020-01-01" max="2025-12-31" required>
+                                <input v-model="solicitudPool.fechafin" type="date" class="form-control" id="fechafin" value="2020-01-01" min="2020-01-01" max="2025-12-31" required>
                             </div>                                                            
                         </div>
                         <div class="form-group col-md-6">
@@ -340,8 +340,8 @@
                                 <label for="numvm">Número de máquinas virtuales: </label>
                                 <div class="form-group d-flex justify-content-center w-75">                                         
                                   <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
-                                    <input v-model="solicitudpool.numvm" type="range" class="form-control" id="numvm"  min="1" max="15" required>                                            
-                                  <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudpool.numvm}}</span>
+                                    <input v-model="solicitudPool.numvm" type="range" class="form-control" id="numvm"  min="1" max="15" required>                                            
+                                  <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudPool.numvm}}</span>
                                 </div>
                             </div>                                                            
                             </div>
@@ -364,117 +364,119 @@
 
 <!-- #MODAL Solicitud de aumento de pool de recursos -->
         <div class="modal fade" id="ModalSolicitudAumento" tabindex="-1" role="dialog" aria-labelledby="SolicitudAumento" aria-hidden="true">
-          <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-              <div class="modal-header text-white bg-primary">
-                <h5 class="modal-title modal-dark" id="ModalAumento"><b>Solicitar aumento de recursos</b></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
+        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
 
-                   <p>Seleccione los nuevos recursos requeridos en su pool</p>
-                   <span class="text-danger">Al menos uno de los recursos a solicitar debe ser mayor y diferente al anterior.</span>
-                   <hr>
-                        <form @submit.prevent="validarAumento()">                                           
-                            <div class="form-row">
-                                <div class="form-group col-md-6">                                            
-                                    <div class="form-group">
-                                        <label for="Disco">Almacenamiento Actual (Gb): <b>{{this.Project.disco_duro}}</b></label>
-                                        <div class="form-group d-flex justify-content-center w-75">                                         
-                                          <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
-                                            <input v-model="solicitudpool.disco_duro" type="range" class="form-control" id="Disco" min="1" max="300" required>
-                                            <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudpool.disco_duro}}</span>
-                                        </div>
-                                    </div>                                                    
-                                    <div class="form-group">
-                                        <label for="CPU">Número de Procesadores Actual: <b>{{this.Project.cpu}}</b></label>
-                                        <div class="form-group d-flex justify-content-center w-75">                                         
-                                          <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
-                                            <input v-model="solicitudpool.cpu" type="range" class="form-control" id="CPU" min="1" max="40" required>
-                                            <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudpool.cpu}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="vms">Número de VM's Actual: <b>{{this.Project.numero_vm}}</b></label>
-                                        <div class="form-group d-flex justify-content-center w-75">                                         
-                                          <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
-                                            <input v-model="solicitudpool.numvm" type="range" class="form-control" id="vms" min="1" max="20" required>
-                                            <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudpool.numvm}}</span>
-                                        </div>
-                                    </div>                                                     
+            <div class="modal-header text-white bg-primary">
+              <h5 class="modal-title modal-dark" id="ModalAumento"><b>Solicitar aumento de recursos</b></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div class="modal-body">
+            <p>Seleccione los nuevos recursos requeridos en su pool</p>
+            <span class="text-danger">Al menos uno de los recursos a solicitar debe ser mayor y diferente al anterior.</span>
+            <hr>
+                <form @submit.prevent="validarAumento()">                                           
+                <div class="form-row">
+                    <div class="form-group col-md-6">                                            
+                        <div class="form-group">
+                            <label for="Disco">Almacenamiento Actual (Gb): <b>{{this.project.disco_duro}}</b></label>
+                            <div class="form-group d-flex justify-content-center w-75">                                         
+                              <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
+                                <input v-model="solicitudPool.disco_duro" type="range" class="form-control" id="Disco" min="1" max="300" required>
+                                <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudPool.disco_duro}}</span>
+                            </div>
+                        </div>                                                    
+                        <div class="form-group">
+                            <label for="CPU">Número de Procesadores Actual: <b>{{this.project.cpu}}</b></label>
+                            <div class="form-group d-flex justify-content-center w-75">                                         
+                              <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
+                                <input v-model="solicitudPool.cpu" type="range" class="form-control" id="CPU" min="1" max="40" required>
+                                <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudPool.cpu}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vms">Número de VM's Actual: <b>{{this.project.numero_vm}}</b></label>
+                            <div class="form-group d-flex justify-content-center w-75">                                         
+                              <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
+                                <input v-model="solicitudPool.numvm" type="range" class="form-control" id="vms" min="1" max="20" required>
+                                <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudPool.numvm}}</span>
+                            </div>
+                        </div>                                                     
+                    </div>
+                        <div class="form-group col-md-6">
+                            <div class="form-group">
+                                <label for="RAM">Memoria RAM Actual (Gb): <b>{{this.project.ram}}</b></label>
+                                <div class="form-group d-flex justify-content-center w-75">                                         
+                                  <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
+                                    <input v-model="solicitudPool.ram" type="range" class="form-control" id="Disco" min="1" max="40" required>
+                                    <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudPool.ram}}</span>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <div class="form-group">
-                                        <label for="RAM">Memoria RAM Actual (Gb): <b>{{this.Project.ram}}</b></label>
-                                        <div class="form-group d-flex justify-content-center w-75">                                         
-                                          <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
-                                            <input v-model="solicitudpool.ram" type="range" class="form-control" id="Disco" min="1" max="40" required>
-                                            <span class="font-weight-bold text-primary ml-2 mt-1">{{solicitudpool.ram}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="fechafin">Fecha Finalización Actual: <b>{{this.Project.fecha_fin}}</b></label>
-                                        <input v-model="solicitudpool.fechafin" class="form-control" type="date" id="fechafin" value="2020-01-01" min="2020-01-01" max="2026-12-31">
-                                    </div> 
-                                </div>                                               
                             </div>
                             <div class="form-group">
-                                <p>Por favor escriba el motivo por el cual desea ampliar sus recursos. *</p>
-                                <span class="text-danger">La información debe ser lo más específica posible.</span>
-                                <hr>
-                                <textarea v-model="solicitudpool.motivo" name="" id="" cols="80" rows="4" placeholder="Motivo de ampliación de recursos" required></textarea>
+                                <label for="fechafin">Fecha Finalización Actual: <b>{{this.project.fecha_fin}}</b></label>
+                                <input v-model="solicitudPool.fechafin" class="form-control" type="date" id="fechafin" value="2020-01-01" min="2020-01-01" max="2026-12-31">
                             </div> 
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-success">Enviar</button>
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                            </div>
+                        </div>                                               
+                </div>
+                    <div class="form-group">
+                        <p>Por favor escriba el motivo por el cual desea ampliar sus recursos. *</p>
+                        <span class="text-danger">La información debe ser lo más específica posible.</span>
+                        <hr>
+                        <textarea v-model="solicitudPool.motivo" name="" id="" cols="80" rows="4" placeholder="Motivo de ampliación de recursos" required></textarea>
+                    </div> 
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success">Enviar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    </div>
                         
-                        </form>
+                </form>
                 
-              </div>
-              
             </div>
-          </div>
+              
+        </div>
+        </div>
         </div>                  
 
 <!-- #MODAL  Solicitud de Backup -->  
         <div class="modal fade" id="ModalSolicitudBackup" tabindex="-1" role="dialog" aria-labelledby="SolicitudBackup" aria-hidden="true">
-          <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content ">
-              <div class="modal-header text-white bg-primary">
-                <h5 class="modal-title modal-dark" id="SolicitudBackup"><b>Información de la VM a guardar</b></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                 <p>Diligencie los datos requeridos para realizar la solicitud de Backup</p>
-                
-                        <form @submit.prevent="sendSolicitud('Backup')">
-                            <div class="form-group">
-                                <div class="form-group col">
-                                    <label for="maquina">Máquina virtual</label>
-                                    <select v-model="solicitudpool.maquina" type="maquina" class="form-control" id="maquina" required>
-                                        <option v-for="server in servers" v-bind:key="server.id">{{server.name}}</option>
-                                    </select>
-                                    
-                                </div> 
-                                <hr>
-                                <p>Por favor escriba el motivo por el cual desea realizar el Backup.</p>
-                                
-                                <textarea v-model="solicitudpool.motivo" class="ml-3" id="" cols="77" rows="4" placeholder="Motivo de ampliación de recursos"></textarea>
-                            </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-success">Enviar</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cacncelar</button>
-                        </div>
-                    </form>
-              </div>
-              
+        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content ">
+            <div class="modal-header text-white bg-primary">
+              <h5 class="modal-title modal-dark" id="SolicitudBackup"><b>Información de la VM a guardar</b></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
-          </div>
+
+            <div class="modal-body">
+               <p>Diligencie los datos requeridos para realizar la solicitud de Backup</p>
+              
+                      <form @submit.prevent="sendSolicitud('Backup')">
+                          <div class="form-group">
+                              <div class="form-group col">
+                                  <label for="maquina">Máquina virtual</label>
+                                  <select v-model="solicitudPool.maquina" type="maquina" class="form-control" id="maquina" required>
+                                      <option v-for="server in servers" v-bind:key="server.id">{{server.name}}</option>
+                                  </select>
+                                  
+                              </div> 
+                              <hr>
+                              <p>Por favor escriba el motivo por el cual desea realizar el Backup.</p>
+                              
+                              <textarea v-model="solicitudPool.motivo" class="ml-3" id="" cols="77" rows="4" placeholder="Motivo de ampliación de recursos"></textarea>
+                          </div>
+                      <div class="text-center">
+                          <button type="submit" class="btn btn-success">Enviar</button>
+                          <button type="button" class="btn btn-danger" data-dismiss="modal">Cacncelar</button>
+                      </div>
+                  </form>
+            </div>
+              
+        </div>
+        </div>
         </div>                    
 <!-- finaliza solicitud back UP -->
 
@@ -527,9 +529,9 @@ export default {
                 'X-OpenStack-Nova-API-Version': '2.1' 
                 }
             },
-            solicitudpool: new SolocitudPool(),
+            solicitudPool: new SolocitudPool(),
             storage:{},
-            Project:[],
+            project:[],
             servers: [],
             pool: false
         }
@@ -565,8 +567,8 @@ export default {
                     }
                     else{
                         this.pool = true;
-                        this.Project = res.data.content;
-                        this.solicitudpool.nombrep = this.Project.nombre_proyecto
+                        this.project = res.data.content;
+                        this.solicitudPool.nombrep = this.project.nombre_proyecto
                         this.getServers(); 
                     }                    
                 })
@@ -576,27 +578,29 @@ export default {
         },
         getServers: async function(){
             let server
-            await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/servers/detail?all_tenants=True&project_id='+this.Project.id_openstack, this.config)
+            await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/servers/detail?all_tenants=True&project_id='+this.project.id_openstack, this.config)
             .then(res => {
-            console.log(res.data.servers);
+            //console.log(res.data.servers);
             this.servers = res.data.servers;
             })
             .catch(error => { console.log('Error en getServers',error); });                
         },
+
+//Para que en el modal SOLICITAR AUMENTO se vean los recursos actuales
         igualarValores: async function(){
-            this.solicitudpool.disco_duro = this.Project.disco_duro
-            this.solicitudpool.numvm = this.Project.numero_vm
-            this.solicitudpool.cpu = this.Project.cpu
-            this.solicitudpool.ram = this.Project.ram
-            this.solicitudpool.fechafin = this.Project.fecha_fin 
+            this.solicitudPool.disco_duro = this.project.disco_duro
+            this.solicitudPool.numvm = this.project.numero_vm
+            this.solicitudPool.cpu = this.project.cpu
+            this.solicitudPool.ram = this.project.ram
+            this.solicitudPool.fechafin = this.project.fecha_fin 
         },
 
         validarAumento: async function(){
-            if (  this.solicitudpool.disco_duro > this.Project.disco_duro ||
-                  this.solicitudpool.numvm > this.Project.numero_vm ||
-                  this.solicitudpool.cpu > this.Project.cpu ||
-                  this.solicitudpool.ram > this.Project.ram ||
-                  this.solicitudpool.fechafin > this.Project.fecha_fin ){
+            if (  this.solicitudPool.disco_duro > this.project.disco_duro ||
+                  this.solicitudPool.numvm > this.project.numero_vm ||
+                  this.solicitudPool.cpu > this.project.cpu ||
+                  this.solicitudPool.ram > this.project.ram ||
+                  this.solicitudPool.fechafin > this.project.fecha_fin ){
                 
                 this.sendSolicitud('Aumento Pool de Recursos')}
             else {
@@ -607,54 +611,56 @@ export default {
 
         },
 
-        limpiar: async function(){this.solicitudpool = new SolocitudPool()},
+        limpiar: async function(){this.solicitudPool = new SolocitudPool()},
         sendSolicitud: async function(tipoSol){
            let solicitud             
-            if(this.solicitudpool.catUsuario == "Estudiante"){ 
+            if(this.solicitudPool.catUsuario == "Estudiante"){ 
                 solicitud = {
                 tipo: tipoSol,
-                catUsuario: this.solicitudpool.catUsuario,
+                catUsuario: this.solicitudPool.catUsuario,
                 usuario : this.user.name,
                 correo: this.user.email,
-                nombre_proyecto: this.solicitudpool.nombrep,
-                contrasenap: this.solicitudpool.contrasenap,
-                descripcion: this.solicitudpool.descripcionp,
-                tutor: this.solicitudpool.tutor,
-                correo_tutor: this.solicitudpool.correo_tutor,
-                fecha_fin: this.solicitudpool.fechafin,
-                numvm: this.solicitudpool.numvm,
-                disco_duro: this.solicitudpool.disco_duro,
-                ram: this.solicitudpool.ram,
-                cpu: this.solicitudpool.cpu,
-                motivo: this.solicitudpool.motivo,
-                maquina: this.solicitudpool.maquina}
+                nombre_proyecto: this.solicitudPool.nombrep,
+                contrasenap: this.solicitudPool.contrasenap,
+                descripcion: this.solicitudPool.descripcionp,
+                tutor: this.solicitudPool.tutor,
+                correo_tutor: this.solicitudPool.correo_tutor,
+                fecha_fin: this.solicitudPool.fechafin,
+                numvm: parseInt(this.solicitudPool.numvm),
+                disco_duro: parseInt(this.solicitudPool.disco_duro),
+                ram: parseInt(this.solicitudPool.ram),
+                cpu: parseInt(this.solicitudPool.cpu),
+                motivo: this.solicitudPool.motivo,
+                maquina: this.solicitudPool.maquina}
             } 
             else{
                 solicitud = {
                 tipo: tipoSol,
-                catUsuario: this.solicitudpool.catUsuario,
+                catUsuario: this.solicitudPool.catUsuario,
                 usuario : this.user.name,
                 correo: this.user.email,
-                nombre_proyecto: this.solicitudpool.nombrep,
-                contrasenap: this.solicitudpool.contrasenap,
-                descripcion: this.solicitudpool.descripcionp,
+                nombre_proyecto: this.solicitudPool.nombrep,
+                contrasenap: this.solicitudPool.contrasenap,
+                descripcion: this.solicitudPool.descripcionp,
                 tutor: this.user.name,
                 correo_tutor: this.user.email,
-                fecha_fin: this.solicitudpool.fechafin,
-                numvm: this.solicitudpool.numvm,
-                disco_duro: this.solicitudpool.disco_duro,
-                ram: this.solicitudpool.ram,
-                cpu: this.solicitudpool.cpu,
-                motivo: this.solicitudpool.motivo,
-                maquina: this.solicitudpool.maquina}
+                fecha_fin: this.solicitudPool.fechafin,
+                numvm: parseInt(this.solicitudPool.numvm),
+                disco_duro: parseInt(this.solicitudPool.disco_duro),
+                ram: parseInt(this.solicitudPool.ram),
+                cpu: parseInt(this.solicitudPool.cpu),
+                motivo: this.solicitudPool.motivo,
+                maquina: this.solicitudPool.maquina}
 
             }  
                     
            await axios.post('/api/solicitudes',solicitud)
             .then(res => { this.$toastr.s("Solicitud enviada correctamente") 
-                $('#ModalSolicitudPool').modal('hide')})
+                $('#ModalSolicitudPool').modal('hide')
+                $('#ModalSolicitudAumento').modal('hide')
+                })
             .catch(error => { this.$toastr.e("Error al envíar la solicitud: " + error ) });
-            this.solicitudpool = new SolocitudPool();
+            this.solicitudPool = new SolocitudPool();
             
             //Si el usuario es profesor o curso, el nombre y correo director es el mismo
             

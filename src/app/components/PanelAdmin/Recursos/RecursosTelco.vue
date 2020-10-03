@@ -151,7 +151,7 @@
                 <td>{{(servidorVMware.ram_blade)}}</td>
                 <td>{{(servidorVMware.ram_blade - servidorVMware.ram_blade_uso)}}</td>
                 <td>{{servidorVMware.cpu_blade }}</td>
-                <td>{{(servidorVMware.cpu_blade + (servidorVMware.cpu_blade*(servidorVMware.sobreasignacion_cpu/100)) - servidorVMware.cpu_blade_uso)}}</td>
+                <td>{{(servidorVMware.cpu_blade + (servidorVMware.cpu_blade*(parseInt(servidorVMware.sobreasignacion_cpu)/100)) - servidorVMware.cpu_blade_uso)}}</td>
                 <td>{{servidorVMware.numero_vm}}</td>
                 <td>    
                     <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
@@ -360,6 +360,8 @@ export default {
         },
 
         eliminarServidor: async function(){ 
+            //await axios.delete('/api/recursos_telco?_id='+this.servidorVMware._id) 
+            //this.getRecursosVMware();
             if( this.servidorVMware.disco_duro_uso != 0 || 
                 this.servidorVMware.ram_blade_uso != 0  || 
                 this.servidorVMware.cpu_blade_uso != 0  ||
@@ -416,7 +418,7 @@ export default {
                     "disco_duro_blade": this.servidorVMware.disco_duro_blade,
                     "ram_blade": this.servidorVMware.ram_blade,
                     "cpu_blade": this.servidorVMware.cpu_blade,
-                    "sobreasignacion_cpu": this.servidorVMware.sobreasignacion_cpu
+                    "sobreasignacion_cpu": parseInt(this.servidorVMware.sobreasignacion_cpu)
                 };             
                         
                 await axios.post('/api/recursos_telco',info)

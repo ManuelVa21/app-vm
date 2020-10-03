@@ -40,6 +40,8 @@ router.post('/', async (req,res) =>{
     try {
         const recursos_telco = new Recursos_telco(req.body);        
         await recursos_telco.save()
+        //console.log("probando insertar")
+        //console.log(prueba)
         res.json({ status:'200', answer:"Servidor creado" });        
     }
     catch (error) {
@@ -50,9 +52,9 @@ router.post('/', async (req,res) =>{
 router.put('/', async (req, res, next) =>{
     
     try {        
-        const recursos_telco = new Recursos_telco(req.body)
-        console.log(recursos_telco)        
-        await Recursos_telco.findByIdAndUpdate(recursos_telco._id ,{$set: recursos_telco }, { new: true} );
+        recursos_telco = req.body
+        //console.log(recursos_telco)        
+        await Recursos_telco.findByIdAndUpdate(recursos_telco._id ,recursos_telco, { new: true} );
         res.json({ status:'200', answer:"Servidor Actualizado" });
     } catch (error) {
         res.json({ status:400, content:error })

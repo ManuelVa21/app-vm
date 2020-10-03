@@ -20,8 +20,9 @@ router.get('/', async (req,res) =>{
 //Para obtener los datos de un solo pool
 router.get('/unpool', async (req,res) =>{
     //console.log('Ruta de un proyecto')
-    //console.log(req.query)
     try {
+        //correo
+        //console.log(req.query)
         const pool_recursos = await Pool_recursos.findOne(req.query);
         //console.log(pool_recursos)
         if (!pool_recursos) {
@@ -36,13 +37,10 @@ router.get('/unpool', async (req,res) =>{
 
 //Para enviar del cliente a la bd
 router.post('/', async (req, res) => {
-    try {
-        //console.log('Se mira el request')
-        //console.log(req.body)
-        const pool_recursos = new Pool_recursos(req.body)
+    try {        
+        const pool_recursos = new Pool_recursos(req.body)        
         await pool_recursos.save();
-        res.json({ status:'200', answer:"Pool de recursos creado" });
-        
+        res.json({ status:'200', answer:"Pool de recursos creado" });        
     } catch (error) {
         res.json({ status:400, content:error })
     }
@@ -51,9 +49,8 @@ router.post('/', async (req, res) => {
 //Para actualizar los datos
 router.put('/', async (req,res) =>{
     try {
-        const pool = new Pool_recursos(req.body)
-        const idpool = req.body._id
-        await Pool_recursos.findByIdAndUpdate(idpool,{$set: pool },{ new: true} );
+        const pool = req.body        
+        await Pool_recursos.findByIdAndUpdate(pool._id,pool,{ new: true} );        
         res.json({ status:'200', answer:"Pool actualizado" });
     } catch (error) {
         res.json({ status:400, content:error })

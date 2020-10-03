@@ -1,15 +1,16 @@
-const path =require('path');
+const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const express =require('express');
+const express = require('express');
 const cron = require('node-cron');
 const morgan = require ('morgan');
 const mongoose = require ('mongoose');
 const axios = require('axios');
-const app=express();
+const app = express();
 const exec = require('child_process').exec;
-var config = require('./config');
 var tokken;
+var token;
+var pool;
 
 
 //mongoose.Promise =global.Promise;
@@ -35,70 +36,56 @@ app.use('/api/solicitudes', require('./routes/solicitudes'));
 app.use('/api/sugerencias', require('./routes/sugerencias'));
 app.use('/api/usuarios', require('./routes/usuarios'));
 app.use('/api/enviar_correo', require('./routes/enviar_correo'));
+app.use('/api/verificar_fecha_fin', require('./routes/verificar_fecha_fin'));
 
-app.use('/api/test', require('./routes/test'));
 app.use('/api/token', require('./routes/token'));
 
 //Recibir token de usuariio
-
 app.get('/:token', (req, res) => {
-    console.log('entra al 1');
-    console.log('aqui estamos ',req.params.token)
+    token=req.params.token;
     axios.get('http://10.55.6.31:3000/auth/verify', {headers : {'x-access-token': req.params.token,'Content-Type':'application/json'}})
         .then(res => {
-            console.log('entra al 3'); 
-            console.log('Se muestra la respuesta del verify del servidor ',res.data.user)
-            user(res.data.user)
-            })
-        .catch(error => { console.log('Error en el verify del servidor '); }); 
-    console.log('entra al 4');;
-    
-    function user(data){
-        console.log('entra al 5');
-        if (data.role === 'guest') {
-            console.log('entra al 6');
-            //Se debe hacer un request para obteer los datos del projecto
-            axios.get('http://localhost:4000/api/pool_recursos/unpool?emailPropietario='+data.email)
-            .then(res => {
-                console.log('entra al 7');
-                if (res.data.status == '404' || res.data.status == '400' || res.data.content.servidor_ubicacion == 'VMware') {
-                    console.log('No hay un pool de recursos creado o se asignó en VMware')                      
-                }
-                else{
-                    console.log('entra al 8');
-                    //Generar token para usuario
-                    //console.log('Se muestra la respuesta del get pool', res.data.content)
-                    console.log('Usuario creado')
-                    console.log('Se genera el token para el usuario')
-                    exec('sh src/scripts/CreateToken1.sh '+res.data.content.nombre_proyecto+' '+res.data.content.nombre_proyecto+' '+res.data.content.contrasena,
-                    (error, stdout, stderr) => {
-                        config.tokenOpenStack = stdout.replace('\r', '');
-                        console.log('el token es ',stdout);
-                        tokken = stdout;
+            if (res.data.user.role === 'guest') {
+                //Se debe hacer un request para obteer los datos del projecto
+                axios.get('http://localhost:4000/api/pool_recursos/unpool?emailPropietario='+res.data.user.email)
+                .then(res => {
+                    if (res.data.status == '404' || res.data.status == '400' || res.data.content.servidor_ubicacion == 'VMware') {
+                        console.log('No hay un pool de recursos creado o se asignó en VMware')                
                     }
-                    );
-                }
-                console.log('entra al 9');                    
-            })
-            .catch(error => { 
-                console.log('Error en axios get proyecto ',error);                    
-            });
-            console.log('entra al 10');
-        }
-        console.log('entra al 11'); 
-    }  
-    console.log('entra al 12');
-    console.log('El token final es ',tokken)
-    res.redirect('/?'+req.params.token);  
-    console.log('entra al 13');
-  });
+                    else{
+                        console.log('entra al 8');
+                        pool=res.data.content._id
+                        exec('sh src/scripts/CreateToken1.sh '+res.data.content.nombre_proyecto+' '+res.data.content.nombre_proyecto+' '+res.data.content.contrasena,
+                        (error, stdout, stderr) => {
+                            tokken = stdout.replace('\r', '');
+                            axios.put('http://localhost:4000/api/pool_recursos/',{
+                                _id: pool,
+                                token_openstack: tokken,
+                            })
+                                .then(res => { 
+                             //       console.log('Respuesta del put ',res)
+                                })
+                                .catch(error => { 
+                               //     console.log('Error en axios put ',error);                    
+                                });
+                        }
+                        );                        
+                    }                
+                })
+                .catch(error => { 
+                    //console.log('Error en axios get proyecto ',error);                    
+                });
+            }
+        })
+        .catch(error => { //console.log('Error en el verify del servidor ',error); 
+    });
+        res.redirect('/?'+token);
+});
 
 /*Server y listening */
 app.listen(app.get('port'), ()=> {
-    console.log('entra al 2');
     console.log('Server on port', app.get('port'));
 });
-
 
 //Static files
 app.use(express.static(path.join(__dirname, 'public')));

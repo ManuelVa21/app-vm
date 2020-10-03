@@ -51,7 +51,7 @@ router.delete('/', async (req,res)=>{
 router.post('/', async (req, res) => {
     try {
         //console.log('Se mira el request')
-        console.log(req.body)
+        //console.log(req.body)
         const usuario = new Usuarios(req.body)
         await usuario.save();
         res.json({ status:'200', answer:"Usuario Creado" });        
@@ -65,11 +65,9 @@ router.post('/', async (req, res) => {
 
 router.put('/:_id', async (req, res, next) =>{
     try {
-        console.log('Se ingresa a put usuario')
-        console.log('Se mira el req.body', req.body)
-        const usuario = new Usuarios(req.body)
-        const idusuario = req.body._id
-        await Usuarios.findByIdAndUpdate(usuario._id ,{$set: usuario }, { new: true} );
+        
+        const usuario = req.body        
+        await Usuarios.findByIdAndUpdate(usuario._id ,usuario, { new: true} );
         res.json({ status:'200', answer:"Usuario actualizado" });
     } catch (error) {
         res.json({ status:400, content:error })
