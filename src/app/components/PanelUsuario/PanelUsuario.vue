@@ -270,6 +270,9 @@ import axios from 'axios'
 import SidebarUsuario from './SidebarUsuario.vue'
 import Token from '!!raw-loader!../PanelAdmin/Token.txt'
 const configG = require('../../../config')
+//var SSH = require('simple-ssh');
+//const { stdout } = require('process');
+//const exec = require('child_process').exec;
 
 export default {
     data(){
@@ -301,14 +304,17 @@ export default {
                   'X-OpenStack-Nova-API-Version': '2.1'
                 }
             },
-           project: [],
-           tokenProject:[],
-           servers: [],
-           flavors: [],
-           images: [],
-           network:[],
-           vm:{},
-           keypair:[],
+            project: [],
+            tokenProject:[],
+            servers: [],
+            flavors: [],
+            images: [],
+            network:[],
+            vm:{},
+            valKeyPair:'',
+            answerServer:{
+               'content' :'Bad Request'
+            } 
         }
     },
     async created(){
@@ -317,7 +323,7 @@ export default {
         this.getImages()
         this.getNetwork()
         //this.getFlavors
-        //this.generateKeypair() 
+        this.generateKeypair() 
       }
              
     },
@@ -378,16 +384,16 @@ generateKeypair: async function (){
         await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/os-keypairs',this.configG)
          .then(res => {
           console.log(res.data.keypairs)
+          if (res.data.keypairs) {
+            console.log('Ya esxiste la keypair')
+            this.valKeyPair =  res.data.keypairs[0].keypair.public_key     
+          }else{
+            console.log('NO esxiste la keypair se debe crear')
+            this.keyPair()
+          }
         })
         .catch(error => { this.$toastr.e("Error al cargar la clave SSH " + error ) });       
-      },        
-        /*if (res.data.keypairs.public_key) {
-          this.keypair = res.data.keypairs.public_key
-                    
-        }else{
-          await axios.post('.....')
-          
-        }*/      
+      },   
       getServers: async function(){
         let server
         await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/servers/detail?all_tenants=false&project_id='+this.project.id_openstack, this.configG)
@@ -427,6 +433,7 @@ generateKeypair: async function (){
           answer[0] = res.data.flavor.disk;
           answer[1] = res.data.flavor.ram;
           answer[2] = res.data.flavor.vcpus;
+          answer[3] = idFlavor;
         })
         .catch(error => { this.$toastr.e("Error al obtener el flavor de las VM's: " + error ) });
         return answer;
@@ -449,10 +456,27 @@ generateKeypair: async function (){
         //console.log('Se ingresa a deleteServer')
         await axios.delete('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer,this.configG)
         .then(res => {
+          this.deleteFlavor(idServer)
           this.$toastr.s("VM eliminada")
         })
         .catch(error => { this.$toastr.e("Error al eliminar la VM " + error ) });
         this.getServers();
+      },
+      deleteFlavor: async function(idServer){
+        console.log('Se ingresa a delete flavor')
+        console.log('Se consulta primero el id del flavor a eliminar')
+        let idFlavor;
+        for await ( server of this.servers){
+          if (server.id == idServer) {
+            console.log('Este es el id del flavor')
+            idFlavor = server.flavor.id[3]
+          }
+        }
+        await axios.delete('http://'+configG.ipOpenstack+'/compute/v2.1/flavors/'+idFlavor,this.config)
+        .then(res => {
+          console.log('Flavor eliminado')
+        })
+        .catch(error => { console.log('Error al elminar flavor, ', error) });
       },
       editServer: async function (idServer){
         console.log (idServer)
@@ -479,6 +503,9 @@ generateKeypair: async function (){
         })
         .catch(error => { this.$toastr.e("Error al obtener la red del proyecto: " + error ) }); 
       },
+//--------------------------------------------------------------------------------//
+//-----------------------------Create server---------------------------------------//
+//--------------------------------------------------------------------------------//
       createFlavor: async function(vm){
         //console.log('Se muestra el vm inicial ',vm)
         console.log('Se muestra el images ',this.images)
@@ -506,7 +533,7 @@ generateKeypair: async function (){
         }
         await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/flavors',data,this.config)
         .then(res => {
-          console.log('Respuesta del post')
+          console.log('Respuesta del CREATE FLAVOR')
           console.log(res.data)
           this.addServer(vm,res.data.flavor.id)
         })
@@ -533,10 +560,90 @@ generateKeypair: async function (){
           this.$toastr.s("VM agregada correctamente ")
           console.log('Respuesta del post')
           console.log(res.data)
+          if (response.data.server) { 
+            this.answerServer.content = res.data.server
+          }else{
+            this.answerServer.content = null
+          }
+          this.consultPort(this.answerServer.content)
         })
         .catch(error => { this.$toastr.e("Error al crear la VM: " + error ) });
+        
+      },
+      consultPort: async function(data){
+        await sleep(10000)
+        let portDevice
+        console.log("Se ingresa a consultar puerto")
+        await axios.get('http://'+configG.ipOpenstack+':9696/v2.0/ports?device_id='+data.id, this.configG)
+        .then(function (res) {
+          console.log('Se muestra la respuesta del consultar puerto')
+          console.log(res.data)
+          portDevice = res.data.ports[0].id
+          this.floatIp(portDevice)
+        })
+        .catch(error => { console.log('error consultar puerto', error) });
+        
+      },
+      floatIp: async function(port){
+        let body={
+          "floatingip": {
+          "floating_network_id": configG.idNetPublic,
+          "port_id": port
+          }
+        }
+        await axios.post('http://'+configG.ipOpenstack+':9696/v2.0/floatingips', body, this.configG)
+        .then( res =>{
+          console.log('Se muestra la respuesta del floatIp ',res)
+        })
+        .catch(error =>{ console.log('error dd ip float', error) })   
+        this.answer.content = await openstack.consultServer(answer.content.id);
+        ipfloat=answer.content.addresses[Object.keys(answer.content.addresses)[0]][1].addr;
+      },
+      keyPair: async function(){
+        console.log('Se ingresa a key pair')
+        let data = {
+          "keypair": {
+          "name": "key-"
+          }
+        }
+        await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/os-keypairs', data, this.configG)
+        .then( res =>{
+          console.log('Se muestra la respuesta de post keypair ',res)
+          this.valKeyPair =  res.data.keypair.public_key
+        })
+        .catch(error =>{ console.log('error en post keypair', error) })  
+      },
+      runServer: async function(){
+        console.log('Se ingresa a run server')
+        /*var ssh = new SSH({
+          host: ipfloat,
+          user: 'ubuntu',
+          key: this.valKeyPair
+        });
+        ssh.exec("sudo useradd telcoims")
+        ssh.exec("echo telcoims:telcoims | sudo chpasswd")
+        ssh.exec("sudo sed -i '$a telcoims    ALL=(ALL:ALL) ALL' /etc/sudoers")
+        .start();*/
+      },
+      consultServer: async function(idServer){
+        await sleep(10000)
+        let server;
+        console.log('Se ingresa a consult server')
+        await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer, this.configG )
+          .then(function (res) {
+            server = res.data.server
+          })
+          .catch(error =>{
+              server = 'error'
+        });
+        console.log('La respuesta de consult server es: ',server)
+        return server;
+      },
+      sleep: async function(ms) {
+        return new Promise(resolve=>{
+          setTimeout(resolve,ms)
+        })
       }
-      
       
     }  
 

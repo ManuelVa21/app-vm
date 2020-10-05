@@ -5,7 +5,18 @@
   //Exporting this so it can be used in other components
   export default {
     extends: Line,
-    data () {
+
+    props: {
+      chartdata:{
+        type: Object,
+        default: null
+      },
+    options:{
+        type: Object,
+        default: null
+      }
+    },
+   /* data () {
       return {
         datacollection: {
           //Data to be represented on x-axis
@@ -46,10 +57,10 @@
           maintainAspectRatio: false
         }
       }
-    },
+    },*/
     mounted () {
       //renderChart function renders the chart with the datacollection and options object.
-      this.renderChart(this.datacollection, this.options)
+      this.renderChart(this.chartdata, this.options)
     }
   }
 </script>

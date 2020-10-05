@@ -37,6 +37,7 @@ app.use('/api/sugerencias', require('./routes/sugerencias'));
 app.use('/api/usuarios', require('./routes/usuarios'));
 app.use('/api/enviar_correo', require('./routes/enviar_correo'));
 app.use('/api/verificar_fecha_fin', require('./routes/verificar_fecha_fin'));
+app.use('/api/generar_graficas', require('./routes/generar_graficas'));
 
 app.use('/api/token', require('./routes/token'));
 
