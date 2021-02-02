@@ -1,12 +1,12 @@
 <template>
-    <div class="content">
+  <div class="content">
     <div class="row">
     
       <div class="col-2 pr-0">
           <SidebarUsuario style="position: sticky; top: 75px"></SidebarUsuario> 
       </div>
 
-    <div class="col-10 pl-0">
+      <div class="col-10 pl-0">
 
         <div style=" float: right;">
             <span>/</span>
@@ -60,116 +60,26 @@
             </div>                         
                 
 <!-- Pestaña para listar VM con sus características básicas, encenderlos, apagarlos, eliminarlos -->
+           <div class="accordion" id="accordionI">
+           <div class="card">
+               <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                 <button v-on:click="getServers()" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                   Listar Máquinas Virtuales
+                 </button>
+                </h5>
+               </div>
+           <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionI">
+           <div class="card-body">
+<!-- MODAL CREAR VM -->          
            
-       
-           
-          
-            <br> 
+             <p></p>
               <h3>
                 <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#ModalCrear">
                   <span data-toggle="tooltip" data-placement="top" title="Crear VM"><i class="fas fa-plus"></i></span>
                 </button>
                 <b> Crear máquina virtual</b>
-              </h3>                                                                               
-<!-- Verificar estado de las VM-->    
-            <br>                        
-            <template v-if="servers.length == 0">  
-              <p>Actualmente no tienes máquinas virtuales creadas</p>
-            </template>
-            <template v-else>
-                <p>Estas son las máquinas virtuales creadas y sus características:</p>
-                <h3>Máquinas virtuales</h3>
-                <div class="table-responsive">
-                <table class="table table-striped table-hover  text-center">
-                 <thead class="thead-dark">
-                  <tr class="table-active">
-                    
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Creada</th>
-                    <th scope="col">S.O.</th>                                        
-                    <th scope="col">Disco</th>
-                    <th scope="col">RAM</th>
-                    <th scope="col">CPU</th>
-                    <th scope="col">IP</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Acciones</th>
-                  </tr>
-                 </thead>
-                    
-                <tbody v-for="(server) in servers" v-bind:key="server.id">
-                  <template v-if="server.status === 'ACTIVE'">
-                  <tr class="table-success">
-                    
-                    <td>{{server.name}}</td>
-                    <td>{{server.created}}</td>
-                    <td>{{server.image.id}}</td>
-                    <td>{{server.flavor.id[0]+' Gb'}}</td>
-                    <td>{{server.flavor.id[1]+' Mb'}}</td>
-                    <td>{{server.flavor.id[2]+' vcpu'}}</td>
-                    <td>-</td>
-                    <td>{{server.status}}</td>
-                    <td>
-                      <div class="dropdown mb-3">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Action
-                        </button>
-                        <div class="dropdown-menu">
-                            <button v-on:click="editarServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>
-                            <button v-on:click="apagarServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Apagar"><i class="fas fa-power-off"></i> Apagar</button>
-                            <button v-on:click="reiniciarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fas fa-redo-alt"></i> Reiniciar</button>
-                            <button v-on:click="consola(server.id)" type="button" class="btn btn-secondary dropdown-item" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i> Abrir</button>
-                            <button v-on:click="backupServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i> Backup</button>
-                            <button v-on:click="pausarServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Pausar"><i class="fas fa-pause"></i> Pausar</button>
-                            <button v-on:click="bloquearServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Bloquear"><i class="fas fa-lock"></i> Bloquear</button>
-                            <button v-on:click="suspenderServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Suspender"><i class="fas fa-moon"></i> Suspender</button>
-                            <div class="dropdown-divider"></div>
-                            <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i> Eliminar</button>
-                        </div>
-                      </div>
-                    </td>
-                  </tr> 
-                  </template>
-                  <template v-else>
-                    <tr class="table-danger">                    
-                    <td>{{server.name}}</td>
-                    <td>{{server.created}}</td>
-                    <td>{{server.image.id}}</td>
-                    <td>{{server.flavor.id[0]+' Gb'}}</td>
-                    <td>{{server.flavor.id[1]+' Gb'}}</td>
-                    <td>{{server.flavor.id[2]+' vcpu'}}</td>
-                    <td>-</td>
-                    <td>{{server.status}}</td>
-                    <td>
-                      <div class="dropdown ">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Action
-                        </button>
-                        <div class="dropdown-menu">
-                            <button v-on:click="encenderServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Encender"><i class="fas fa-power-off"></i> Encender</button>
-                            <button v-on:click="consola(server.id)" type="button" class="btn btn-secondary dropdown-item" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i> Abrir</button>
-                            <button v-on:click="editarServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>
-                            <button v-on:click="reiniciarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fas fa-redo-alt"></i> Reiniciar</button>
-                            <button v-on:click="backupServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i> Backup</button>
-                            <button v-on:click="desPausarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Despausar"><i class="fas fa-play"></i> Despausar</button>
-                            <button v-on:click="desBloquearServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Desbloquear"><i class="fas fa-lock-open"></i> Desbloquear</button>
-                            <div class="dropdown-divider"></div>
-                            <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i> Eliminar</button>
-                        </div>
-                      </div>
-                    </td>
-                    </tr>
-                   </template>
-                      </tbody>
-                     </table>
-                </div>
-                    </template>
-
-
-                            
-        
-      </template><br>
-
-      <!-- MODAL CREAR VM -->   
+              </h3>
             <div class="modal fade" id="ModalCrear" tabindex="-1" role="dialog" aria-labelledby="ModalCrearTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -239,6 +149,107 @@
             </div>
             </div>
             </div>
+                                                                               
+<!-- Verificar estado de las VM-->    
+            <br>                        
+            <template v-if="servers.length == 0">  
+              <p>Actualmente no tienes máquinas virtuales creadas</p>
+            </template>
+            <template v-else>
+                <p>Estas son las máquinas virtuales creadas y sus características:</p>
+                <h3>Máquinas virtuales</h3>
+                <div class="table-responsive">
+                <table class="table table-striped table-hover  text-center">
+                 <thead class="thead-dark">
+                  <tr class="table-active">
+                    
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Creada</th>
+                    <th scope="col">S.O.</th>                                        
+                    <th scope="col">Disco</th>
+                    <th scope="col">RAM</th>
+                    <th scope="col">CPU</th>
+                    <th scope="col">IP</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acciones</th>
+                  </tr>
+                 </thead>
+                    
+                <tbody v-for="(server) in servers" v-bind:key="server.id">
+                  <template v-if="server.status === 'ACTIVE'">
+                  <tr class="table-success">
+                    
+                    <td>{{server.name}}</td>
+                    <td>{{server.created}}</td>
+                    <td>{{server.image.id}}</td>
+                    <td>{{server.flavor.id[0]+' Gb'}}</td>
+                    <td>{{server.flavor.id[1]+' Mb'}}</td>
+                    <td>{{server.flavor.id[2]+' vcpu'}}</td>
+                    <td>-</td>
+                    <td>{{server.status}}</td>
+                    <td>
+                      <div class="dropup mb-3">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Action
+                        </button>
+                        <div class="dropdown-menu">
+                            <button v-on:click="editarServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>
+                            <button v-on:click="apagarServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Apagar"><i class="fas fa-power-off"></i> Apagar</button>
+                            <button v-on:click="reiniciarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fas fa-redo-alt"></i> Reiniciar</button>
+                            <button v-on:click="consola(server.id)" type="button" class="btn btn-secondary dropdown-item" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i> Abrir</button>
+                            <button v-on:click="backupServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i> Backup</button>
+                            <button v-on:click="pausarServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Pausar"><i class="fas fa-pause"></i> Pausar</button>
+                            <button v-on:click="bloquearServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Bloquear"><i class="fas fa-lock"></i> Bloquear</button>
+                            <button v-on:click="suspenderServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Suspender"><i class="fas fa-moon"></i> Suspender</button>
+                            <div class="dropdown-divider"></div>
+                            <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i> Eliminar</button>
+                        </div>
+                      </div>
+                    </td>
+                  </tr> 
+                  </template>
+                  <template v-else>
+                    <tr class="table-danger">                    
+                    <td>{{server.name}}</td>
+                    <td>{{server.created}}</td>
+                    <td>{{server.image.id}}</td>
+                    <td>{{server.flavor.id[0]+' Gb'}}</td>
+                    <td>{{server.flavor.id[1]+' Gb'}}</td>
+                    <td>{{server.flavor.id[2]+' vcpu'}}</td>
+                    <td>-</td>
+                    <td>{{server.status}}</td>
+                    <td>
+                      <div class="dropdown ">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Action
+                        </button>
+                        <div class="dropdown-menu">
+                            <button v-on:click="encenderServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Encender"><i class="fas fa-power-off"></i> Encender</button>
+                            <button v-on:click="consola(server.id)" type="button" class="btn btn-secondary dropdown-item" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i> Abrir</button>
+                            <button v-on:click="editarServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>
+                            <button v-on:click="reiniciarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fas fa-redo-alt"></i> Reiniciar</button>
+                            <button v-on:click="backupServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i> Backup</button>
+                            <button v-on:click="desPausarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Despausar"><i class="fas fa-play"></i> Despausar</button>
+                            <button v-on:click="desBloquearServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Desbloquear"><i class="fas fa-lock-open"></i> Desbloquear</button>
+                            <div class="dropdown-divider"></div>
+                            <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i> Eliminar</button>
+                        </div>
+                      </div>
+                    </td>
+                    </tr>
+                   </template>
+                      </tbody>
+                     </table>
+                </div>
+                    </template>
+                </div>     
+            </div>
+            </div>
+            </div>                
+        
+      </template><br>
+
+
            
   </div>
   </div>  
@@ -383,8 +394,8 @@ crearKeyPair: async function(){
          // console.log('Se muestra la respuesta de post keypair ',res)
          // console.log(res.data.keypair)
           this.valorKeyPair =  res.data.keypair.private_key
-          //console.log("clave privada")
-          //console.log(this.valorKeyPair)
+          console.log("clave privada")
+          console.log(this.valorKeyPair)
             await axios.put('http://localhost:4000/api/pool_recursos/',{
                 _id: this.project._id,
                 private_key: this.valorKeyPair,
@@ -588,8 +599,8 @@ crearKeyPair: async function(){
             "name": vm.nombre, 
             "imageRef": vm.SO, 
             "flavorRef": id_flavor,
-            "key_name": "key-"+this.project.nombre_proyecto,
-            //"availability_zone": "nova",
+            //"key_name": "req.body.nameKey",
+            //"availability_zone": "nova", 
             "adminPass" : "admin",
             "max_count": 1, 
             "min_count": 1,  
@@ -671,19 +682,7 @@ crearKeyPair: async function(){
         return new Promise(resolve=>{
           setTimeout(resolve,ms)
         })
-      },
-      /*
-      generarPEM: async function(){
-        let data = this.project;
-        //console.log(data)
-        await axios.post('/api/openstack/crearPem', data  )
-          .then(function (res) {
-            console.log(res)
-          })
-          .catch(error =>{
-            console.log(error)
-        });
-      }*/
+      }
       
     }  
 

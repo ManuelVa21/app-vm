@@ -3,12 +3,12 @@
         <div class="row">
             
         <div class="col-2">
-            <SidebarAdmin style="position: sticky; top: 70px"></SidebarAdmin>
+            <SidebarAdmin style="position: sticky; top: 75px"></SidebarAdmin>
         </div>
 
-        <div class="col-10 " style="padding-left: 0;">
+        <div class="col-10 pl-0">
 
-            <div style=" float: right;">
+            <div style=" float: right; margin-right:1em">
                     <span>/</span>
                     <router-link to="/PanelAdmin">Panel Admin</router-link>
                     <span>/</span>

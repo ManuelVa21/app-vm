@@ -3,7 +3,7 @@
     <div class="row">
         
         <div class="col-2">
-          <SidebarAdmin style="position: sticky; top: 70px"></SidebarAdmin>
+          <SidebarAdmin style="position: sticky; top: 75px"></SidebarAdmin>
         </div>
     <div class="col-10">
             
@@ -343,15 +343,8 @@ const configG = require('../../../../config')
 
 export default {
     data(){
-        return{
-        
-        config:{
-            headers:{
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            "Access-Control-Allow-Origin":"*"
-            }
-        },
+        return{        
+       
         configOS:{
             headers:{
             'User-Agent': 'python-keystoneclient',
@@ -364,30 +357,40 @@ export default {
             'Accept': 'application/json',
             'X-OpenStack-Nova-API-Version': '2.1' 
             }
-        },
-        configSimple:{
+        },       
+        configNeutron:{
             headers:{
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
             'X-Auth-Token': Token,
-            'Content-Type': 'application/json'
+            'User-Agent': 'openstacksdk/0.48.0 keystoneauth1/4.2.1 python-requests/2.23.0 CPython/3.8.5',
+            'Access-Control-Allow-Origin': '10.55.6.39',
+            'Access-Control-Allow-Credentials':'true',
+            'Access-Control-Expose-Headers': 'Authorization',
+            'Access-Control-Max-Age':'86400'
             }
         },
-        configOSS:{
-            headers:{
-                'Content-Type': 'application/json',
+        configCinder:{
+            headers:{            
                 'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'User-Agent': 'python-cinderclient',
                 'X-Auth-Token': Token,
-                'User-Agent': 'openstacksdk/0.48.0 keystoneauth1/4.2.1 python-requests/2.23.0 CPython/3.8.2',
                 'Access-Control-Allow-Origin': '10.55.6.39',
                 'Access-Control-Allow-Credentials':'true',
                 'Access-Control-Expose-Headers': 'Authorization',
-                'Access-Control-Max-Age':'86400'
+                'Access-Control-Max-Age':'86400'                                
             }
         },
         configUserAddRole:{
             headers:{            
-                'Accept' : 'application/json',
-                'User-Agent' : 'python-keystoneclient',
-                'X-Auth-Token' : Token,
+                'Accept': 'application/json',
+                'User-Agent': 'python-keystoneclient',
+                'X-Auth-Token': Token,
+                'Access-Control-Allow-Origin': '10.55.6.39',
+                'Access-Control-Allow-Credentials':'true',
+                'Access-Control-Expose-Headers': 'Authorization',
+                'Access-Control-Max-Age':'86400'                                
             }
         },
             solicitudes:[],
@@ -418,7 +421,7 @@ export default {
             let tipo = 'Pool de Recursos'
             await axios.get('/api/solicitudes?tipo='+tipo)            
             .then(res => {
-                this.solicitudes = res.data.content;    
+                this.solicitudes = res.data.content.reverse();    
             })            
             .catch(error => { this.$toastr.e("Error al obtener las solicitudes: " + error) });
         },
@@ -541,6 +544,7 @@ export default {
                     if (res.status == '201') {
                         this.createPool(res.data.project.id,info)
                         this.setQuota(res.data.project.id,info);
+                        this.setSecurityGroup(res.data.project.id);
                         this.createUser(res.data.project.id,info)
                         this.createNetwork(res.data.project.id,info)                        
                         this.$toastr.i("El proyecto y el pool de recursos se ha creado correctamente")
@@ -557,11 +561,73 @@ export default {
                     "cores": parseInt(info.cpu)
                 }
             };
+            let dataVolumen={
+                "quota_set":{
+                    "gigabytes": parseInt(info.disco_duro), 
+		            //"snapshots": parseInt(info.numvm), 
+		            "volumes": parseInt(info.numvm)
+                }
+            }
+
+        //Asignar Quota computo
             await axios.put('http://'+configG.ipOpenstack+'/compute/v2.1/os-quota-sets/'+id_project,data,this.configOS)
             .then(res => {
+                
             })
             .catch(error => { this.$toastr.e("Error al asignar la Quota en OpenStack 'Pool de recursos' " + error ) });
+        //Asignar Quota de almacenamiento   
+            await axios.put('http://'+configG.ipOpenstack+'/volume/v3/'+configG.idProjectAdmin+'/os-quota-sets/'+id_project, dataVolumen,this.configCinder)
+            .then(res => {
+                
+            })
+            .catch(error => { this.$toastr.e("Error al asignar la Quota de almacenamiento " + error ) });
+            
         },
+        
+        setSecurityGroup: async function(id_project){   
+           await axios.get('http://'+configG.ipOpenstack+':9696/v2.0/security-groups?project_id='+id_project,this.configNeutron)         
+           //await axios.get('http://'+configG.ipOpenstack+':9696/v2.0/security-groups?project_id=61cf078ef53e40f7a36094b7a29f4817',this.configDeleteNetwork)
+            .then(res => {
+                //console.log(res.data.security_groups[0])
+                this.setRules(res.data.security_groups[0].id , id_project)
+            })
+            .catch(error => { 
+                console.log(error)
+             });       
+        },
+        setRules: async function(idGrupo, id_project){
+            //console.log(idGrupo, id_project)
+            let data={
+                        "security_group_rules": [                       
+                            {   "protocol": "icmp",             //ICMP INGRESS
+                                "direction": "egress",
+                                "security_group_id": idGrupo,                               
+                                "project_id": id_project},
+                            {   "protocol": "icmp",             //ICMP EGRESS
+                                "direction": "ingress",
+                                "security_group_id": idGrupo,   
+                                "project_id": id_project},
+                            {   "protocol": "tcp",              //TCP SSH
+                                "direction": "ingress",
+                                "port_range_max": 22, 
+					            "port_range_min": 22,
+                                "security_group_id": idGrupo, 
+                                "project_id": id_project}
+                        ]
+                    };
+            await axios.post('http://'+configG.ipOpenstack+':9696/v2.0/security-group-rules', data ,this.configNeutron)
+            .then(res => {
+                console.log("REGLAS DE SEGURIDAD CREADAS")
+                //console.log(res)
+                //this.setRule(res.data.security_groups[0].id)
+            })
+            .catch(error => { 
+                console.log("Error reglas de seguridad")
+                console.log(error)
+             });
+        },
+
+
         createUser: async function(id_project,info){
             let data={
                 "user":{
@@ -583,10 +649,16 @@ export default {
             .catch(error => { this.$toastr.e("Error al crear el usuario en OpenStack' " + error )});
         },
         roleAdd: async function(id_project,id_user){
+            console.log("Id del proyecto e id del usuario")
+            console.log(id_project)
+            console.log(id_user)
+
             //http://10.55.2.24/identity/v3/projects/{id proyecto}/users/{id usuario creado}/roles/{id role member}
             //http://10.55.2.24/identity/v3/projects/d4e480ee2284481b9bb7db926ba7cfb1/users/9ba3f2cf490b44a6aafe6d09deaac518/roles/e6dfb94eb95542a0b415279abe461aab
             await axios.put('http://'+configG.ipOpenstack+'/identity/v3/projects/'+id_project+'/users/'+id_user+'/roles/'+configG.roleMember,this.configUserAddRole)
-            .then(res => {                
+            .then(res => {  
+                console.log("se añadió el rol")
+                console.log(res)              
             })
             .catch(error => { 
                 console.log('error al añadir el Rol')
@@ -606,7 +678,7 @@ export default {
                     "name": info.nombre_proyecto+"-net"
                     }
             };
-            await axios.post('http://'+configG.ipOpenstack+':9696/v2.0/networks',data,this.configOSS)
+            await axios.post('http://'+configG.ipOpenstack+':9696/v2.0/networks',data,this.configNeutron)
             .then(res => {
                // console.log('Se muestra la respuesta del create network')
                 //console.log(res)
@@ -622,10 +694,11 @@ export default {
                     "network_id": id_net, 
                     "cidr": "192.168.205.0/24", 
                     "name": info.nombre_proyecto+"-subnet", 
-                    "project_id": id_project
+                    "project_id": id_project,
+                    "dns_nameservers": ["8.8.8.8", "8.8.4.4"]
                     }
             };
-            await axios.post('http://'+configG.ipOpenstack+':9696/v2.0/subnets',data,this.configOSS)
+            await axios.post('http://'+configG.ipOpenstack+':9696/v2.0/subnets',data,this.configNeutron)
             .then(res => {
                // console.log('Se muestra la respuesta del create sub network')
                 //console.log(res)
@@ -644,7 +717,7 @@ export default {
                     "admin_state_up": true
                     }
             };
-            await axios.post('http://'+configG.ipOpenstack+':9696/v2.0/routers',data,this.configOSS)
+            await axios.post('http://'+configG.ipOpenstack+':9696/v2.0/routers',data,this.configNeutron)
             .then(res => {
                // console.log('Se muestra la respuesta del create router')
                 //console.log(res)
@@ -658,7 +731,7 @@ export default {
             let data={
                 "subnet_id": idSubnet
             }
-            await axios.put('http://'+configG.ipOpenstack+':9696/v2.0/routers/'+id_router+'/add_router_interface',data,this.configOSS)
+            await axios.put('http://'+configG.ipOpenstack+':9696/v2.0/routers/'+id_router+'/add_router_interface',data,this.configNeutron)
             .then(res => {
                // console.log('Se muestra la respuesta del add router')
                 //console.log(res)
@@ -676,7 +749,7 @@ export default {
                     }
                 }
             };
-            await axios.put('http://'+configG.ipOpenstack+':9696/v2.0/routers/'+id_router,data,this.configOSS)
+            await axios.put('http://'+configG.ipOpenstack+':9696/v2.0/routers/'+id_router,data,this.configNeutron)
             .then(res => {
                // console.log('Se muestra la respuesta del set router')
                // console.log(res)

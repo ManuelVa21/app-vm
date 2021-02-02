@@ -13,6 +13,7 @@
                 <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelUsuario/SolicitudesUsuario">Solicitudes</router-link></li>
                 <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelUsuario/Notificaciones">Notificaciones <span class="badge badge-danger">{{notificaciones.length}}</span></router-link></li>
                 <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelUsuario/AlertasUsuario">Alertas <span class="badge badge-danger">{{alertas.length}}</span></router-link></li>
+                <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelUsuario/SugerenciasUsuario">Sugerencias <span ></span></router-link></li>
             </ul>
           </div>
       </div>

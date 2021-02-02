@@ -59,7 +59,7 @@ router.post('/', async (req,res) =>{
     })
         notificacionesMes = notificacionesMes.slice(mesInicial, mesFinal+1)
 
-    const alertas = await Alertas_notificaciones.find({tipo:'Alarma'})
+    const alertas = await Alertas_notificaciones.find({tipo:'Alerta'})
     alertas.forEach(function(element) { 
         //se obtiene la fecha en milisegundos de cada ALERTA y su respectivo mes
         fechaAlerta = new Date (element.fecha)
@@ -75,7 +75,7 @@ router.post('/', async (req,res) =>{
         alertasMes = alertasMes.slice(mesInicial, mesFinal+1)
 
         meses = meses.slice(mesInicial, mesFinal+1)
-        console.log(meses)
+        //console.log(meses)
         //Finalmente se envían en el content los vectores correspondientes
       res.json({ status:'200', content: [solicitudesMes, notificacionesMes, alertasMes, meses]});
     } catch (error) {

@@ -3,10 +3,10 @@
     <div class="row">
         
         <div class="col-2">
-          <SidebarAdmin style="position: sticky; top: 70px"></SidebarAdmin>
+          <SidebarAdmin style="position: sticky; top: 75px"></SidebarAdmin>
         </div>
         
-        <div class="col-10" style="padding-left: 0;">
+        <div class="col-10">
           
         <div style=" float: right;">
             <span>/</span>
@@ -252,12 +252,11 @@
         </div>
         </div>
 
-
-
             
     </div>
     </div>
     </div>  
+                
 </template>
 
 
@@ -312,7 +311,8 @@ export default {
             },
             servidorVMware: new servidorVMware(),
             recursosTs:[],
-            servidoresVMware: []
+            servidoresVMware: [],
+            flavors: []
 
         }
     },
@@ -362,10 +362,10 @@ export default {
         eliminarServidor: async function(){ 
             //await axios.delete('/api/recursos_telco?_id='+this.servidorVMware._id) 
             //this.getRecursosVMware();
-            if( this.servidorVMware.disco_duro_uso != 0 || 
-                this.servidorVMware.ram_blade_uso != 0  || 
-                this.servidorVMware.cpu_blade_uso != 0  ||
-                this.servidorVMware.numero_vm != 0 )
+            if( this.servidorVMware.disco_duro_uso > 0 || 
+                this.servidorVMware.ram_blade_uso > 0  || 
+                this.servidorVMware.cpu_blade_uso > 0  ||
+                this.servidorVMware.numero_vm > 0 )
             {
                this.$toastr.e("No se puede eliminar este servidor. !!Hay recursos en uso")
             }
@@ -433,11 +433,8 @@ export default {
             else{
                 this.$toastr.w("Hay información obligatoria")
             }
-            
-           
         },
         
-
     }
 }
 </script>

@@ -7,15 +7,28 @@
         
         <div class="col-10 pl-0">
             
-        <div style=" float: right">
+        <div style=" float: right; margin-right: 1em">
             <span>/</span>
             <router-link to="/PanelUsuario">Mi Proyecto</router-link>
             <span>/</span>
-            <strong class="final-path">Notificaciones</strong>
+            <strong class="final-path">Sugerencias</strong>
             <span>/</span>
         </div><br>
+
+
+        <div class="container ml-5">
+
+            <form @submit.prevent="enviarSugerencia()">
+                <div class="form-group">
+                    <h4>Ingrese la descripción de la sugerencia.</h4>
+                    <textarea v-model="sugerencia.descripcion" cols="50" rows="4" placeholder="Sugerencia."></textarea><br>
+                        <button type="submit" class="btn btn-success">Enviar</button>
+                        <button @click="limpiarSugerencia()" type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    </div>
+            </form>
+        </div><br>
             
-            <div class="table-responsive">
+        <!--    <div class="table-responsive">
             <VueyeTable 
             :data="notificaciones" 
             :columns="columns" 
@@ -45,8 +58,8 @@
                         </div>
                     </template>
                 </template>  
-            </VueyeTable>
-            </div> 
+            </VueyeTable>  
+            </div> -->
 
     </div>
     </div> 
@@ -64,64 +77,66 @@ const configG = require('../../../config')
 export default {
     data(){
         return{
-            notificaciones: [],
-            storage:{},
+            notificaciones: [],  
+            storage:[],      
             columns:[
                 {key: "fecha", label: "Fecha", display: true},
                 {key: "descripcion", label: "Descripcion", display: true, sortable: true},
                 {key: "estado", label: "Estado", display: true},                
                 {key: "_id", label: "Acciones", display: true},
-            ]
+            ],
+            sugerencia:[]
         }
     },
-    created(){
-        this.getStorage();
+    async created(){
+        await this.getStorage();
     },
     components:{
         'SidebarUsuario': SidebarUsuario,
         VueyeTable  
     },
     methods:{
-        getStorage: async function(){
-            //console.log('Se ingresa a get storage')            
-            var storage;
+        getStorage: async function(){    
             try {
-            if (localStorage.getItem) {
-                this.storage = JSON.parse(localStorage.getItem('userInfo'))
-                //console.log('se muestra el storage ',storage.email)
-                this.getNotificaciones(this.storage.email)
-            }
+                if (localStorage.getItem) {
+                    this.storage = JSON.parse(localStorage.getItem('userInfo'))
+                    console.log('se muestra el storage ', this.storage)
+                    //this.getNotificaciones(this.storage.email)
+                }
             } catch(e) {
-                storage = {};
+               this.storage = {};
             }
         },
-        getNotificaciones: async function(email){
+        enviarSugerencia: async function(){
+            let data={
+                
+                usuario: this.storage.name,
+                correo: this.storage.email,
+                descripcion: this.sugerencia.descripcion,                
+            }
+            
+            await axios.post('/api/sugerencias',data)
+                .then(res => {
+                    this.$toastr.s("Sugerencia enviada")
+                    this.limpiarSugerencia()  
+                })
+                .catch(error => {
+                    this.$toastr.e("Error al enviar la sugerencia")
+                })
+        },
+        limpiarSugerencia: async function(){
+            this.sugerencia.descripcion = ""
+        }
+        /*getNotificaciones: async function(email){
             //console.log('Se ingresa a getnotificaciones y se muestra el email '+email)
             await axios.get('/api/alertas_notificaciones?correo_usuario='+email+'&tipo=Notificación')
             .then(res => {
                 //console.log('Se muestra respuesta get ',res.data.content)
-                this.notificaciones = res.data.content.reverse();                   
+                this.notificaciones = res.data.content;                   
             })
             .catch(error => {this.$toastr.e("Error al obtener las notificaciones: " + error ) });
-        },
-        atenderNotificacion: async function(id){
-            //console.log('Se va a cambiar el estado de la Notificacion de usuario, id: ',id)
-            await axios.put('/api/alertas_notificaciones/'+id,{estado: 'Atendido' },configG.headersDataBase)
-                .then(res => { 
-                    this.$toastr.s("Notificación atendida")
-                    this.getNotificaciones(this.storage.email)
-                    })
-                .catch(error => {this.$toastr.e("Error al cambiar estado de la notificación: " + error )});
-        },
-        eliminarNotificacion: async function(id){
-            await axios.delete('/api/alertas_notificaciones?_id='+id, configG.headersDataBase)
-            .then(res => { 
-                //console.log(res)
-                this.$toastr.s("Notificación eliminada")
-                this.getNotificaciones(this.storage.email)
-                })
-            .catch(error => { this.$toastr.e("Error al eliminar la notificación: " + error )});
-        }
+        },*/
+        
     }
 }
 </script>

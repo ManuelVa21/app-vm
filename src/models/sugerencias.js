@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const sugerencias = new Schema({
     usuario: {type: String},
+    correo: {type: String},
     fecha: {type: Date, default: Date.now},
     descripcion: {type:String},
     estado: {type:String, default:"Sin Atender"},

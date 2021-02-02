@@ -3,7 +3,7 @@
     <div class="row">
 
         <div class="col-2">
-            <SidebarAdmin style="position: sticky; top: 70px"></SidebarAdmin>
+            <SidebarAdmin style="position: sticky; top: 75px"></SidebarAdmin>
         </div>
     <div class="col-10">            
             
@@ -80,12 +80,13 @@
            
                       <button @click="getOneUser(item._id)" class="btn-sm btn-success" data-toggle="modal" data-target="#modalRecursos" data-placement="top" title="Editar Usuario"><i class="fas fa-edit"></i></button>                                            
                       <button @click="getOneUser(item._id)" class="btn-sm btn-info" data-toggle="modal" data-target="#ModalSendNotificacion" data-placement="top" title="Enviar notificación"><i class="fas fa-envelope"></i></button>
-                   <!--  <button @click="eliminarUsuario(item._id)" class="btn-sm btn-danger" data-placement="top" title="Eliminar usuario"><i class="fas fa-trash"></i></button>  -->
+                     <!-- <button @click="eliminarUsuario(item._id)" class="btn-sm btn-danger" data-placement="top" title="Eliminar usuario"><i class="fas fa-trash"></i></button>  -->
                     </div>                                                                                                       
                 </template>                                           
                                                 
         </VueyeTable>  
         </div>
+        
 
 <!--MODAL EDITAR USUARIO  -->  
         <div class="modal fade" id="modalRecursos" tabindex="-1" role="dialog" aria-hidden="true">
@@ -285,6 +286,8 @@ export default{
                 });                                        
         }, 
 //FUNCIONES DE PRUEBA
+
+       
 //CREAR nuevo usuario   
         
         addUser: async function(){ 

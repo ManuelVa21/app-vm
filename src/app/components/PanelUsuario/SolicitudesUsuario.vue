@@ -3,12 +3,12 @@
     <div class="row">
 
         <div class="col-2 col-with-right-dorder">
-            <SidebarUsuario style="position: sticky; top: 70px"></SidebarUsuario> 
+            <SidebarUsuario style="position: sticky; top: 75px"></SidebarUsuario> 
         </div>
 
-        <div class="col-10" style="padding-left: 0;">
+        <div class="col-10 pl-0">
             
-        <div style=" float: right;">
+        <div class="mr-2" style=" float: right;">
             <span>/</span>
             <router-link to="/PanelUsuario">Mi Proyecto</router-link>
             <span>/</span>
@@ -16,16 +16,16 @@
             <span>/</span>
         </div><br>
 
-        <br><br><p>
-        <div class="btn-group-vertical btn-group-lg" style="display: flex; align-items: center">   
+        <br><br>
+        <div class="btn-group-vertical btn-group-lg mr-4" style="display: flex; align-items: center">   
             
             <template v-if="pool === true">
                 <button  disabled class="btn btn-outline-info " data-toggle="modal" data-target="#ModalSolicitudPool">
                     Pool de recursos  </button>
                 <button @click="igualarValores()" class="btn btn-outline-info" data-toggle="modal" data-target="#ModalSolicitudAumento" >
                     Aumento de pool de recursos  </button>
-                <button class="btn btn-outline-info " data-toggle="modal" data-target="#ModalSolicitudBackup" >
-                    Backup </button>            
+            <!--    <button class="btn btn-outline-info " data-toggle="modal" data-target="#ModalSolicitudBackup" >
+                    Backup </button>            -->
             </template>
             
             <template v-else> 
@@ -33,8 +33,8 @@
                     Pool de recursos </button>
                 <button disabled class="btn btn-outline-info " data-toggle="modal" data-target="#ModalSolicitudAumento">
                     Aumento de pool de recursos </button>
-                <button disabled class="btn btn-outline-info " data-toggle="modal" data-target="#ModalSolicitudBackup" >
-                    Backup </button>
+               <!-- <button disabled class="btn btn-outline-info " data-toggle="modal" data-target="#ModalSolicitudBackup" >
+                    Backup </button> -->
             </template>   
                      
         </div>

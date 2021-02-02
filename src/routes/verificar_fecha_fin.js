@@ -41,50 +41,50 @@ try {
                 enviarCorreo(notificacion)
                 
             }
-//Menos de 8 días Se envía una ALARMA al usuario y luego al administrador
+//Menos de 8 días Se envía una ALERTA al usuario y luego al administrador
             else if (diasRestantes>0){
                 let notificacion = {
-                    "tipo" : 'Alarma',
+                    "tipo" : 'Alerta',
                     "descripcion" : 'El proyecto: '+element.nombre_proyecto+ ' finaliza en: '+diasRestantes+
                                     ' días. Si requiere más tiempo, realice una solicitud de aumento de pool de recursos con el tiempo requerido',
                     "usuario_destino" : element.propietario,
                     "correo_usuario" : element.emailPropietario,
-                    "subject" : "Alarma plataforma Telco 2.0"
+                    "subject" : "Alerta plataforma Telco 2.0"
                 }
                 enviarNotificacion(notificacion);
                 enviarCorreo(notificacion)
                 let notificacionAdmin = {
-                    "tipo" : 'Alarma',
+                    "tipo" : 'Alerta',
                     "descripcion" : 'El proyecto: '+element.nombre_proyecto+ ' finaliza en: '+diasRestantes+
                                     ' días. Por favor comuníquese con el usuario o director del proyecto',
                     "usuario_destino" : 'Administrador',
                     "correo_usuario" : 'diegofernandov@unicauca.edu.co', //Poner el correo del Admin
-                    "subject" : "Alarma plataforma Telco 2.0"
+                    "subject" : "Alerta plataforma Telco 2.0"
                 }
                 enviarNotificacion(notificacionAdmin);
                 enviarCorreo(notificacionAdmin)
                 
             }
-// YA finalizó el project se envía ALARMA al usuario y admin. Además, se cambia de estado el proyecto a "Revisar"
+// YA finalizó el project se envía ALERTA al usuario y admin. Además, se cambia de estado el proyecto a "Revisar"
             else{
                 let notificacion = {
-                    "tipo" : 'Alarma',
+                    "tipo" : 'Alerta',
                     "descripcion" : 'Finalizó el tiempo solicitado del proyecto: '+element.nombre_proyecto+ '.' +
                                      'Si requiere más tiempo, realice una solicitud de aumento de pool de recursos con el tiempo requerido',
                     "usuario_destino" : element.propietario,
                     "correo_usuario" : element.emailPropietario,
-                    "subject" : "Alarma plataforma Telco 2.0"
+                    "subject" : "Alerta plataforma Telco 2.0"
                 }
                 enviarCorreo(notificacion)
                 enviarNotificacion(notificacion)                
                 cambiarEstado(element._id)
                 let notificacionAdmin = {
-                    "tipo" : 'Alarma',
+                    "tipo" : 'Alerta',
                     "descripcion" : 'Finalizó el tiempo solicitado del proyecto: '+element.nombre_proyecto+ '.' +
                                     'Por favor comuníquese con el usuario o director del proyecto y revise el estado del proyecto.',
                     "usuario_destino" : 'Administrador',
                     "correo_usuario" : 'diegofernandov@unicauca.edu.co', //Poner el correo del admin
-                    "subject" : "Alarma plataforma Telco 2.0"
+                    "subject" : "Alerta plataforma Telco 2.0"
                 }
                 enviarCorreo(notificacionAdmin)
                 enviarNotificacion(notificacionAdmin)                

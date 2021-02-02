@@ -3,7 +3,7 @@
         <div class="row">
                 
             <div class="col-2 col-with-right-border">
-                <SidebarAdmin style="position: sticky; top: 70px"></SidebarAdmin>
+                <SidebarAdmin style="position: sticky; top: 75px"></SidebarAdmin>
             </div>
             
             <div class="col-10">
@@ -81,7 +81,7 @@ export default{
         return{
             sugerencias: [],
             columns:[
-                {key: "nombre", label: "Usuario", display: true},                
+                {key: "usuario", label: "Usuario", display: true},                
                 {key: "fecha", label: "Fecha", display: true},
                 {key: "descripcion", label: "Descripción", display: true},
                 {key: "estado", label: "Estado", display: true, sortable: true},                
@@ -103,8 +103,13 @@ export default{
             await axios.get('/api/sugerencias')
             .then(res => {
                 //console.log('Se muestra respuesta get del sidebar usuario get notificaciones')
-                //console.log(res.data.content);
-                this.sugerencias = res.data.content;                    
+                console.log(res.data.content);
+                this.sugerencias = res.data.content;
+               /* sugerencias1.forEach(element => {
+                    element.fecha = new Date (this.element.fecha)                    
+                    element.fecha = element.fechafecha.toLocaleDateString()                    
+                }); 
+                this.sugerencias = this.sug */
             })
             .catch(error => { this.$toastr.e("Error al obtener las sugerencias: "+ error) });
         },
@@ -113,7 +118,7 @@ export default{
             await axios.put('/api/sugerencias/'+id,{estado: info },this.configG)
                 .then(res => { 
                     this.getSugerencias()
-                    this.$toastr.s("Sugerencia atendida")
+                    this.$toastr.s("Sugerencia revisada")
                     console.log(res)
                     })
                 .catch(error => { this.$toastr.e("Error al cambiar estado: "+ error) });

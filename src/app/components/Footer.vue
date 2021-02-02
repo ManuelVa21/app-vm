@@ -45,8 +45,7 @@ import VueRouter from 'vue-router'
 export default {
     data () {
     return {
-      auth: '',
-      user: ''
+      
     }
   },methods: {
     

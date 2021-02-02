@@ -89,7 +89,7 @@ export default {
             await axios.get('/api/alertas_notificaciones?correo_usuario='+email+'&tipo=Alerta')
             .then(res => {
                 //console.log('Se muestra respuesta get ',res.data.content)
-                this.alertas = res.data.content;                    
+                this.alertas = res.data.content.reverse();                    
             })
             .catch(error => { this.$toastr.e("Error al obtener las alertas: " + error ) });
         },

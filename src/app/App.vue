@@ -1,14 +1,14 @@
 <!--  --> 
 <template lang='html'>
   <div id="app">
-    <div class="fixed-top">
+    <div class="section fixed-top">
       <navbar></navbar>
     </div>
-    <div class="section" role="main" style="margin-top: 75px;">
+    <div class="section" role="main" style="margin-top: 75px">
       <router-view/>
     </div>
     
-    <div class="section bg-dark text-white" style="margin-top: 75px">
+    <div class="section bg-dark text-white static-bottom">
       <Footer></Footer> 
     </div>
   </div>

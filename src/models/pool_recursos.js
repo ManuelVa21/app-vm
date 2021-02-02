@@ -7,6 +7,7 @@ const pool_recursosSchema = new Schema({
     estado: {type:String, default:'Activo'},
     id_openstack: {type: String},
     token_openstack: {type: String, default:''},
+    private_key: {type: String, default:''},
     contrasena: {type: String},
     descripcion: {type: String},
     propietario: {type: String},

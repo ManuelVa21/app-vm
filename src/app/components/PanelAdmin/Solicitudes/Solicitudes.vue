@@ -3,12 +3,12 @@
     <div class="row">
 
         <div class="col-2">
-          <SidebarAdmin style="position: sticky; top: 70px"></SidebarAdmin>
+          <SidebarAdmin style="position: sticky; top: 75px"></SidebarAdmin>
         </div>
 
-        <div class="col-10" style="padding-left: 0;">
+        <div class="col-10 pl-0">
 
-        <div style=" float: right;">
+        <div class="mr-2" style=" float: right;">
           <span>/</span>
           <router-link to="/PanelAdmin">Panel Admin</router-link>
           <span>/</span>            
@@ -17,10 +17,10 @@
         </div><br>
 
            <br><br><p>
-            <div class="btn-group-vertical btn-group-lg" style="display: flex; align-items: center">   
+            <div class="btn-group-vertical btn-group-lg mr-2" style="display: flex; align-items: center">   
             <button @click="$router.push('/PanelAdmin/Solicitudes/PoolRecursos')" class="btn btn-outline-info">Pool de recursos <span class="ml-3 badge badge-danger">{{solicitudesPool.length}}</span></button>
             <button @click="$router.push('/PanelAdmin/Solicitudes/AumentoPool')" class="btn btn-outline-info ">Aumento pool de recursos <span class="ml-3 badge badge-danger">{{solicitudesAumento.length}}</span></button>
-            <button @click="$router.push('/PanelAdmin/Solicitudes/Backup')" class="btn btn-outline-info ">Backup <span class="ml-3 badge badge-danger">{{solicitudesBackup.length}}</span></button>
+            <!--<button @click="$router.push('/PanelAdmin/Solicitudes/Backup')" class="btn btn-outline-info ">Backup <span class="ml-3 badge badge-danger">{{solicitudesBackup.length}}</span></button>-->
             </div>
         </div>
 

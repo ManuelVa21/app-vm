@@ -22,6 +22,7 @@ import PanelUsuario from './components/PanelUsuario/PanelUsuario.vue'
 import NotificacionesUsuario from './components/PanelUsuario/Notificaciones.vue'
 import AlertasUsuario from './components/PanelUsuario/AlertasUsuario.vue'
 import SolicitudesUsuario from './components/PanelUsuario/SolicitudesUsuario.vue'
+import SugerenciasUsuario from './components/PanelUsuario/SugerenciasUsuario.vue'
 //Componentes Panel Admin
 import PanelAdmin from './components/PanelAdmin/PanelAdmin.vue'
 import InfoUsuarios from './components/PanelAdmin/InfoUsuarios.vue'
@@ -51,6 +52,7 @@ const routes = [
   { name: 'PanelUsuario/NotificacionesUsuario', path: '/PanelUsuario/Notificaciones', component: NotificacionesUsuario },
   { name: 'PanelUsuario/AlertasUsuario', path: '/PanelUsuario/AlertasUsuario', component: AlertasUsuario },
   { name: 'PanelUsuario/SolicitudesUsuario', path: '/PanelUsuario/SolicitudesUsuario', component: SolicitudesUsuario },
+  { name: 'PanelUsuario/SugerenciasUsuario', path: '/PanelUsuario/SugerenciasUsuario', component: SugerenciasUsuario },
 //    RUTAS DEL ADMIN
   { name: 'PanelAdmin/InfoUsuarios', path: '/PanelAdmin/InfoUsuarios', component: InfoUsuarios },
   { name: 'PanelAdmin/Solicitudes', path: '/PanelAdmin/Solicitudes', component: Solicitudes },

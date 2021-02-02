@@ -1,12 +1,12 @@
 <template>
-    <div class="content">
+  <div class="content">
     <div class="row">
     
       <div class="col-2 pr-0">
           <SidebarUsuario style="position: sticky; top: 75px"></SidebarUsuario> 
       </div>
 
-    <div class="col-10 pl-0">
+      <div class="col-10 pl-0">
 
         <div style=" float: right;">
             <span>/</span>
@@ -33,20 +33,7 @@
           </div>
       </template>
 <!-- En esta sección se presenta la información del proyecto y las VM --> 
-      <template v-else-if = " project.servidor_ubicacion == 'VMware' ">
-        <h3 class= "text-center">Hola <b>{{this.user.name}}</b>, tu proyecto es: <b>{{project.nombre_proyecto}}</b> </h3>
-          
-            <div>
-              <h4>Tienes los siguientes recursos asignados: </h4>
-                <h5>Almacenamiento (Gb): {{project.disco_duro}}</h5>                                                  
-                <h5>RAM (Gb): {{project.ram}}</h5>
-                <h5>CPU: {{project.cpu}}</h5> 
-                <h5> Puedes crear {{project.numero_vm}} máquinas Virtuales</h5>
-                <h5> Fecha finalización: {{project.fecha_fin}} </h5> 
-              <h4> <b>NOTA:</b> Tus recursos están asignados en VMware, contáctate con el administrador para acceder a tus VM's </h4>
-            </div>  
-      </template>
-      <template v-else-if = " project.servidor_ubicacion == 'OpenStack' ">         
+      <template v-else>         
         <br>                      
           <h3 class= "text-center">Hola <b>{{this.user.name}}</b>, tu proyecto es: <b>{{project.nombre_proyecto}}</b> </h3>
           
@@ -60,116 +47,26 @@
             </div>                         
                 
 <!-- Pestaña para listar VM con sus características básicas, encenderlos, apagarlos, eliminarlos -->
+           <div class="accordion" id="accordionI">
+           <div class="card">
+               <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                 <button v-on:click="getServers()" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                   Listar Máquinas Virtuales
+                 </button>
+                </h5>
+               </div>
+           <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionI">
+           <div class="card-body">
+<!-- MODAL CREAR VM -->          
            
-       
-           
-          
-            <br> 
+             <p></p>
               <h3>
                 <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#ModalCrear">
                   <span data-toggle="tooltip" data-placement="top" title="Crear VM"><i class="fas fa-plus"></i></span>
                 </button>
                 <b> Crear máquina virtual</b>
-              </h3>                                                                               
-<!-- Verificar estado de las VM-->    
-            <br>                        
-            <template v-if="servers.length == 0">  
-              <p>Actualmente no tienes máquinas virtuales creadas</p>
-            </template>
-            <template v-else>
-                <p>Estas son las máquinas virtuales creadas y sus características:</p>
-                <h3>Máquinas virtuales</h3>
-                <div class="table-responsive">
-                <table class="table table-striped table-hover  text-center">
-                 <thead class="thead-dark">
-                  <tr class="table-active">
-                    
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Creada</th>
-                    <th scope="col">S.O.</th>                                        
-                    <th scope="col">Disco</th>
-                    <th scope="col">RAM</th>
-                    <th scope="col">CPU</th>
-                    <th scope="col">IP</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Acciones</th>
-                  </tr>
-                 </thead>
-                    
-                <tbody v-for="(server) in servers" v-bind:key="server.id">
-                  <template v-if="server.status === 'ACTIVE'">
-                  <tr class="table-success">
-                    
-                    <td>{{server.name}}</td>
-                    <td>{{server.created}}</td>
-                    <td>{{server.image.id}}</td>
-                    <td>{{server.flavor.id[0]+' Gb'}}</td>
-                    <td>{{server.flavor.id[1]+' Mb'}}</td>
-                    <td>{{server.flavor.id[2]+' vcpu'}}</td>
-                    <td>-</td>
-                    <td>{{server.status}}</td>
-                    <td>
-                      <div class="dropdown mb-3">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Action
-                        </button>
-                        <div class="dropdown-menu">
-                            <button v-on:click="editarServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>
-                            <button v-on:click="apagarServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Apagar"><i class="fas fa-power-off"></i> Apagar</button>
-                            <button v-on:click="reiniciarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fas fa-redo-alt"></i> Reiniciar</button>
-                            <button v-on:click="consola(server.id)" type="button" class="btn btn-secondary dropdown-item" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i> Abrir</button>
-                            <button v-on:click="backupServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i> Backup</button>
-                            <button v-on:click="pausarServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Pausar"><i class="fas fa-pause"></i> Pausar</button>
-                            <button v-on:click="bloquearServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Bloquear"><i class="fas fa-lock"></i> Bloquear</button>
-                            <button v-on:click="suspenderServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Suspender"><i class="fas fa-moon"></i> Suspender</button>
-                            <div class="dropdown-divider"></div>
-                            <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i> Eliminar</button>
-                        </div>
-                      </div>
-                    </td>
-                  </tr> 
-                  </template>
-                  <template v-else>
-                    <tr class="table-danger">                    
-                    <td>{{server.name}}</td>
-                    <td>{{server.created}}</td>
-                    <td>{{server.image.id}}</td>
-                    <td>{{server.flavor.id[0]+' Gb'}}</td>
-                    <td>{{server.flavor.id[1]+' Gb'}}</td>
-                    <td>{{server.flavor.id[2]+' vcpu'}}</td>
-                    <td>-</td>
-                    <td>{{server.status}}</td>
-                    <td>
-                      <div class="dropdown ">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Action
-                        </button>
-                        <div class="dropdown-menu">
-                            <button v-on:click="encenderServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Encender"><i class="fas fa-power-off"></i> Encender</button>
-                            <button v-on:click="consola(server.id)" type="button" class="btn btn-secondary dropdown-item" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i> Abrir</button>
-                            <button v-on:click="editarServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>
-                            <button v-on:click="reiniciarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fas fa-redo-alt"></i> Reiniciar</button>
-                            <button v-on:click="backupServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i> Backup</button>
-                            <button v-on:click="desPausarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Despausar"><i class="fas fa-play"></i> Despausar</button>
-                            <button v-on:click="desBloquearServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Desbloquear"><i class="fas fa-lock-open"></i> Desbloquear</button>
-                            <div class="dropdown-divider"></div>
-                            <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i> Eliminar</button>
-                        </div>
-                      </div>
-                    </td>
-                    </tr>
-                   </template>
-                      </tbody>
-                     </table>
-                </div>
-                    </template>
-
-
-                            
-        
-      </template><br>
-
-      <!-- MODAL CREAR VM -->   
+              </h3>
             <div class="modal fade" id="ModalCrear" tabindex="-1" role="dialog" aria-labelledby="ModalCrearTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -201,12 +98,11 @@
                   <div class="form-group">
                   <div class="form-row">
                   <div class="form-group col">
-                    <span class="text-danger">Los recursos deben estár dentro del rango de recursos asignados </span>
                       <div class="form-group">
                         <label for="disco">Disco duro (Gb):</label>
                         <div class="form-group d-flex justify-content-center w-75">                                         
                           <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
-                            <input v-model="vm.disco_duro" type="range" class="form-control" id="disco"  min="1" max="20" required>                                            
+                            <input v-model="vm.disco_duro" type="range" class="form-control" id="disco"  min="1" max="15" required>                                            
                           <span class="font-weight-bold text-primary ml-2 mt-1">{{vm.disco_duro}}</span>
                         </div>
                       </div>
@@ -233,12 +129,114 @@
               </div>
     <!-- Pie del MODAL-->
               <div class="modal-footer">
-                <button v-on:click="comprobarFlavor(vm)" type="button" class="btn btn-success">Crear</button>
+                <button v-on:click="createFlavor(vm)" type="button" class="btn btn-success">Crear</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
               </div>
             </div>
             </div>
             </div>
+                                                                               
+<!-- Verificar estado de las VM-->    
+            <br>                        
+            <template v-if="servers.length == 0">  
+              <p>Actualmente no tienes máquinas virtuales creadas</p>
+            </template>
+            <template v-else>
+                <p>Estas son las máquinas virtuales creadas y sus características:</p>
+                <h3>Máquinas virtuales</h3>
+                <div class="table-responsive">
+                <table class="table table-striped table-hover  text-center">
+                 <thead class="thead-dark">
+                  <tr class="table-active">
+                    <th scope="col">#</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Creada</th>
+                    <th scope="col">S.O.</th>                                        
+                    <th scope="col">Disco</th>
+                    <th scope="col">RAM</th>
+                    <th scope="col">CPU</th>
+                    <th scope="col">IP</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acciones</th>
+                  </tr>
+                 </thead>
+                    
+                <tbody v-for="(server, index) in servers" v-bind:key="server.id">
+                  <template v-if="server.status === 'ACTIVE'">
+                  <tr class="table-success">
+                    <th>{{index+1}}</th>
+                    <td>{{server.name}}</td>
+                    <td>{{server.created}}</td>
+                    <td>{{server.image.id}}</td>
+                    <td>{{server.flavor.id[0]+' Gb'}}</td>
+                    <td>{{server.flavor.id[1]+' Mb'}}</td>
+                    <td>{{server.flavor.id[2]+' vcpu'}}</td>
+                    <td>-</td>
+                    <td>{{server.status}}</td>
+                    <td>
+                      <div class="dropdown">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Action
+                        </button>
+                        <div class="dropdown-menu">
+                            <button v-on:click="editarServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>
+                            <button v-on:click="apagarServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Apagar"><i class="fas fa-power-off"></i> Apagar</button>
+                            <button v-on:click="reiniciarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fas fa-redo-alt"></i> Reiniciar</button>
+                            <button v-on:click="consola(server.id)" type="button" class="btn btn-secondary dropdown-item" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i> Abrir</button>
+                            <button v-on:click="backupServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i> Backup</button>
+                            <button v-on:click="pausarServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Pausar"><i class="fas fa-pause"></i> Pausar</button>
+                            <button v-on:click="bloquearServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Bloquear"><i class="fas fa-lock"></i> Bloquear</button>
+                            <button v-on:click="suspenderServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Suspender"><i class="fas fa-moon"></i> Suspender</button>
+                            <div class="dropdown-divider"></div>
+                            <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i> Eliminar</button>
+                        </div>
+                      </div>
+                    </td>
+                  </tr> 
+                  </template>
+                  <template v-else>
+                    <tr class="table-danger">
+                    <th>{{index+1}}</th>
+                    <td>{{server.name}}</td>
+                    <td>{{server.created}}</td>
+                    <td>{{server.image.id}}</td>
+                    <td>{{server.flavor.id[0]+' Gb'}}</td>
+                    <td>{{server.flavor.id[1]+' Gb'}}</td>
+                    <td>{{server.flavor.id[2]+' vcpu'}}</td>
+                    <td>-</td>
+                    <td>{{server.status}}</td>
+                    <td>
+                      <div class="dropdown dropleft">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Action
+                        </button>
+                        <div class="dropdown-menu">
+                            <button v-on:click="encenderServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Encender"><i class="fas fa-power-off"></i> Encender</button>
+                            <button v-on:click="consola(server.id)" type="button" class="btn btn-secondary dropdown-item" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i> Abrir</button>
+                            <button v-on:click="editarServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>
+                            <button v-on:click="reiniciarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fas fa-redo-alt"></i> Reiniciar</button>
+                            <button v-on:click="backupServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i> Backup</button>
+                            <button v-on:click="desPausarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Despausar"><i class="fas fa-play"></i> Despausar</button>
+                            <button v-on:click="desBloquearServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Desbloquear"><i class="fas fa-lock-open"></i> Desbloquear</button>
+                            <div class="dropdown-divider"></div>
+                            <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i> Eliminar</button>
+                        </div>
+                      </div>
+                    </td>
+                    </tr>
+                   </template>
+                      </tbody>
+                     </table>
+                </div>
+                    </template>
+                </div>     
+            </div>
+            </div>
+            </div>                
+        
+      </template><br>
+
+
            
   </div>
   </div>  
@@ -303,9 +301,8 @@ export default {
       if(this.project.servidor_ubicacion == "OpenStack"){        
         this.getImages()
         this.getNetwork()
-        this.getServers()
         //this.getFlavors
-        //this.generateKeypair() 
+        this.generateKeypair() 
       }
              
     },
@@ -313,15 +310,17 @@ export default {
         'SidebarUsuario': SidebarUsuario  
     },
     methods: {
-//Se obtiene información del localStorage      
+//Se obtiene información del localStor      
       getStorage: async function(){
         //console.log('Se ingresa a get storage')            
         var storage;
         try {
           if (localStorage.getItem) {
               storage = JSON.parse(localStorage.getItem('userInfo'))
+              //console.log('se muestra el storage ',storage)
               this.user = storage
-              await this.getPool(this.user.email)              
+              await this.getPool(this.user.email)
+              //this.getToken()
           }}
           catch(e) {
             storage = {}; }
@@ -330,14 +329,14 @@ export default {
 //Se trae el pool de recursos con el correo del localStorage         
       getPool: async function(){
         await axios.get('/api/pool_recursos/unpool?emailPropietario='+this.user.email)
-        .then( res => {
+        .then(res => {
           if (res.data.status == '404' || res.data.status == '400') {
             this.project = "false";                      
           }
           else{             
-            this.project = res.data.content;            
-            this.project.fecha_fin = new Date (this.project.fecha_fin)
-            this.project.fecha_fin = this.project.fecha_fin.toLocaleDateString()
+            this.project = res.data.content;
+              this.project.fecha_fin = new Date (this.project.fecha_fin)
+              this.project.fecha_fin = this.project.fecha_fin.toLocaleDateString()
             this.tokenProject = this.project.token_openstack;
             //console.log(this.project)
             this.configG = {
@@ -352,15 +351,7 @@ export default {
                     'Accept': 'application/json',                  
                     'X-OpenStack-Nova-API-Version': '2.1'
                   }
-              }
-            if(this.project.private_key === '')  
-            {
-              this.crearKeyPair()
-            }
-            else{
-              console.log(this.project.private_key)
-            }
-             
+              } 
           }                    
         })
         .catch(error => { 
@@ -370,32 +361,34 @@ export default {
       }, 
 // Funciones en OPENSTACK
 //                                              Poner ID proyecto OpenStack  
-
+generateKeypair: async function (){
+        await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/os-keypairs',this.configG)
+         .then(res => {
+          //console.log(res.data.keypairs)
+          if (res.data.keypairs) {
+            //console.log('Ya esxiste la keypair')
+            this.valorKeyPair =  res.data.keypairs[0].keypair.public_key 
+            console.log(valorKeyPair)    
+          }else{
+            //console.log('NO esxiste la keypair se debe crear')
+            this.crearKeyPair()
+          }
+        })
+        .catch(error => { 
+            console.log(error)
+            this.$toastr.e("Error al cargar la Key-Pair " + error ) });       
+      }, 
 crearKeyPair: async function(){
         console.log('Se ingresa a key pair')
         let data = {
           "keypair": {
-          "name": "key-"+this.project.nombre_proyecto
+          "name": "key-"
           }
         }
         await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/os-keypairs', data, this.configG)
-        .then(async res =>{
-         // console.log('Se muestra la respuesta de post keypair ',res)
-         // console.log(res.data.keypair)
-          this.valorKeyPair =  res.data.keypair.private_key
-          //console.log("clave privada")
-          //console.log(this.valorKeyPair)
-            await axios.put('http://localhost:4000/api/pool_recursos/',{
-                _id: this.project._id,
-                private_key: this.valorKeyPair,
-            })
-                .then(res => { 
-             //       console.log('Respuesta del put ',res)
-             console.log(res)
-                })
-                .catch(error => { 
-               //     console.log('Error en axios put ',error);                    
-                });
+        .then( res =>{
+          console.log('Se muestra la respuesta de post keypair ',res)
+          this.valorKeyPair =  res.data.keypair.public_key
         })
         .catch(error =>{ console.log('error en post keypair', error) })  
       }, 
@@ -410,7 +403,7 @@ crearKeyPair: async function(){
         .catch(error => { this.$toastr.e("Error al obtener las VM's " + error )
         })
         if (this.servers.length == 0 )
-            { this.$toastr.i("No tiene Máquinas creadas ")}
+            { this.$toastr.i("No tiene servidores ")}
           else{
             //console.log("Si hay servidores ")
             for await ( server of this.servers){
@@ -443,29 +436,8 @@ crearKeyPair: async function(){
         .catch(error => { this.$toastr.e("Error al obtener el flavor de las VM's: " + error ) });
         return answer;
       },
-      
 //ACCIONES VM's  Acceder por consola - Eliminar - Editar - Encender - Apagar - Reiniciar        
-     encenderServer: async function(idServer) {
-            console.log('Se ingresa a encender')
-            let data={ "os-start": null }
-            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.configG)
-            .then(res => {
-                this.$toastr.i("Encendiendo VM ")
-            })
-            .catch(error => { this.$toastr.e("Error al encender la VM " + error) });
-            this.getServers();
-        },
-     apagarServer: async function(idServer) {
-            console.log('Se ingresa a apagar')
-            let data={ "os-stop": null }
-            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.configG)
-            .then(res => {
-                this.$toastr.i("Apagando VM ")
-            })
-            .catch(error => { this.$toastr.e("Error al apagar la VM" + error) });
-            this.getServers();
-        },
-     consola: async function(idServer){
+      consola: async function(idServer){
         let data={
           "os-getVNCConsole": {
             "type": "novnc"
@@ -532,65 +504,50 @@ crearKeyPair: async function(){
 //--------------------------------------------------------------------------------//
 //-----------------------------Create server---------------------------------------//
 //--------------------------------------------------------------------------------//
-      comprobarFlavor: async function(vm){
+      createFlavor: async function(vm){
         //console.log('Se muestra el vm inicial ',vm)
-        
- //---------------------------------------------------------------------------------//
- //-- Consultar si existe flavor con el nombre, FORMATO ((RAM(Mb)-ALMACENAMIENTO(Gb)-VCPU(#)))
- //-- Si no existe, se manda a crear y si existe se toma el id del flavor para crear la VM 
-
-        
-        //Vamos a cambiar el nombre de la imagen por el id de la imagen
+        console.log('Se muestra el images ',this.images)
         for (let index = 0; index < this.images.length; index++) {
           if (this.images[index].name==vm.SO) {
             //console.log('El id buscado es ',this.images[index].id)
             vm.SO = this.images[index].id
-        }}
-        console.log('Se ingresa a comprobarFlavor')
-        
-        let name = vm.ram*1024+'-'+vm.disco_duro+'-'+vm.cpu
-       
-        await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/flavors/'+name,this.configG)
-            .then(res => {
-                //console.log("Si existe el flavor se envia el id y los demás datos")
-               // console.log(res.data.flavor.id)
-                //this.flavors = res.data.flavors
-                this.addServer(vm,res.data.flavor.id)                                
-            }).catch(async error => {                
-                let data={
-                  "flavor": {
-                    "vcpus": parseInt(vm.cpu), 
-                    "disk": parseInt(vm.disco_duro),
-                    "ram": (parseInt(vm.ram)*1024), 
-                    "id": name, 
-                    "name": name 
-                  }
-                }        
-               await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/flavors',data,this.config)
-                .then(res => {
-                  //console.log('Respuesta del CREATE FLAVOR')
-                  //console.log(res.data.flavor.id)
-                  this.addServer(vm,res.data.flavor.id)
-                })
-                .catch(error => {
-                  console.log(error)
-                  this.$toastr.e("Error al crear el flavor: " + error )
-                });
-              })
-      },
-      addServer: async function(vm,id_flavor){
-        console.log('Se ingresa a addServer ')
-        console.log(vm)
-        console.log("id flavor")
-        console.log(id_flavor)
+          }
+        }
+        //console.log('El vm ahora es ',vm)
+        //console.log('Se ingresa a createFlavor')
+        let data={
+          "flavor": {
+            "vcpus": parseInt(vm.cpu), 
+            "disk": parseInt(vm.disco_duro), 
+            "name": "flavor-"+vm.nombre, 
+            //"os-flavor-access:is_public": true, 
+            //"description": "Flavor creado para máquina "+vm.nombre,
+            //"rxtx_factor": 1.0, 
+            //"OS-FLV-EXT-DATA:ephemeral": 0, 
+            "ram": (parseInt(vm.ram)*1024), 
+            "id": "id-"+vm.nombre
+            //"swap": 0
+          }
+        }
+        await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/flavors',data,this.config)
+        .then(res => {
+          console.log('Respuesta del CREATE FLAVOR')
+          console.log(res.data)
+          this.addServer(vm,res.data.flavor.id)
+        })
+        .catch(error => {
+          console.log(error)
+          this.$toastr.e("Error al crear el flavor: " + error )}); 
+      },  
+       addServer: async function(vm,id_flavor){
+        console.log('Se ingresa a addServer ',vm)
         let data={
           "server": {
             "name": vm.nombre, 
             "imageRef": vm.SO, 
             "flavorRef": id_flavor,
-            "key_name": "key-"+this.project.nombre_proyecto,
-            //"availability_zone": "nova",
-            "adminPass" : "admin",
+            //"key_name": "req.body.nameKey",
+            //"availability_zone": "nova", 
             "max_count": 1, 
             "min_count": 1,  
             "networks": [{"uuid": this.network}]
@@ -601,12 +558,12 @@ crearKeyPair: async function(){
           this.$toastr.s("VM agregada correctamente ")
           console.log('Respuesta del post')
           console.log(res.data)
-         /* if (response.data.server) { 
+          if (response.data.server) { 
             this.answerServer.content = res.data.server
           }else{
             this.answerServer.content = null
           }
-          this.consultPort(this.answerServer.content)*/
+          this.consultPort(this.answerServer.content)
         })
         .catch(error => { this.$toastr.e("Error al crear la VM: " + error ) });
         
@@ -671,19 +628,7 @@ crearKeyPair: async function(){
         return new Promise(resolve=>{
           setTimeout(resolve,ms)
         })
-      },
-      /*
-      generarPEM: async function(){
-        let data = this.project;
-        //console.log(data)
-        await axios.post('/api/openstack/crearPem', data  )
-          .then(function (res) {
-            console.log(res)
-          })
-          .catch(error =>{
-            console.log(error)
-        });
-      }*/
+      }
       
     }  
 

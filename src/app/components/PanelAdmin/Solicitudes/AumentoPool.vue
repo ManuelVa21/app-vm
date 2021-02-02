@@ -2,10 +2,10 @@
   <div class="content">
     <div class="row">
       <div class="col-2">
-        <SidebarAdmin style="position: sticky; top: 70px"></SidebarAdmin>
+        <SidebarAdmin style="position: sticky; top: 75px"></SidebarAdmin>
       </div>
         
-        <div class="col-10" style="padding-left: 0;">
+        <div class="col-10 pl-0">
             
         <div style=" float: right;">
             <span>/</span>
@@ -257,7 +257,7 @@ export default {
             let tipo = 'Aumento Pool de Recursos'   //  OJOOOOOOOOOO cambiar a aumento de recursos
             await axios.get('/api/solicitudes?tipo='+tipo)            
             .then(res => {
-                this.solicitudes = res.data.content;                
+                this.solicitudes = res.data.content.reverse();                
                 //console.log(this.solicitudes);
             })            
             .catch(error => { this.$toastr.e("Error al obtener las solicitudes: " + error )});

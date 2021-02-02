@@ -2,9 +2,9 @@
     <div class="content">
     <div class="row">
         <div class="col-2">
-          <SidebarAdmin style="position: sticky; top: 70px"></SidebarAdmin>
+          <SidebarAdmin style="position: sticky; top: 75px"></SidebarAdmin>
         </div>
-    <div class="col-10" style="padding-left: 0;">
+    <div class="col-10 pl-0">
           
         <div style=" float: right;">
             <span>/</span>
@@ -63,9 +63,11 @@
                         </div>
                     </template>
                     <template v-else>
-                        <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
-                            <button @click="getOnePool(item)" type="button" class="btn-sm btn-info ml-3" data-toggle="modal" data-target="#ModalCambiarEstado" data-placement="top" title="Cambiar estado"><i class="fas fa-edit"></i></button> 
-                          <!--  <button @click="getOnePool(item)" type="button" class="btn-sm btn-danger " data-toggle="modal" data-target="#ModalConfirmarEliminar" data-placement="top" title="Eliminar proyecto"><i class="fas fa-trash"></i></button>  -->
+                        <div class="btn-group-sm" role="group" aria-label="Basic example">   
+                            <button @click="getOnePool(item)" type="button" class="btn-sm btn-info" data-toggle="modal" data-target="#ModalCambiarEstado" data-placement="top" title="Cambiar estado"><i class="fas fa-edit"></i></button>                                                                                                          
+                           <!-- <button @click="getOnePool(item)" type="button" class="btn-sm btn-danger" data-toggle="modal" data-target="#ModalConfirmarEliminar" data-placement="top" title="Eliminar proyecto"><i class="fas fa-trash"></i></button>  -->
+                            
+                           <!-- <button @click="prueba(item)" type="button" class="btn-sm btn-success" data-placement="top" title="prueba"><i class="fas fa-eye"></i></button> -->
                         
                         </div>
                     </template>  
@@ -87,14 +89,19 @@
                    <span aria-hidden="true">&times;</span> </button>
             </div>
             <div class="modal-body text-center">
-                <div class="text-justify">
-                    <p>* Recuerde que al desactivar los proyectos, se libera la CPU y RAM pero no el almacenamiento. Para liberar los recursos debe eliminar el proyecto.</p>
-                    <p>* Si el proyecto está en VMware, al desactivar el proyecto, diríjase al servidor correspondiente utilizando el vSphere client y apague las VM's. </p> 
-                    <p>* Por su parte si el proyecto está en OpenStack, se desactiva el proyecto y el usuario no podrá acceder a el.</p>
-                </div>
-                <button  class="btn font-weight-bold btn-success " data-dismiss="modal">cancelar</button>
-                <button  @click="desactivarProyecto()" class="btn font-weight-bold btn-danger" data-dismiss="modal">DESACTIVAR</button>
-            
+                <template v-if="project.estado == 'Activo'">
+                        <div class="text-justify">
+                            <p>* Recuerde que al desactivar los proyectos, se libera la CPU y RAM pero no el almacenamiento. Para liberar los recursos debe eliminar el proyecto.</p>
+                            <p>* Si el proyecto está en VMware, al desactivar el proyecto, diríjase al servidor correspondiente utilizando el vSphere client y apague las VM's. </p> 
+                            <p>* Por su parte si el proyecto está en OpenStack, se desactiva el proyecto y el usuario no podrá acceder a el.</p>
+                        </div>                    
+                        <button  class="btn font-weight-bold btn-success " data-dismiss="modal">cancelar</button>
+                        <button  @click="desactivarProyecto()" class="btn font-weight-bold btn-danger" data-dismiss="modal">DESACTIVAR</button>
+                </template>
+                <template v-if="project.estado == 'Inactivo'">
+                    <button  class="btn font-weight-bold btn-success " data-dismiss="modal">cancelar</button>
+                    <button  @click="desactivarProyecto()" class="btn font-weight-bold btn-danger" data-dismiss="modal">ACTIVAR</button>
+                </template>
             </div>
         </div>
         </div>
@@ -211,7 +218,7 @@ export default {
             configDeleteNetwork:{
                 headers:{
                 'Accept' : 'application/json',
-                'User-Agent': 'openstacksdk/0.48.0 keystoneauth1/4.2.1 python-requests/2.23.0 CPython/3.8.2',
+                'User-Agent': 'openstacksdk/0.48.0 keystoneauth1/4.2.1 python-requests/2.23.0 CPython/3.8.5',
                 'X-Auth-Token':Token,
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '10.55.6.39',
@@ -254,6 +261,7 @@ export default {
 
     },
     methods:{
+        
 // Obtener información de los proyectos
         getPools: async function(){
             await axios.get('/api/pool_recursos')

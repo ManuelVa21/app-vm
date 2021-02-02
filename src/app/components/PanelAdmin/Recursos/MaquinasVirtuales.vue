@@ -3,9 +3,9 @@
     <div class="content">
     <div class="row">
         <div class="col-2">
-          <SidebarAdmin style="position: sticky; top: 70px"></SidebarAdmin>
+          <SidebarAdmin style="position: sticky; top: 75px"></SidebarAdmin>
         </div>
-        <div class="col-10" style="padding-left: 0;">
+        <div class="col-10 pl-0">
           
         <div style=" float: right;">
             <span>/</span>
@@ -28,19 +28,19 @@
                 title="Máquinas Virtuales"                           
                 filter-by="status">                            
 <!-- Mostrar estado VM -->     
-                <template v-slot:status="{item}">
-                    <template v-if="item.status === 'ACTIVE'">                                        
-                        <td class="bg-success text-white"><b>ACTIVE</b></td>                                        
-                    </template>
-                    <template v-if="item.status === 'VERIFY_RESIZE'">
-                        <td class="bg-warning text-white"><b>VERIFICANDO</b></td>
-                    </template>
-                    <template v-else>
-                        <td class="bg-danger text-white"><b>APAGADO</b></td>
-                    </template>                                                                          
+            <template v-slot:status="{item}">
+                <template v-if="item.status === 'ACTIVE'">                                        
+                    <td class="bg-success text-white"><b>ACTIVE</b></td>                                        
                 </template>
- <!-- Mostrar Acciones sobre VM's -->
-                <template v-slot:_id="{item}">
+                <template v-else-if="item.status === 'ERROR'">
+                    <td class="bg-warning text-white"><b>ERROR</b></td>
+                </template>
+                <template v-else>
+                    <td class="bg-danger text-white"><b>APAGADO</b></td>
+                </template>                                                                          
+            </template>
+<!-- Mostrar ACCIONES VM -->             
+                  <template v-slot:id="{item}">
                     <template v-if="item.status === 'ACTIVE'">                                        
                         <div class="dropdown dropleft">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -61,7 +61,7 @@
                         </div>                                        
                     </template>
 
-                    <template v-if="item.status === 'VERIFY_RESIZE'">
+                    <template v-else-if="item.status === 'VERIFY_RESIZE'">
                         <div class="dropdown dropleft">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Action
@@ -97,7 +97,10 @@
                     </template>
                 </template>
 
+             
             </VueyeTable>
+ <!-- Mostrar Acciones sobre VM's -->
+            
                                                   
                 
             </div>
@@ -158,24 +161,28 @@ export default {
             listServer: [],
             columns:[              
                 {key: "tenant_id", label: "Proyecto", display: true, sortable: true},
-                {key: "", label: "Usuario", display: true},
+                //{key: "", label: "Usuario", display: true},
                 {key: "name", label: "Nombre VM", display: true},                
-                {key: "created", label: "Creado", display: true},
+                //{key: "created", label: "Creado", display: true},
                 {key: "image.id", label: "S.O.", display: true},
-                {key: "flavor.id[0]", label: "Disco 'Gb'", display: true},                             
-                {key: "flavor.id[1]", label: "RAM 'Mb'", display: true, sortable: true},
-                {key: "flavor.id[2]", label: "CPU", display: true},
-                {key: "", label: "IP", display: true},
-                {key: "status", label: "Estado", display: true},
+                {key: "almacenamiento", label: "Disco 'Gb'", display: true},                             
+                {key: "ram", label: "RAM 'Mb'", display: true},
+                {key: "cpu", label: "CPU", display: true},
+                //{key: "", label: "IP", display: true},
+                {key: "status", label: "Estado", display: true, sortable: true},
                 {key: "id", label: "Acciones", display: true},                              
             ]  
         }
     },
     created(){
-        this.getServers();
+        
+        this.getServers()
+        
     },
     methods:{
+        
         getServers: async function(){
+            this.$toastr.i("Espere mientras cargan las VM's")
             let server
             //console.log('Se ingresa a getServers')
             await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/servers/detail?all_tenants=True', this.config)
@@ -185,18 +192,21 @@ export default {
                     //console.log(res.data.servers[4].addresses);
                 })
                 .catch(error => { this.$toastr.e("Error al cargar las VM's de OpenStack " + error) });
+                
                 for await ( server of this.servers){
                     server.tenant_id = await this.getOneProject(server.tenant_id);
                     if (server.image.id) {
                         server.image.id = await this.getOneImage(server.image.id);                        
-                    }
-                    else{
-                        server.image.id =server.image.id; 
-                    }
-                    server.flavor.id= await this.getOneFlavor(server.flavor.id);
+                    }                    
+                    server.flavor.id = await this.getOneFlavor(server.flavor.id);
+                    server.almacenamiento = server.flavor.id[0]
+                    server.ram = server.flavor.id[1]
+                    server.cpu =server.flavor.id[2]
                 }
+                console.log("antes de probar")
                 this.listServer = this.servers;
-                console.log('list server es: ',this.listServer)
+               // console.log('list server es: '+ this.listServer)
+               
         },
         //Se obtiene el proyecto para nombre de proyecto. --Usar tenant_id--
         getOneProject: async function(id){
@@ -204,7 +214,7 @@ export default {
             //console.log('Se ingresa  getOneProject')
             await axios.get('http://'+configG.ipOpenstack+'/identity/v3/projects/'+id,this.config)
                 .then(res => {
-                    //console.log(res.data.project.name)
+                   // console.log(res.data.project.name)
                     answer= res.data.project.name;
                 })
                 .catch(error => { 
@@ -219,7 +229,7 @@ export default {
             await axios.get('http://'+configG.ipOpenstack+'/image/v2/images/'+id,this.config)
                 .then(res => {
                     //console.log(res)
-                    //console.log(res.data.name)
+                   // console.log(res.data.name)
                     answer= res.data.name;
                 })
                 .catch(error => { 
@@ -246,7 +256,7 @@ export default {
 //SERVER//
         addServer: async function(){
             console.log('Se ingresa a addServer')
-            /*let data={
+            let data={
                 "server": {
                     "name": "pruebaconhost",
                     "OS-DCF:diskConfig": "AUTO", 
@@ -262,7 +272,7 @@ export default {
                     console.log(res.data)
                 })
                 .catch(error => { this.$toastr.e("Error al crear la VM " + error)});
-                this.getServers();*/
+                this.getServers();
         },
         consola: async function(idServer){
             let data={
@@ -278,7 +288,8 @@ export default {
                 .catch(error => { this.$toastr.e("Error al cargar la consola " + error) });
         },
         deleteServer: async function(idServer){
-            //console.log('Se ingresa a deleteServer')
+            console.log('Se ingresa a deleteServer')
+            console.log(idServer)
             await axios.delete('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer,this.config)
                 .then(res => {
                     this.$toastr.i("VM eliminada ")
