@@ -70,7 +70,9 @@
                   <span data-toggle="tooltip" data-placement="top" title="Crear VM"><i class="fas fa-plus"></i></span>
                 </button>
                 <b> Crear máquina virtual</b>
-              </h3>                                                                               
+              </h3>  
+              
+                                                                                        
 <!-- Verificar estado de las VM-->    
             <br>                        
             <template v-if="servers.length == 0">  
@@ -78,7 +80,10 @@
             </template>
             <template v-else>
                 <p>Estas son las máquinas virtuales creadas y sus características:</p>
-                <h3>Máquinas virtuales</h3>
+                <p class="text-danger">* Si la máquina no muestra el usuario/contraseña. Utilice por defecto root/root y 
+                  posteriormente cree su usuario y contraseña.</p>
+                <p class="text-danger">* Al crear una VM espere un tiempo mientras se crea la VM (1 min) y vuelva a cargar la página. </p>
+              
                 <div class="table-responsive">
                 <table class="table table-striped table-hover  text-center">
                  <thead class="thead-dark">
@@ -109,21 +114,23 @@
                     <td>-</td>
                     <td>{{server.status}}</td>
                     <td>
-                      <div class="dropdown mb-3">
+                      <div class="dropdown" style="position: static" >
                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Action
                         </button>
-                        <div class="dropdown-menu">
-                            <button v-on:click="editarServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>
+                        <div class="dropdown-menu" >
+                            
+                             <!--<button v-on:click="editarServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>-->
                             <button v-on:click="apagarServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Apagar"><i class="fas fa-power-off"></i> Apagar</button>
-                            <button v-on:click="reiniciarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fas fa-redo-alt"></i> Reiniciar</button>
                             <button v-on:click="consola(server.id)" type="button" class="btn btn-secondary dropdown-item" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i> Abrir</button>
-                            <button v-on:click="backupServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i> Backup</button>
+                            <button v-on:click="reiniciarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fas fa-redo-alt"></i> Reiniciar</button>
                             <button v-on:click="pausarServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Pausar"><i class="fas fa-pause"></i> Pausar</button>
                             <button v-on:click="bloquearServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Bloquear"><i class="fas fa-lock"></i> Bloquear</button>
+                            
                             <button v-on:click="suspenderServer(server.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Suspender"><i class="fas fa-moon"></i> Suspender</button>
                             <div class="dropdown-divider"></div>
                             <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i> Eliminar</button>
+                          
                         </div>
                       </div>
                     </td>
@@ -140,18 +147,18 @@
                     <td>-</td>
                     <td>{{server.status}}</td>
                     <td>
-                      <div class="dropdown ">
+                      <div class="dropdown" style="position: static">
                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Action
                         </button>
                         <div class="dropdown-menu">
                             <button v-on:click="encenderServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Encender"><i class="fas fa-power-off"></i> Encender</button>
                             <button v-on:click="consola(server.id)" type="button" class="btn btn-secondary dropdown-item" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i> Abrir</button>
-                            <button v-on:click="editarServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>
+                            <!-- <button v-on:click="editarServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>-->
                             <button v-on:click="reiniciarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fas fa-redo-alt"></i> Reiniciar</button>
-                            <button v-on:click="backupServer(server.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i> Backup</button>
                             <button v-on:click="desPausarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Despausar"><i class="fas fa-play"></i> Despausar</button>
                             <button v-on:click="desBloquearServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Desbloquear"><i class="fas fa-lock-open"></i> Desbloquear</button>
+                            <button v-on:click="reanudarServer(server.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reanudar"><i class="fas fa-tv"></i> Reanudar</button>
                             <div class="dropdown-divider"></div>
                             <button v-on:click="deleteServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i> Eliminar</button>
                         </div>
@@ -169,13 +176,13 @@
         
       </template><br>
 
-      <!-- MODAL CREAR VM -->   
-            <div class="modal fade" id="ModalCrear" tabindex="-1" role="dialog" aria-labelledby="ModalCrearTitle" aria-hidden="true">
+<!-- MODAL CREAR VM -->   
+            <div class="modal fade" id="ModalCrear" tabindex="-1" role="dialog" aria-labelledby="ModalCrear" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               
               <div class="modal-header text-white bg-primary">                                                 
-                <h5 class="modal-title modal-dark" id="SolicitudPool"><b>Máquina Virtual</b></h5>
+                <h5 class="modal-title modal-dark"><b>Máquina Virtual</b></h5>
                 <button  type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button> 
@@ -206,7 +213,7 @@
                         <label for="disco">Disco duro (Gb):</label>
                         <div class="form-group d-flex justify-content-center w-75">                                         
                           <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
-                            <input v-model="vm.disco_duro" type="range" class="form-control" id="disco"  min="1" max="20" required>                                            
+                            <input v-model="vm.disco_duro" type="range" class="form-control" id="disco"  min="1" max="100" required>                                            
                           <span class="font-weight-bold text-primary ml-2 mt-1">{{vm.disco_duro}}</span>
                         </div>
                       </div>
@@ -222,7 +229,7 @@
                         <label for="ram">Ram (GB):</label>
                         <div class="form-group d-flex justify-content-center w-75">                                         
                           <span class="font-weight-bold text-primary mr-2 mt-1">0</span>                                                
-                            <input v-model="vm.ram" type="range" class="form-control" id="ram"  min="1" max="8" required>                                            
+                            <input v-model="vm.ram" type="range" class="form-control" id="ram"  min="1" max="16" required>                                            
                           <span class="font-weight-bold text-primary ml-2 mt-1">{{vm.ram}}</span>
                         </div>                        
                         </div>
@@ -238,7 +245,7 @@
               </div>
             </div>
             </div>
-            </div>
+            </div>            
            
   </div>
   </div>  
@@ -309,19 +316,19 @@ export default {
       }
              
     },
+//COMPONENTES
     components:{
         'SidebarUsuario': SidebarUsuario  
     },
     methods: {
 //Se obtiene información del localStorage      
       getStorage: async function(){
-        //console.log('Se ingresa a get storage')            
         var storage;
         try {
           if (localStorage.getItem) {
               storage = JSON.parse(localStorage.getItem('userInfo'))
               this.user = storage
-              await this.getPool(this.user.email)              
+              await this.getPool(this.user.email)     //Traer el pool de recursos         
           }}
           catch(e) {
             storage = {}; }
@@ -332,13 +339,13 @@ export default {
         await axios.get('/api/pool_recursos/unpool?emailPropietario='+this.user.email)
         .then( res => {
           if (res.data.status == '404' || res.data.status == '400') {
-            this.project = "false";                      
+            this.project = "false";             //no hay pool asociado         
           }
           else{             
             this.project = res.data.content;            
             this.project.fecha_fin = new Date (this.project.fecha_fin)
             this.project.fecha_fin = this.project.fecha_fin.toLocaleDateString()
-            this.tokenProject = this.project.token_openstack;
+            this.tokenProject = this.project.token_openstack; // asignamos el token de Openstack
             //console.log(this.project)
             this.configG = {
                   headers:{
@@ -358,7 +365,7 @@ export default {
               this.crearKeyPair()
             }
             else{
-              console.log(this.project.private_key)
+              //console.log(this.project.private_key)
             }
              
           }                    
@@ -391,8 +398,8 @@ crearKeyPair: async function(){
             })
                 .then(res => { 
              //       console.log('Respuesta del put ',res)
-             console.log(res)
-                })
+             //console.log(res)
+                })//
                 .catch(error => { 
                //     console.log('Error en axios put ',error);                    
                 });
@@ -482,28 +489,98 @@ crearKeyPair: async function(){
         //console.log('Se ingresa a deleteServer')
         await axios.delete('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer,this.configG)
         .then(res => {
-          this.deleteFlavor(idServer)
+          
           this.$toastr.s("VM eliminada")
+          var esperando = setTimeout(this.getServers(),100000); 
         })
         .catch(error => { this.$toastr.e("Error al eliminar la VM " + error ) });
-        this.getServers();
+        
+    
+        
       },
-      deleteFlavor: async function(idServer){
-        console.log('Se ingresa a delete flavor')
-        console.log('Se consulta primero el id del flavor a eliminar')
-        let idFlavor;
-        for await ( server of this.servers){
-          if (server.id == idServer) {
-            console.log('Este es el id del flavor')
-            idFlavor = server.flavor.id[3]
-          }
-        }
-        await axios.delete('http://'+configG.ipOpenstack+'/compute/v2.1/flavors/'+idFlavor,this.config)
-        .then(res => {
-          console.log('Flavor eliminado')
-        })
-        .catch(error => { console.log('Error al elminar flavor, ', error) });
-      },
+      reiniciarServer: async function(idServer) {
+            console.log('Se ingresa a reiniciar')
+            let data={"reboot": {"type": "SOFT"}}
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.configG)
+            .then(res => {
+                this.$toastr.i("Reiniciando la VM " )
+            })
+            .catch(error => { this.$toastr.e("Error al reiniciar la VM " + error) });
+            this.getServers();
+        },
+      pausarServer: async function(idServer) {
+            console.log('Se ingresa a pausar')
+            let data={"pause": null}
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.configG)
+            .then(res => {
+                this.$toastr.i("Servidor pausado ")
+            })
+            .catch(error => { this.$toastr.e("Error al pausar la VM " + error) });
+            this.getServers();
+        },
+      desPausarServer: async function(idServer) {
+            console.log('Se ingresa a despausar')
+            let data={"unpause": null}
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.configG)
+            .then(res => {
+                this.$toastr.i("VM despausada ")
+            })
+            .catch(error => { this.$toastr.e("Error al despausar la VM " + error) });
+            this.getServers();
+        },
+      bloquearServer: async function(idServer) {
+            console.log('Se ingresa a bloquear')
+            let data={"lock": null}
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.configG)
+            .then(res => {
+                this.$toastr.i("VM bloqueada ")
+            })
+            .catch(error => { this.$toastr.e("Error al bloquear la VM " + error) });
+            this.getServers();
+        },
+      desBloquearServer: async function(idServer) {
+            console.log('Se ingresa a desbloquear')
+            let data={"unlock": null}
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.configG)
+            .then(res => {
+                this.$toastr.i("VM desbloqueada ")
+            })
+            .catch(error => { this.$toastr.e("Error al desbloquear la VM " + error) });
+            this.getServers();
+        }, 
+        suspenderServer: async function(idServer) {
+            console.log('Se ingresa a suspender')
+            let data={"suspend": null}
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.configG)
+            .then(res => {
+                this.$toastr.i("VM suspendida ")
+            })
+            .catch(error => { this.$toastr.e("Error al suspender la VM " + error) });
+            this.getServers();
+        },
+        reanudarServer: async function(idServer) {
+            console.log('Se ingresa a reanudar')
+            let data={"resume": null}
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.configG)
+            .then(res => {
+                this.$toastr.i("VM reanudada")
+            })
+            .catch(error => { this.$toastr.e("Error al reanudar la VM " + error) 
+            console.log(error)
+            });
+            this.getServers();
+        },
+        reconstruirServer: async function(idServer) {
+            console.log('Se ingresa a reanudar')
+            let data={"resume": null}
+            await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.configG)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(error => { this.$toastr.e("Error al reconstruir la VM " + error) });
+            this.getServers();
+        }, 
+      
       editServer: async function (idServer){
         console.log (idServer)
       },
@@ -570,7 +647,9 @@ crearKeyPair: async function(){
                 .then(res => {
                   //console.log('Respuesta del CREATE FLAVOR')
                   //console.log(res.data.flavor.id)
+                  
                   this.addServer(vm,res.data.flavor.id)
+                  
                 })
                 .catch(error => {
                   console.log(error)
@@ -578,114 +657,36 @@ crearKeyPair: async function(){
                 });
               })
       },
-      addServer: async function(vm,id_flavor){
-        console.log('Se ingresa a addServer ')
-        console.log(vm)
-        console.log("id flavor")
-        console.log(id_flavor)
+      addServer: async function(vm,id_flavor){       
+         $('#ModalCrear').modal('hide')
         let data={
           "server": {
-            "name": vm.nombre, 
+            "name": vm.nombre,
             "imageRef": vm.SO, 
             "flavorRef": id_flavor,
             "key_name": "key-"+this.project.nombre_proyecto,
-            //"availability_zone": "nova",
-            "adminPass" : "admin",
+            //"availability_zone": "nova",            
             "max_count": 1, 
             "min_count": 1,  
             "networks": [{"uuid": this.network}]
           }
         }
         await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers',data,this.configG)
-        .then(res => {
-          this.$toastr.s("VM agregada correctamente ")
-          console.log('Respuesta del post')
-          console.log(res.data)
-         /* if (response.data.server) { 
-            this.answerServer.content = res.data.server
-          }else{
-            this.answerServer.content = null
-          }
-          this.consultPort(this.answerServer.content)*/
+        .then( res => {
+          
+          this.$toastr.s("Creando VM ");       
+          
+          var esperando =  setTimeout(this.getServers(),60000 );   
+                  
         })
-        .catch(error => { this.$toastr.e("Error al crear la VM: " + error ) });
+        .catch(error => { this.$toastr.e("Error, verifique tener recursos disponibles.") 
         
-      },
-      consultPort: async function(data){
-        await sleep(10000)
-        let portDevice
-        console.log("Se ingresa a consultar puerto")
-        await axios.get('http://'+configG.ipOpenstack+':9696/v2.0/ports?device_id='+data.id, this.configG)
-        .then(function (res) {
-          console.log('Se muestra la respuesta del consultar puerto')
-          console.log(res.data)
-          portDevice = res.data.ports[0].id
-          this.floatIp(portDevice)
-        })
-        .catch(error => { console.log('error consultar puerto', error) });
+        console.log(error)});
         
-      },
-      floatIp: async function(port){
-        let body={
-          "floatingip": {
-          "floating_network_id": configG.idNetPublic,
-          "port_id": port
-          }
-        }
-        await axios.post('http://'+configG.ipOpenstack+':9696/v2.0/floatingips', body, this.configG)
-        .then( res =>{
-          console.log('Se muestra la respuesta del floatIp ',res)
-        })
-        .catch(error =>{ console.log('error dd ip float', error) })   
-        this.answer.content = await openstack.consultServer(answer.content.id);
-        ipfloat=answer.content.addresses[Object.keys(answer.content.addresses)[0]][1].addr;
-      },
+      }     
       
-      runServer: async function(){
-        console.log('Se ingresa a run server')
-        /*var ssh = new SSH({
-          host: ipfloat,
-          user: 'ubuntu',
-          key: this.valorKeyPair
-        });
-        ssh.exec("sudo useradd telcoims")
-        ssh.exec("echo telcoims:telcoims | sudo chpasswd")
-        ssh.exec("sudo sed -i '$a telcoims    ALL=(ALL:ALL) ALL' /etc/sudoers")
-        .start();*/
-      },
-      consultServer: async function(idServer){
-        await sleep(10000)
-        let server;
-        console.log('Se ingresa a consult server')
-        await axios.get('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer, this.configG )
-          .then(function (res) {
-            server = res.data.server
-          })
-          .catch(error =>{
-              server = 'error'
-        });
-        console.log('La respuesta de consult server es: ',server)
-        return server;
-      },
-      sleep: async function(ms) {
-        return new Promise(resolve=>{
-          setTimeout(resolve,ms)
-        })
-      },
-      /*
-      generarPEM: async function(){
-        let data = this.project;
-        //console.log(data)
-        await axios.post('/api/openstack/crearPem', data  )
-          .then(function (res) {
-            console.log(res)
-          })
-          .catch(error =>{
-            console.log(error)
-        });
-      }*/
-      
-    }  
+    },
+    
 
     
 }

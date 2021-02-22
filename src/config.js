@@ -1,7 +1,7 @@
 module.exports={
-    OS_USERNAME: 'gestionvm',
+    OS_USERNAME: 'telco',
     OS_PROJECT_NAME: 'admin',
-    OS_PASSWORD: '123',
+    OS_PASSWORD: 'Telco2016',
     tokenOpenStack: '',
     ipOpenstack: '10.55.2.20',
     ipServerUsuarios: '10.55.6.31',

@@ -24,8 +24,7 @@
                     Pool de recursos  </button>
                 <button @click="igualarValores()" class="btn btn-outline-info" data-toggle="modal" data-target="#ModalSolicitudAumento" >
                     Aumento de pool de recursos  </button>
-            <!--    <button class="btn btn-outline-info " data-toggle="modal" data-target="#ModalSolicitudBackup" >
-                    Backup </button>            -->
+            
             </template>
             
             <template v-else> 
@@ -33,8 +32,7 @@
                     Pool de recursos </button>
                 <button disabled class="btn btn-outline-info " data-toggle="modal" data-target="#ModalSolicitudAumento">
                     Aumento de pool de recursos </button>
-               <!-- <button disabled class="btn btn-outline-info " data-toggle="modal" data-target="#ModalSolicitudBackup" >
-                    Backup </button> -->
+             
             </template>   
                      
         </div>
@@ -440,45 +438,7 @@
         </div>
         </div>                  
 
-<!-- #MODAL  Solicitud de Backup -->  
-        <div class="modal fade" id="ModalSolicitudBackup" tabindex="-1" role="dialog" aria-labelledby="SolicitudBackup" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content ">
-            <div class="modal-header text-white bg-primary">
-              <h5 class="modal-title modal-dark" id="SolicitudBackup"><b>Información de la VM a guardar</b></h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
 
-            <div class="modal-body">
-               <p>Diligencie los datos requeridos para realizar la solicitud de Backup</p>
-              
-                      <form @submit.prevent="sendSolicitud('Backup')">
-                          <div class="form-group">
-                              <div class="form-group col">
-                                  <label for="maquina">Máquina virtual</label>
-                                  <select v-model="solicitudPool.maquina" type="maquina" class="form-control" id="maquina" required>
-                                      <option v-for="server in servers" v-bind:key="server.id">{{server.name}}</option>
-                                  </select>
-                                  
-                              </div> 
-                              <hr>
-                              <p>Por favor escriba el motivo por el cual desea realizar el Backup.</p>
-                              
-                              <textarea v-model="solicitudPool.motivo" class="ml-3" id="" cols="77" rows="4" placeholder="Motivo de ampliación de recursos"></textarea>
-                          </div>
-                      <div class="text-center">
-                          <button type="submit" class="btn btn-success">Enviar</button>
-                          <button type="button" class="btn btn-danger" data-dismiss="modal">Cacncelar</button>
-                      </div>
-                  </form>
-            </div>
-              
-        </div>
-        </div>
-        </div>                    
-<!-- finaliza solicitud back UP -->
 
     </div>
     </div>
@@ -655,7 +615,7 @@ export default {
             }  
                     
            await axios.post('/api/solicitudes',solicitud)
-            .then(res => { this.$toastr.s("Solicitud enviada correctamente") 
+            .then(res => { this.$toastr.s("Solicitud creada correctamente, espere la confirmación del administrador") 
                 $('#ModalSolicitudPool').modal('hide')
                 $('#ModalSolicitudAumento').modal('hide')
                 })

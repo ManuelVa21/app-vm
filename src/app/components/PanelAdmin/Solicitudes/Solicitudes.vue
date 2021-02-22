@@ -20,7 +20,6 @@
             <div class="btn-group-vertical btn-group-lg mr-2" style="display: flex; align-items: center">   
             <button @click="$router.push('/PanelAdmin/Solicitudes/PoolRecursos')" class="btn btn-outline-info">Pool de recursos <span class="ml-3 badge badge-danger">{{solicitudesPool.length}}</span></button>
             <button @click="$router.push('/PanelAdmin/Solicitudes/AumentoPool')" class="btn btn-outline-info ">Aumento pool de recursos <span class="ml-3 badge badge-danger">{{solicitudesAumento.length}}</span></button>
-            <!--<button @click="$router.push('/PanelAdmin/Solicitudes/Backup')" class="btn btn-outline-info ">Backup <span class="ml-3 badge badge-danger">{{solicitudesBackup.length}}</span></button>-->
             </div>
         </div>
 
@@ -40,13 +39,13 @@ export default{
 
           solicitudesPool: [],
           solicitudesAumento: [],
-          solicitudesBackup: [],
+          
         }
     },
     created(){
         this.getSolicitudesPool();
         this.getSolicitudesAumento();
-        this.getSolicitudesBackup();
+       
 
     },
     components:{
@@ -72,17 +71,8 @@ export default{
             this.solicitudesAumento = res.data.content;                    
         })
         .catch(error => { this.$toastr.e("Error al obtener las solicitudes de aumento de pool: " + error ) });
-      },
-      getSolicitudesBackup: async function(){
-        //console.log('Se ingresa a getNotificaciones')
-        await axios.get('/api/solicitudes?estado=Sin Atender&tipo=Backup')
-        .then(res => {
-            //console.log('Se muestra respuesta get del sidebar usuario get solicitudes')
-            //console.log(res.data);
-            this.solicitudesBackup = res.data.content;                    
-        })
-        .catch(error => { this.$toastr.e("Error al obtener las solicitudes de backup: " + error )});
       }
+      
 
     }  
   }

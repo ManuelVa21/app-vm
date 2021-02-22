@@ -68,7 +68,7 @@ export default{
     },
     getAlertas: async function(correo){
       //console.log('Se ingresa a getAlertas')
-      await axios.get('/api/alertas_notificaciones?correo_usuario='+correo+'estado=Sin Atender&tipo=Alerta')
+      await axios.get('/api/alertas_notificaciones?usuario_destino=Administrador&estado=Sin Atender&tipo=Alerta')
       .then(res => {
           //console.log('La respuesta en getAlertas es ',res.data.content);
           this.alertas = res.data.content;                    
@@ -77,7 +77,7 @@ export default{
     },
     getNotificaciones: async function(correo){
       //console.log('Se ingresa a getNotificaciones')
-      await axios.get('/api/alertas_notificaciones?correo_usuario='+correo+'estado=Sin Atender&tipo=Notificación')
+      await axios.get('/api/alertas_notificaciones?usuario_destino=Administrador&estado=Sin Atender&tipo=Notificación')
       .then(res => {
           //console.log('La respuesta en getNotificacion es ',res.data.content);
           this.notificaciones = res.data.content;                    

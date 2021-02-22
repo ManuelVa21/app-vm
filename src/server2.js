@@ -73,18 +73,18 @@ app.get('/:token', (req, res) => {
                     exec('sh src/scripts/CreateToken1.sh '+res.data.content.nombre_proyecto+' '+res.data.content.nombre_proyecto+' '+res.data.content.contrasena,
                     (error, stdout, stderr) => {
                         tokken = stdout.replace('\r', '');
-                        console.log('el token es ',tokken);
+                        //console.log('el token es ',tokken);
                     }
                     );
                 }
-                console.log('entra al 9');                    
+                //console.log('entra al 9');                    
             })
             .catch(error => { 
-                console.log('Error en axios get proyecto ',error);                    
+                //console.log('Error en axios get proyecto ',error);                    
             });
-            console.log('entra al 10');
+            //console.log('entra al 10');
         }
-        console.log('entra al 11'); 
+        //console.log('entra al 11'); 
     }
   });
 

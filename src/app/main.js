@@ -24,7 +24,7 @@ import AlertasUsuario from './components/PanelUsuario/AlertasUsuario.vue'
 import SolicitudesUsuario from './components/PanelUsuario/SolicitudesUsuario.vue'
 import SugerenciasUsuario from './components/PanelUsuario/SugerenciasUsuario.vue'
 //Componentes Panel Admin
-import PanelAdmin from './components/PanelAdmin/PanelAdmin.vue'
+//import PanelAdmin from './components/PanelAdmin/PanelAdmin.vue'
 import InfoUsuarios from './components/PanelAdmin/InfoUsuarios.vue'
 import Solicitudes from './components/PanelAdmin/Solicitudes/Solicitudes.vue'
   import PoolRecursos from './components/PanelAdmin/Solicitudes/PoolRecursos.vue'
@@ -68,7 +68,7 @@ const routes = [
     { name: 'PanelAdmin/AlertasYNot/Alertas', path: '/PanelAdmin/AlertasYNot/Alertas', component: Alertas },
     { name: 'PanelAdmin/AlertasYNot/Notificaciones', path: '/PanelAdmin/AlertasYNot/Notificaciones', component: Notificaciones },
   { name: 'PanelAdmin/Sugerencias', path: '/PanelAdmin/Sugerencias', component: Sugerencias },
-  { name: 'PanelAdmin', path: '/PanelAdmin', component: PanelAdmin },
+  //{ name: 'PanelAdmin', path: '/PanelAdmin', component: PanelAdmin },
   { path: '*', redirectTo: 'Inicio' }
 
 ];

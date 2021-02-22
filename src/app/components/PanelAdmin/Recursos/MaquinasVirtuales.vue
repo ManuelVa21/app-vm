@@ -46,11 +46,10 @@
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Action </button>
                         <div class="dropdown-menu">
-                            <button v-on:click="editarServer(item.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>
+                            <!-- <button v-on:click="confirmEditarServer(item.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>-->
                             <button v-on:click="apagarServer(item.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Apagar"><i class="fas fa-power-off"></i> Apagar</button>
                             <button v-on:click="reiniciarServer(item.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fas fa-redo-alt"></i> Reiniciar</button>
                             <button v-on:click="consola(item.id)" type="button" class="btn btn-secondary dropdown-item" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i> Abrir</button>
-                            <button v-on:click="backupServer(item.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i> Backup</button>
                             <button v-on:click="pausarServer(item.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Pausar"><i class="fas fa-pause"></i> Pausar</button>
                             <button v-on:click="bloquearServer(item.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Bloquear"><i class="fas fa-lock"></i> Bloquear</button>
                             <button v-on:click="suspenderServer(item.id)" type="button" class="btn btn-warning dropdown-item" data-toggle="tooltip" data-placement="top" title="Suspender"><i class="fas fa-moon"></i> Suspender</button>
@@ -67,7 +66,7 @@
                                 Action
                             </button>
                         <div class="dropdown-menu">
-                            <button v-on:click="confirmEditarServer(item.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Desbloquear"><i class="far fa-check-circle"></i> Confirmar edición</button>
+                             <button v-on:click="confirmEditarServer(item.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Desbloquear"><i class="far fa-check-circle"></i> Confirmar edición</button>
                         <div class="dropdown-divider"></div>
                             <button v-on:click="deleteServer(item.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i> Eliminar</button>
                             <!--<button v-on:click="reconstruirServer(server.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Reconstruir"><i class="fas fa-circle-notch"></i> Reconstruir</button>-->
@@ -82,12 +81,11 @@
                             </button>
                         <div class="dropdown-menu">
                             <button v-on:click="encenderServer(item.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Encender"><i class="fas fa-power-off"></i> Encender</button>
-                            <button v-on:click="reanudarServer(item.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reanudar"><i class="fas fa-tv"></i> Reanudar</button>
                             <button v-on:click="consola(item.id)" type="button" class="btn btn-secondary dropdown-item" data-toggle="tooltip" data-placement="top" title="Abrir en consola"><i class="fas fa-expand"></i> Abrir</button>
-                            <button v-on:click="editarServer(item.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>
+                             <!--<button v-on:click="editarServer(item.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i> Editar</button>-->
                             <button v-on:click="reiniciarServer(item.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fas fa-redo-alt"></i> Reiniciar</button>
-                            <button v-on:click="backupServer(item.id)" type="button" class="btn btn-primary dropdown-item" data-toggle="tooltip" data-placement="top" title="Realizar Backup"><i class="fas fa-save"></i> Backup</button>
                             <button v-on:click="desPausarServer(item.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Despausar"><i class="fas fa-play"></i> Despausar</button>
+                            <button v-on:click="reanudarServer(item.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Reanudar"><i class="fas fa-tv"></i> Reanudar</button>
                             <button v-on:click="desBloquearServer(item.id)" type="button" class="btn btn-success dropdown-item" data-toggle="tooltip" data-placement="top" title="Desbloquear"><i class="fas fa-lock-open"></i> Desbloquear</button>
                         <div class="dropdown-divider"></div>
                             <button v-on:click="deleteServer(item.id)" type="button" class="btn btn-danger dropdown-item" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i> Eliminar</button>
@@ -296,10 +294,7 @@ export default {
                 })
                 .catch(error => { this.$toastr.e("Error al eliminar el servidor " + error) });
                 this.getServers();
-        },
-        backupServer: async function(idServer){
-            console.log('Se ingresa a backup')
-        },
+        },       
         apagarServer: async function(idServer) {
             console.log('Se ingresa a apagar')
             let data={ "os-stop": null }
@@ -406,7 +401,7 @@ export default {
             let data={"resume": null}
             await axios.post('http://'+configG.ipOpenstack+'/compute/v2.1/servers/'+idServer+'/action',data,this.config)
             .then(res => {
-                this.$toastr.i("VM reanudada " + error)
+                this.$toastr.i("VM reanudada")
             })
             .catch(error => { this.$toastr.e("Error al reanudar la VM " + error) });
             this.getServers();

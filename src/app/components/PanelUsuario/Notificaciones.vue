@@ -24,12 +24,12 @@
 
 
                 <template v-slot:estado="{item}">
-                    <template v-if="item.estado == 'Sin Atender'">  
-                        <td class="bg-danger font-weight-bold text-white">Sin Atender</td>
+                    <template v-if="item.estado == 'Atendido'">  
+                        <td class="bg-success font-weight-bold text-white">Atendido</td>
                           
                     </template>
                     <template v-else>
-                         <td class="bg-success font-weight-bold text-white">Atendido</td> 
+                         <td class="bg-danger font-weight-bold text-white">Sin Atender</td> 
                      </template>                                                                
                  </template> 
 
@@ -87,17 +87,19 @@ export default {
             var storage;
             try {
             if (localStorage.getItem) {
-                this.storage = JSON.parse(localStorage.getItem('userInfo'))
+                storage = JSON.parse(localStorage.getItem('userInfo'))
+                this.user = storage
                 //console.log('se muestra el storage ',storage.email)
-                this.getNotificaciones(this.storage.email)
+                //console.log("el usuario es"+this.user)
+                this.getNotificaciones(this.user.email)
             }
             } catch(e) {
                 storage = {};
             }
         },
-        getNotificaciones: async function(email){
+        getNotificaciones: async function(correo){
             //console.log('Se ingresa a getnotificaciones y se muestra el email '+email)
-            await axios.get('/api/alertas_notificaciones?correo_usuario='+email+'&tipo=Notificación')
+            await axios.get('/api/alertas_notificaciones?correo_usuario='+correo+'&tipo=Notificación')
             .then(res => {
                 //console.log('Se muestra respuesta get ',res.data.content)
                 this.notificaciones = res.data.content.reverse();                   
@@ -109,7 +111,7 @@ export default {
             await axios.put('/api/alertas_notificaciones/'+id,{estado: 'Atendido' },configG.headersDataBase)
                 .then(res => { 
                     this.$toastr.s("Notificación atendida")
-                    this.getNotificaciones(this.storage.email)
+                    this.getNotificaciones(this.user.email)
                     })
                 .catch(error => {this.$toastr.e("Error al cambiar estado de la notificación: " + error )});
         },
@@ -118,7 +120,7 @@ export default {
             .then(res => { 
                 //console.log(res)
                 this.$toastr.s("Notificación eliminada")
-                this.getNotificaciones(this.storage.email)
+                this.getNotificaciones(this.user.email)
                 })
             .catch(error => { this.$toastr.e("Error al eliminar la notificación: " + error )});
         }

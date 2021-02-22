@@ -7,7 +7,7 @@
 6 silly lifecycle app-vm@1.0.0~prewebpack: no script for prewebpack, continuing
 7 info lifecycle app-vm@1.0.0~webpack: app-vm@1.0.0
 8 verbose lifecycle app-vm@1.0.0~webpack: unsafe-perm in lifecycle true
-9 verbose lifecycle app-vm@1.0.0~webpack: PATH: /usr/share/npm/bin/node-gyp-bin:/home/gestion/app-vm/node_modules/.bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+9 verbose lifecycle app-vm@1.0.0~webpack: PATH: /usr/share/npm/bin/node-gyp-bin:/home/gestion/app-vm/node_modules/.bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
 10 verbose lifecycle app-vm@1.0.0~webpack: CWD: /home/gestion/app-vm
 11 silly lifecycle app-vm@1.0.0~webpack: Args: [ '-c', 'webpack --mode development --watch' ]
 12 silly lifecycle app-vm@1.0.0~webpack: Returned: code: 1  signal: null
@@ -24,7 +24,7 @@
 14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:209:5)
 15 verbose pkgid app-vm@1.0.0
 16 verbose cwd /home/gestion/app-vm
-17 error Linux 4.15.0-128-generic
+17 error Linux 4.15.0-135-generic
 18 error argv "/usr/bin/node" "/usr/bin/npm" "run" "webpack"
 19 error node v8.10.0
 20 error npm  v3.5.2

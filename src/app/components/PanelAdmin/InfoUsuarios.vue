@@ -14,58 +14,6 @@
             <strong class="final-path">Info Usuarios</strong>
             <span>/</span>
         </div> <br>
-            
-            <!--  esto es para agregar un usuario sirve para probar                                                                                
-            <button @click="limpiarUsuario()" class="btn btn-success btn-sm" data-toggle="modal" data-target="#ModalAddUser">
-                <span data-toggle="tooltip" data-placement="top" title="Agregar usuario"><i class="fas fa-plus"></i></span>
-            </button>              
-
-             <div class="modal fade" id="ModalAddUser" tabindex="-1" role="dialog" aria-labelledby="ModalAddUserLabel" aria-hidden="true">
-             <div class="modal-dialog modal-dialog-centered" role="document">
-             <div class="modal-content">
-
-                <div class="modal-header text-white bg-primary">
-                    <h5 class="modal-title modal-dark"><b>Crear Usuario</b></h5>
-                    <button @click="limpiarUsuario()" type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span></button> 
-                </div>
-
-                <div class="modal-body">
-                    
-                    <form id="formAddUsuario">
-                                             
-                        <label>Nombre: * </label> <br>
-                        <input v-model="usuario.nombre" type="text" id="nombre" class="form-control" placeholder="Ingresar Nombre"><br>                                                          
-                                                        
-                        <label> Correo electrónico: * </label> <br>
-                        <input v-model="usuario.correo" type="text" id="correo" class="form-control" placeholder="Ingresar Correo"><br>  
-                            
-                        <label> Pool asociado: * </label> <br>
-                        <input v-model="usuario.pool_asociado" type="text" id="pool_asociado" class="form-control" placeholder="Ingrese nombre del pool"> <br> 
-                            
-                        <label> Categoría de usuario: * </label> <br>
-                        <select v-model="usuario.categoria_us" id="categoria_us" class="form-control">
-                            <option selected>Seleccione nuevo tipo de usuario</option>
-                                <option>Estudiante</option>
-                                <option>Docente</option>
-                                <option>Curso</option>
-                        </select> 
-
-                       
-                    </form>
-                </div>
-
-                <div class="modal-footer">
-                    <button v-on:click="validarForm()" type="button" class="btn btn-success" >Crear</button>
-                    <button @click="limpiarUsuario()" type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close"> 
-                                    Cancelar</button>                                            
-                                      
-                </div> 
-                            
-             </div>
-             </div>
-             </div>
-            --> 
                                         
         <div class="table-responsive">
 
@@ -111,15 +59,16 @@
                     <label class="control-label" for="Correo">Correo electrónico</label>
                     <input v-model="usuario.correo" type="text" id="Correo" class="form-control" placeholder="Ingresar Correo">   
                 </div>
-
                 <div class="form-group text-left required">
-                    <label class="control-label" for="Categoria">Categoría de usuario </label>
-                    <select v-model="usuario.categoria_us" class="form-control" id="categoria">
-                          <option selected>Estudiante</option>
-                          <option>Docente</option>
-                          <option>Curso</option>
-                    </select>   
-                </div> 
+                    <label class="control-label" for="Correo">Director</label>
+                    <input v-model="usuario.tutor" type="text" id="Correo" class="form-control" placeholder="Ingresar Correo">   
+                </div>
+                <div class="form-group text-left required">
+                    <label class="control-label" for="Correo">Correo Director</label>
+                    <input v-model="usuario.correo_tutor" type="text" id="Correo" class="form-control" placeholder="Ingresar Correo">   
+                </div>
+
+                
                 </form>                                         
             </div>
 
@@ -218,42 +167,41 @@ export default{
 //Se obtienen los Usuarios       
        getUsuarios: async function(){            
             await axios.get('/api/usuarios')
-                .then(res => {                    
-                    this.usuarios = res.data.content; 
-                    console.log(this.usuarios)
-                    this.limpiarUsuario()                   
-                })
-                .catch(error => {
-                   this.$toastr.e("Error al obtener usuarios: " + error)
-                });
+            .then(res => {                    
+                this.usuarios = res.data.content; 
+                //console.log(this.usuarios)
+                this.limpiarUsuario()                   
+            })
+            .catch(error => {
+               this.$toastr.e("Error al obtener usuarios: " + error)
+            });
         },
 //Obtener un usuario para luego editarlo
         getOneUser: async function(idUser){
-               //console.log(idUser);
-               await axios.get('/api/usuarios/unusuario?_id='+idUser)
-                .then(res => {
-                    this.usuario = res.data.content;                     
-                })
-                .catch(error => {
-                    this.$toastr.e("Error al obtener el usuario " + error);
-                });
+            await axios.get('/api/usuarios/unusuario?_id='+idUser)
+             .then(res => {
+                 this.usuario = res.data.content;                     
+             })
+             .catch(error => {
+                 this.$toastr.e("Error al obtener el usuario " + error);
+             });
         },
  //  Vamos a ACTUALIZAR un usuario
         updateUser: async function(){                   
            await axios.put('/api/usuarios/'+this.usuario._id , this.usuario, this.config)
-                .then(res => {
-                    this.getUsuarios();
-                    this.$toastr.s("Usuario editado correctamente")                                        
-                })
-                .catch(error => { this.$toastr.e("Error al actualizar el usuario: " + error); });
+            .then(res => {
+                this.getUsuarios();
+                this.$toastr.s("Usuario editado correctamente")                                        
+            })
+            .catch(error => { this.$toastr.e("Error al actualizar el usuario: " + error); });
         },
         limpiarUsuario(){
             usuario :[
-                        this.usuario.nombre = '', 
-                        this.usuario.correo = '',
-                        this.usuario.categoria_us = '',
-                        this.usuario.pool_asociado = '',
-                    ];
+                this.usuario.nombre = '', 
+                this.usuario.correo = '',
+                this.usuario.tutor = '',
+                this.correo_tutor = '',
+                ];
         }, 
 //   ENVIAR UNA NOTIFICACION
         sendNotificacion: async function(usuario,notificacion){
@@ -286,28 +234,8 @@ export default{
                 });                                        
         }, 
 //FUNCIONES DE PRUEBA
-
-       
-//CREAR nuevo usuario   
         
-        addUser: async function(){ 
-            let info={
-                    "nombre": this.usuario.nombre, 
-                    "correo": this.usuario.correo,
-                    "categoria_us": this.usuario.categoria_us,
-                    "pool_asociado": this.usuario.pool_asociado
-            };
-            //console.log('Se ingresa crear usuario')
-            //console.log(info)
-            await axios.post('/api/usuarios',info,this.config)
-            .then(res => { 
-                this.$toastr.s("El usuario: "+ this.usuario.nombre +" fue creado correctamente")
-                   
-                //console.log(res)
-            })
-            .catch(error => { this.$toastr.e("Error al crear el nuevo usuario: " + error)});
-            this.getUsuarios();     
-        },
+       
 //Delete usuario
         eliminarUsuario: async function (id){
             await axios.delete('/api/usuarios?_id='+id)            
@@ -315,39 +243,7 @@ export default{
             this.getUsuarios();
             })            
             .catch(error => { this.$toastr.e("Error al eliminar el usuario: " + error )});
-        },
-        validarForm: async function(){
-            if(this.usuario.nombre && this.usuario.correo && 
-                this.usuario.categoria_us && this.usuario.pool_asociado){
-                    this.addUser();
-                    $('#ModalAddUser').modal('hide')
-                    //this.$toastr.s("Usuario creado correctamente")
-            }
-            else if(!this.usuario.nombre)
-            {   
-                this.$toastr.w("El nombre es obligatorio")
-                //alert("El nombre es obligatorio")
-                formAddUsuario.nombre.focus() 
-            }
-            else if(!this.usuario.correo)
-            {  
-                this.$toastr.w("El correo es obligatorio")
-                formAddUsuario.correo.focus() 
-            }
-            else if (!this.usuario.pool_asociado)
-            {   
-                this.$toastr.w("El pool es obligatorio")
-                formAddUsuario.pool_asociado.focus() 
-            }
-
-            else if (!this.usuario.categoria_us)
-            {  
-                this.$toastr.w("La categoria de usuario es obligatoria")
-                
-            }
-          
         }
-
 
    }
 }

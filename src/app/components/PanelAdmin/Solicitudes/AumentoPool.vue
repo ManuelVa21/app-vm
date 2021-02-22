@@ -21,12 +21,12 @@
               <button @click="$router.push('/PanelAdmin/Solicitudes/Backup')" class="btn btn-outline-info">Backup</button>
             </div> -->
            
-            <div class="table-responsive">     
-              <VueyeTable 
-                :data="solicitudes" 
-                :columns="columns" 
-                title="Solicitudes de aumento de recursos"                           
-                filter-by="estado">   
+        <div class="table-responsive">     
+            <VueyeTable 
+              :data="solicitudes" 
+              :columns="columns" 
+              title="Solicitudes de aumento de recursos"                           
+              filter-by="estado">   
     <!-- Ver Estado de solicitud -->
            <template v-slot:estado="{item}">
                 <template v-if="item.estado == 'Aceptada'">                                        
@@ -45,34 +45,33 @@
             </template>  
 
 <!-- Ver recursos solicitados -->               
-                <template v-slot:_id="{item}">                                                                                                                                 
-                    <button v-on:click="getUnaSolicitud(item._id)" class="btn-sm btn-primary" data-toggle="modal" data-target="#modalRecursos" data-placement="top" title="Ver y aceptar recursos"><i class="far fa-eye"></i></button>                                                                                                                                               
-                </template>                              
+            <template v-slot:_id="{item}">                                                                                                                                 
+                <button v-on:click="getUnaSolicitud(item._id)" class="btn-sm btn-primary" data-toggle="modal" data-target="#modalRecursos" data-placement="top" title="Ver y aceptar recursos"><i class="far fa-eye"></i></button>                                                                                                                                               
+            </template>                              
 <!-- Acciones -->                                       
-                <template v-slot:acciones="{item}"> 
+            <template v-slot:acciones="{item}"> 
 
-                  <template v-if="item.estado == 'Aceptada'">  
-                    <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
-                        <button  type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Aceptar" disabled><i class="fas fa-check"></i></button>
-                        <button  type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Rechazar" disabled><i class="fas fa-times"></i></button>                                            
+                <template v-if="item.estado == 'Aceptada'">  
+                  <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
+                    <button v-on:click="getUnaSolicitud(item._id)" type="button" class="btn btn-danger ml-3" data-toggle="modal"  data-target="#ModalDeleteSolicitud" data-placement="top" title="Eliminar solicitud"><i class="fas fa-trash"></i></button>                                            
+                 </div>
+                </template>
+                <template v-else-if="item.estado == 'Rechazada'" style="text-align: center">  
+                    <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                                                     
+                        <button v-on:click="getUnaSolicitud(item._id)" type="button" class="btn-sm btn-info" data-toggle="modal" data-target="#ModalMotivoRechazo" data-placement="top" title="Motivo rechazo"><i class="fas fa-question-circle"></i></button>                                            
+                        <button v-on:click="getUnaSolicitud(item._id)" type="button" class="btn-sm btn-danger" data-toggle="modal"  data-target="#ModalDeleteSolicitud" data-placement="top" title="Eliminar solicitud"><i class="fas fa-trash"></i></button>                                            
                     </div>
-                  </template>
+                </template>
+                <template v-else>
+                      <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
+                      <button v-on:click="confirmarSolicitud(item._id)" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Aceptar"><i class="fas fa-check"></i></button>
+                      <button v-on:click="getUnaSolicitud(item._id)" type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalCancelarSolicitud" data-placement="top" title="Rechazar"><i class="fas fa-times"></i></button>                                            
+                       </div>
+                </template>
+            </template>
 
-                  <template v-else-if="item.estado == 'Rechazada'" style="text-align: center">  
-                         <div class="pl-3">                                                                                                                                     
-                            <button v-on:click="getUnaSolicitud(item._id)" type="button" class="btn-sm btn-info" data-toggle="modal" data-target="#ModalMotivoRechazo" data-placement="top" title="Motivo rechazo"><i class="fas fa-question-circle"></i></button>                                            
-                         </div>
-                  </template>
-
-                  <template v-else>
-                        <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
-                        <button v-on:click="confirmarSolicitud(item._id)" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Aceptar"><i class="fas fa-check"></i></button>
-                        <button v-on:click="getUnaSolicitud(item._id)" type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalCancelarSolicitud" data-placement="top" title="Rechazar"><i class="fas fa-times"></i></button>                                            
-                         </div>
-                  </template>
-                </template>       
-              </VueyeTable>              
-            </div>
+            </VueyeTable>              
+        </div>
 
 <!--MODAL VER RECURSOS SOLICITADOS --> 
             <div class="modal fade" id="modalRecursos" tabindex="-1" role="dialog" aria-labelledby="ModalRecursosLabel" aria-hidden="true">
@@ -175,21 +174,47 @@
             </div> 
 
 <!--MODAL Motivo Rechazo  -->  
-            <div class="modal fade bg-modal-sm" id="ModalMotivoRechazo" tabindex="-1" role="dialog" aria-labelledby="ModalMotivoRechazo" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-                <div class="modal-content">
-                 <div class="modal-header text-white bg-primary">
-                        <div class="modal-title" id="ModalMotivoRechazo"><b>Motivo de rechazo:</b></div>
-                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span> </button>
-                </div>
-                <div class="modal-body">
-                 
-                  {{this.solicitud.motivo}}
-                </div>
-                </div>
-              </div>
+        <div class="modal fade bg-modal-sm" id="ModalMotivoRechazo" tabindex="-1" role="dialog" aria-labelledby="ModalMotivoRechazo" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-white bg-primary">
+                    <div class="modal-title" id="ModalMotivoRechazo"><b>Motivo de rechazo:</b></div>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span> </button>
             </div>
+
+            <div class="modal-body">
+             
+              {{this.solicitud.motivo}}
+            </div>
+        </div>
+        </div>
+        </div>
+<!--MODAL confirmar eliminar solicitud  Sólo se muestra cuando la solicitud está rechazada o aceptada-->
+        <div class="modal fade bg-modal" id="ModalDeleteSolicitud" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            
+            <div class="modal-header text-white bg-primary">
+                   <div class="modal-title"><b>Eliminar solicitud:</b></div>
+                   <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">&times;</span> </button>
+            </div>
+            
+            <div class="modal-body">                                  
+                
+                  
+                <div class="text-center">
+                    <p>Al eliminar la solicitud se perderá el registro de la misma.</p>
+                    <p>    ¿Está seguro de eliminar la solicitud?</p> 
+                    <button class="btn font-weight-bold btn-success" data-dismiss="modal">Cancelar</button>
+                    <button @click="eliminarSolicitud(solicitud._id)" class="btn font-weight-bold btn-danger" data-dismiss="modal">Eliminar</button>
+                </div>
+
+            </div>
+        </div>
+        </div>
+        </div>
 
        
         </div>
@@ -307,6 +332,15 @@ export default {
             }
         },
 // Cuando se rechaza la solicitud se abre un modal para enviar el motivo del rechazo de la solicitud
+        eliminarSolicitud: async function(_id){
+            await axios.delete('/api/solicitudes?_id='+_id)
+            .then(res => { 
+                this.$toastr.s("Solicitud eliminada")
+                this.getSolicitudes()
+            })
+            .catch(error => { this.$toastr.e("Error al eliminar la solicitud:" + error) });
+        },
+
         negarSolicitud: async function(){
             if(!this.solicitud.motivo){
                 this.$toastr.w("El motivo de cancelación es obligatorio")

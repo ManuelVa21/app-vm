@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/"><img class="img" src="../../assets/telcoLOGO.png" alt="Telco" style="max-height: 50px;"></a>
+    <a class="navbar-brand" href="http://10.55.6.31:4200/home"><img src="admiracion.png" alt="Telco" /></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar1" aria-controls="navbar1" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -18,7 +18,7 @@
           <router-link class="nav-link" to="/PanelUsuario">Mi Proyecto</router-link>
         </li>
         <li v-if="auth==='admin'" class="nav-item">
-          <router-link class="nav-link" to="/PanelAdmin">Panel Admin</router-link>
+          <router-link class="nav-link" to="/PanelAdmin/Recursos/RecursosTelco">Panel Admin</router-link>
           </li>
       </ul>
       <div class="input-group-append">

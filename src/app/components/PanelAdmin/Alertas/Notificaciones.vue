@@ -18,12 +18,36 @@
 
                 
             <div class="table-responsive">
-                <VueyeTable 
-                :data="notificaciones" 
-                :columns="columns" 
-                title="Notificaciones"
-                filter-by="estado">
-                </VueyeTable>
+            <VueyeTable 
+            :data="notificaciones" 
+            :columns="columns" 
+            title="Notificaciones de Administrador"
+            filter-by="estado">
+
+
+                <template v-slot:estado="{item}">
+                    <template v-if="item.estado == 'Atendido'">  
+                        <td class="bg-success font-weight-bold text-white">Atendido</td>
+                          
+                    </template>
+                    <template v-else>
+                         <td class="bg-danger font-weight-bold text-white">Sin Atender</td> 
+                     </template>                                                                
+                 </template> 
+
+                <template v-slot:_id="{item}"> 
+                    <template v-if="item.estado == 'Sin Atender'">  
+                        <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
+                            <button v-on:click="atenderNotificacion(item._id)" type="button" class="btn btn-success ml-3" data-toggle="tooltip" data-placement="top" title="Aceptar"><i class="fas fa-check"></i></button>                                            
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
+                            <button v-on:click="eliminarNotificacion(item._id)" type="button" class="btn btn-danger ml-3" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i></button>                                           
+                        </div>
+                    </template>
+                </template>  
+            </VueyeTable>
             </div> 
 
             
@@ -62,12 +86,40 @@ export default{
         }
     },    
     created(){  
-        //this.getNotificaciones();
+        this.getNotificaciones();
     },
     components:{
         'SidebarAdmin': SidebarAdmin,
         VueyeTable
     },
-   methods:{}
+   methods:{
+       getNotificaciones: async function(){
+            //console.log('Se ingresa a getnotificaciones y se muestra el email '+email)
+            await axios.get('/api/alertas_notificaciones?usuario_destino=Administrador&tipo=Notificación')
+            .then(res => {
+                //console.log('Se muestra respuesta get ',res.data.content)
+                this.notificaciones = res.data.content.reverse();                   
+            })
+            .catch(error => {this.$toastr.e("Error al obtener las notificaciones: " + error ) });
+        },
+        atenderNotificacion: async function(id){
+            //console.log('Se va a cambiar el estado de la Notificacion de usuario, id: ',id)
+            await axios.put('/api/alertas_notificaciones/'+id,{estado: 'Atendido' },configG.headersDataBase)
+                .then(res => { 
+                    this.$toastr.s("Notificación atendida")
+                    this.getNotificaciones()
+                    })
+                .catch(error => {this.$toastr.e("Error al cambiar estado de la notificación: " + error )});
+        },
+        eliminarNotificacion: async function(id){
+            await axios.delete('/api/alertas_notificaciones?_id='+id, configG.headersDataBase)
+            .then(res => { 
+                //console.log(res)
+                this.$toastr.s("Notificación eliminada")
+                this.getNotificaciones()
+                })
+            .catch(error => { this.$toastr.e("Error al eliminar la notificación: " + error )});
+        }
+   }
 }
 </script>

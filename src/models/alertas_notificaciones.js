@@ -7,7 +7,7 @@ const alertas_notificaciones = new Schema({
     descripcion: {type:String},    
     estado: {type:String, default:"Sin Atender"},
     usuario_destino: {type: String, default: "Administrador"},
-    correo_usuario: {type: String, default: "diegofernandov@unicauca.edu.co"}  //Poner el correo de Admin
+    correo_usuario: {type: String, default: "telco@unicauca.edu.co"}  //Poner el correo de Admin
 
 },{
     collection: 'alertas_notificaciones'

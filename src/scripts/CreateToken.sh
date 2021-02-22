@@ -1,12 +1,12 @@
 #!/bin/sh
 
-export OS_USERNAME=gestionvm   
+export OS_USERNAME=telco
 #export OS_USERNAME=$1
 export OS_PROJECT_NAME=admin
 #export OS_PROJECT_NAME=$2
 export OS_PROJECT_DOMAIN_NAME=default
 export OS_USER_DOMAIN_NAME=Default
-export OS_PASSWORD=123
+export OS_PASSWORD=Telco2016
 #export OS_PASSWORD=$3
 export OS_AUTH_URL=http://10.55.2.20/identity/v3
 

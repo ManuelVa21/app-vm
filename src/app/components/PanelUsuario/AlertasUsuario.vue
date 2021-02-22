@@ -22,8 +22,19 @@
                     :columns="columns" 
                     title="Alertas de Usuario"
                     filter-by="estado">
+                        
+                        <template v-slot:estado="{item}">
+                           <template v-if="item.estado == 'Sin Atender'">  
+                               <td class="bg-danger font-weight-bold text-white">Sin Atender</td>
+                                 
+                           </template>
+                           <template v-else>
+                                <td class="bg-success font-weight-bold text-white">Atendido</td> 
+                            </template>                                                                
+                        </template> 
+
                         <template v-slot:_id="{item}"> 
-                            <template v-if="item.estado == 'Sin atender'">  
+                            <template v-if="item.estado == 'Sin Atender'">  
                                 <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
                                     <button v-on:click="atenderAlerta(item._id)" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Atender"><i class="fas fa-check"></i></button>                                            
                                 </div>
@@ -77,16 +88,16 @@ export default {
             try {
             if (localStorage.getItem) {
                 this.storage = JSON.parse(localStorage.getItem('userInfo'))
-                //console.log('se muestra el storage ',storage.email)
+                console.log('se muestra el storage ', this.storage)
                 this.getAlertas(this.storage.email)
             }
             } catch(e) {
                 storage = {};
             }
         },
-        getAlertas: async function(email){
+        getAlertas: async function(correo){
             //console.log('Se ingresa a getalerta y se muestra el email '+email)
-            await axios.get('/api/alertas_notificaciones?correo_usuario='+email+'&tipo=Alerta')
+            await axios.get('/api/alertas_notificaciones?correo_usuario='+correo+'&tipo=Alerta')
             .then(res => {
                 //console.log('Se muestra respuesta get ',res.data.content)
                 this.alertas = res.data.content.reverse();                    
@@ -95,7 +106,7 @@ export default {
         },
         atenderAlerta: async function(id){
             console.log('Se va a cambiar el estado de la Notificacion de usuario')
-            await axios.put('/api/alertas_notificaciones/'+id,{estado: 'Atendido' },configG.headersDataBase)
+            await axios.put('/api/alertas_notificaciones/'+id,{estado: 'Atendido' })
                 .then(res => { 
                     this.$toastr.s("Se cambió el estado correctamente")
                     this.getAlertas(this.storage.email)
@@ -103,7 +114,7 @@ export default {
                 .catch(error => { this.$toastr.e("Error al cambiar el estado de la alerta: " + error ) });
         },
         eliminarAlerta: async function(info){
-            await axios.delete('/api/alertas_notificaciones?_id='+info._id, configG.headersDataBase)
+            await axios.delete('/api/alertas_notificaciones?_id='+info)
             .then(res => { 
                 //console.log(res)
                 this.$toastr.s("Alerta eliminada correctamente")

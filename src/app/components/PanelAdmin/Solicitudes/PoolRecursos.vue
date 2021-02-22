@@ -298,7 +298,7 @@
         </div>
         </div>
         </div>
-<!--MODAL confirmar eliminas solicitud  Sólo se muestra cuando la solicitud está rechazada o aceptada-->
+<!--MODAL confirmar eliminar solicitud  Sólo se muestra cuando la solicitud está rechazada o aceptada-->
         <div class="modal fade bg-modal" id="ModalDeleteSolicitud" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">

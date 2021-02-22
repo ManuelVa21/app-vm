@@ -16,6 +16,9 @@
             <span>/</span>
         </div><br>
 
+<!--<button @click="prueba()" class="btn btn-success btn-sm">
+                verificar fecha fin
+</button>-->
         
         <div class="table-responsive">
                 
@@ -62,15 +65,25 @@
                             <button @click="getOnePool(item)" type="button" class="btn-sm btn-info" data-toggle="modal" data-target="#ModalCambiarEstado" data-placement="top" title="Cambiar estado"><i class="fas fa-edit"></i></button> 
                         </div>
                     </template>
-                    <template v-else>
+                    <template v-else-if="item.estado == 'Activo'">
                         <div class="btn-group-sm" role="group" aria-label="Basic example">   
-                            <button @click="getOnePool(item)" type="button" class="btn-sm btn-info" data-toggle="modal" data-target="#ModalCambiarEstado" data-placement="top" title="Cambiar estado"><i class="fas fa-edit"></i></button>                                                                                                          
+                            <button @click="getOnePool(item)" type="button" class="btn-sm btn-info ml-3" data-toggle="modal" data-target="#ModalCambiarEstado" data-placement="top" title="Cambiar estado"><i class="fas fa-edit"></i></button> 
+                                                                                                                                     
                            <!-- <button @click="getOnePool(item)" type="button" class="btn-sm btn-danger" data-toggle="modal" data-target="#ModalConfirmarEliminar" data-placement="top" title="Eliminar proyecto"><i class="fas fa-trash"></i></button>  -->
                             
                            <!-- <button @click="prueba(item)" type="button" class="btn-sm btn-success" data-placement="top" title="prueba"><i class="fas fa-eye"></i></button> -->
                         
                         </div>
                     </template>  
+                    <template v-else>
+                        <div class="btn-group-sm" role="group" aria-label="Basic example">   
+                           <!-- <button @click="getOnePool(item)" type="button" class="btn-sm btn-info" data-toggle="modal" data-target="#ModalCambiarEstado" data-placement="top" title="Cambiar estado"><i class="fas fa-edit"></i></button> -->                                                                                                         
+                            <button @click="getOnePool(item)" type="button" class="btn-sm btn-danger" data-toggle="modal" data-target="#ModalConfirmarEliminar" data-placement="top" title="Eliminar proyecto"><i class="fas fa-trash"></i></button>  
+                            <button @click="getOnePool(item)" type="button" class="btn-sm btn-info" data-toggle="modal" data-target="#ModalCambiarEstado" data-placement="top" title="Cambiar estado"><i class="fas fa-edit"></i></button> 
+                           <!-- <button @click="prueba(item)" type="button" class="btn-sm btn-success" data-placement="top" title="prueba"><i class="fas fa-eye"></i></button> -->
+                        
+                        </div>
+                    </template> 
                     
                 </template>
 
@@ -102,6 +115,11 @@
                     <button  class="btn font-weight-bold btn-success " data-dismiss="modal">cancelar</button>
                     <button  @click="desactivarProyecto()" class="btn font-weight-bold btn-danger" data-dismiss="modal">ACTIVAR</button>
                 </template>
+                <template v-if="project.estado == 'Revisar'">
+                    <button  class="btn font-weight-bold btn-success " data-dismiss="modal">cancelar</button>
+                    <button  @click="desactivarProyecto()" class="btn font-weight-bold btn-danger" data-dismiss="modal">DESACTIVAR</button>
+                </template> 
+
             </div>
         </div>
         </div>
@@ -276,7 +294,7 @@ export default {
                     this.project = res.data.content;
                     this.project.fecha_fin = new Date (this.project.fecha_fin)
                     this.project.fecha_fin = this.project.fecha_fin.toLocaleDateString()
-                    console.log(this.project)
+                    //console.log(this.project)
                     })
                 .catch(error => { this.$toastr.e("Error al cargar el pool de recursos " + error) });                
         },
@@ -284,7 +302,7 @@ export default {
         desactivarProyecto: async function(){
             if (this.project.servidor_ubicacion == "OpenStack"){
             //Se desactiva el proyecto en openstack
-                console.log("desactivar Openstack");                
+                //console.log("desactivar Openstack");                
                 if(this.project.estado == "Activo"){
                     let data={
                         "project": {                       
@@ -292,7 +310,7 @@ export default {
                     let cambioEstado = "Inactivo"
                      await axios.patch('http://'+configG.ipOpenstack+'/identity/v3/projects/'+this.project.id_openstack,data,this.config)
                     .then(res => {                   
-                       console.log(res)
+                       //console.log(res)
                        this.$toastr.s("Se cambió el estado en OpenStack")                       
                        this.cambiarEstado(cambioEstado);                                     
                     })
@@ -305,7 +323,7 @@ export default {
                     let cambioEstado = "Activo"
                      await axios.patch('http://'+configG.ipOpenstack+'/identity/v3/projects/'+this.project.id_openstack,data,this.config)
                     .then(res => {                   
-                       console.log(res)
+                       //console.log(res)
                        this.$toastr.s("Se cambió el estado en OpenStack")                       
                        this.cambiarEstado(cambioEstado);                                     
                     })
@@ -396,7 +414,7 @@ export default {
         },
         liberarRecursosVMware: async function(actualizarRecursos){
            
-           console.log(actualizarRecursos)
+           //console.log(actualizarRecursos)
             await axios.put('/api/recursos_telco',actualizarRecursos)
             .then(res => { 
                 this.$toastr.s("recursos disponibles actualizados")
@@ -409,7 +427,7 @@ export default {
     //Primero se eliminan los puertos del router, el router y la red
             await axios.get('http://'+configG.ipOpenstack+':9696/v2.0/networks?name='+this.project.nombre_proyecto+'-net',this.config)
                 .then(res => {
-                    console.log('Respuesta get network',res)
+                    //console.log('Respuesta get network',res)
                     this.network.networkId = res.data.networks[0].id                   
                 })
                 .catch(error => { this.$toastr.e("Error al obtener la red del proyecto " + error) });
@@ -452,10 +470,9 @@ export default {
             let data = {
                 "port_id": interfaceId
             }
-             console.log("la id de la data es:"+ data)
+             //console.log("la id de la data es:"+ data)
             await axios.put('http://'+configG.ipOpenstack+':9696/v2.0/routers/'+this.network.routerId+'/remove_router_interface',data,this.configDeleteNetwork)
-                .then(res => {
-                    console.log('Si se pudo eliminar la interface')
+                .then(res => {                    
                     this.deleteRouter()
                 })
                 .catch(error => { 
@@ -477,14 +494,28 @@ export default {
                     this.$toastr.s("Red eliminada ")
                 })
                 .catch(error => {
-                    //console.log('ERROR delete Network',error)
+                    console.log('ERROR delete Network',error)
                     this.$toastr.e("Error al eliminar la red del proyecto, por favor ur al dashboard y eliminarla manualmente") });     
         },
         deleteUser: async function(userId){
             await axios.delete('http://'+configG.ipOpenstack+'/identity/v3/users/'+userId,this.config)
                 .then(res => { })
                 .catch(error => { this.$toastr.e("Error al eliminar el usuario en OpenStack " + error) });
-        }
+        },
+///FUNCIONES DE PRUEBA
+        prueba: async function(){
+            
+            await axios.get('/api/verificar_fecha_fin')
+                .then(res => {                  
+                   
+                   //console.log(res);
+                   console.log("verificar fecha fin")
+                              
+                })
+                .catch(error => { 
+                    console.log('Error ',error);                    
+            }); 
+        },
        
 
     }

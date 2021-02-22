@@ -1,18 +1,35 @@
-<!-- -->
-<!-- Sidebar Admin -->
 <template>
     <div>
-        <div class="d-flex" id="wrapper">
-          <!-- Sidebar -->
-          <div class="bg-light border-right" id="sidebar-wrapper">
-            <!-- <img src="..." alt="..." class="rounded-circle"> -->
-            <div class="sidebar-heading text-center text-primary">Admin Telco 2.0</div>
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/InfoUsuarios">Información usuarios</router-link></li>
-                <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/Recursos">Recursos</router-link></li>
-                <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/Solicitudes">Solicitudes <span class="ml-1 badge badge-danger">{{solicitudes.length}}</span></router-link></li>
-                <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/AlertasYNot">Alertas y notificaciones <span class="ml-1 badge badge-danger">{{alertas.length}}</span></router-link></li>
-                <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/Sugerencias">Sugerencias <span class="ml-1 badge badge-danger">{{sugerencias.length}}</span></router-link></li>
+      <div class="d-flex" id="wrapper">
+        <div class="bg-light border-right" id="sidebar-wrapper">
+          <div class="sidebar-heading text-center text-primary">Admin Telco 2.0</div>
+            <ul class="list-group list-group-flush">
+              
+              <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/InfoUsuarios">Información usuarios</router-link></li>
+              <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/Recursos">Recursos</router-link></li>
+  <!--Verificar si hay solicitudes   --> 
+              <template v-if="solicitudes.length == 0">
+                  <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/Solicitudes">Solicitudes </router-link></li>
+              </template>
+              <template v-else>                    
+                  <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/Solicitudes">Solicitudes <span class="ml-1 badge badge-danger">{{solicitudes.length}}</span></router-link></li>
+              </template>
+  <!--Verificar si hay alertas   -->            
+              <template v-if="alertas.length == 0">
+                  <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/AlertasYNot">Alertas y notificaciones </router-link></li>
+              </template>
+              <template v-else>                    
+                   <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/AlertasYNot">Alertas y notificaciones <span class="ml-1 badge badge-danger">{{alertas.length}}</span></router-link></li>
+              </template>
+  <!--Verificar si hay sugerencias   --> 
+              <template v-if="sugerencias.length == 0">
+                  <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/Sugerencias">Sugerencias </router-link></li>
+              </template>
+              <template v-else>                    
+                  <li class="list-group-item list-group-item-action bg-light"><router-link to="/PanelAdmin/Sugerencias">Sugerencias <span class="ml-1 badge badge-danger">{{sugerencias.length}}</span></router-link></li>
+              </template>
+              
+              
             </ul>
           </div>
       </div>
@@ -37,10 +54,10 @@ export default {
     this.getStorage()
     this.getSugerencias()
     this.getSolicitudes()
+    this.getAlertas()
   },
   methods:{
-    getStorage: async function(){
-      //console.log('Se ingresa a get storage')            
+    getStorage: async function(){          
       var storage;
       try {
         if (localStorage.getItem) {
@@ -53,31 +70,22 @@ export default {
       }
     },
     getSolicitudes: async function(){
-      //console.log('Se ingresa a getNotificaciones')
       await axios.get('/api/solicitudes?estado=Sin Atender')
       .then(res => {
-          //console.log('Se muestra respuesta get del sidebar usuario get solicitudes')
-          //console.log(res.data);
           this.solicitudes = res.data.content;                    
       })
       .catch(error => { console.log('Error en get solicitudes',error); });
     },
-    getAlertas: async function(correo){
-      //console.log('Se ingresa a getAlertas')
-      await axios.get('/api/alertas_notificaciones?correo_usuario='+correo+'&estado=Sin Atender')
+    getAlertas: async function(){
+      await axios.get('/api/alertas_notificaciones?usuario_destino=Administrador&estado=Sin Atender')
       .then(res => {
-          //console.log('Se muestra respuesta get del sidebar usuario get alertas')
-          //console.log(res.data.content);
           this.alertas = res.data.content;                    
       })
       .catch(error => { console.log('Error en get alertas',error); });
     },
     getSugerencias: async function(){
-      //console.log('Se ingresa a getAlertas')
       await axios.get('/api/sugerencias?estado=Sin Atender')
       .then(res => {
-          //console.log('Se muestra respuesta get del sidebar usuario get sugerencias')
-          //console.log(res.data.content);
           this.sugerencias = res.data.content;                    
       })
       .catch(error => { console.log('Error en get sugerencias',error); });

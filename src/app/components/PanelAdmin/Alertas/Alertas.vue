@@ -18,16 +18,36 @@
             </div><br>
             
             <div class="table-responsive">
-                
-                <VueyeTable 
-                :data="alertas" 
-                :columns="columns" 
-                title="Alertas"
-                filter-by="estado">
-                </VueyeTable>
+                    <VueyeTable 
+                    :data="alertas" 
+                    :columns="columns" 
+                    title="Alertas de Administrador"
+                    filter-by="estado">
+                        
+                        <template v-slot:estado="{item}">
+                           <template v-if="item.estado == 'Sin Atender'">  
+                               <td class="bg-danger font-weight-bold text-white">Sin Atender</td>
+                                 
+                           </template>
+                           <template v-else>
+                                <td class="bg-success font-weight-bold text-white">Atendido</td> 
+                            </template>                                                                
+                        </template> 
 
-            </div> 
-
+                        <template v-slot:_id="{item}"> 
+                            <template v-if="item.estado == 'Sin Atender'">  
+                                <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
+                                    <button v-on:click="atenderAlerta(item._id)" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Atender"><i class="fas fa-check"></i></button>                                            
+                                </div>
+                            </template>
+                            <template v-else>
+                                <div class="btn-group-sm" role="group" aria-label="Basic example">                                                                                                            
+                                    <button v-on:click="eliminarAlerta(item._id)" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fas fa-trash"></i></button>                                           
+                                </div>
+                            </template>
+                        </template>  
+                    </VueyeTable>
+                    </div>
 
             </div>
         </div>      
@@ -69,12 +89,40 @@ export default{
         }
     },    
     created(){  
-        //this.getAlertas();
+        this.getAlertas();
     },
     components:{
         'SidebarAdmin': SidebarAdmin,
         VueyeTable
     },
-   methods:{}
+   methods:{
+       getAlertas: async function(){
+            //console.log('Se ingresa a getalerta y se muestra el email '+email)
+            await axios.get('/api/alertas_notificaciones?usuario_destino=Administrador&tipo=Alerta')
+            .then(res => {
+                //console.log('Se muestra respuesta get ',res.data.content)
+                this.alertas = res.data.content.reverse();                    
+            })
+            .catch(error => { this.$toastr.e("Error al obtener las alertas: " + error ) });
+        },
+        atenderAlerta: async function(id){
+            console.log('Se va a cambiar el estado de la Notificacion de usuario')
+            await axios.put('/api/alertas_notificaciones/'+id,{estado: 'Atendido' })
+                .then(res => { 
+                    this.$toastr.s("Se cambió el estado correctamente")
+                    this.getAlertas()
+                    })
+                .catch(error => { this.$toastr.e("Error al cambiar el estado de la alerta: " + error ) });
+        },
+        eliminarAlerta: async function(info){
+            await axios.delete('/api/alertas_notificaciones?_id='+info)
+            .then(res => { 
+                //console.log(res)
+                this.$toastr.s("Alerta eliminada correctamente")
+                this.getAlertas()
+                })
+            .catch(error => { this.$toastr.e("Error al eliminar la alerta: " + error ) });
+        }   
+   }
 }
 </script>
